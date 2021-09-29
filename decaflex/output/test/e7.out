@@ -1,0 +1,11 @@
+T_WHITESPACE \n
+T_ID extern
+T_WHITESPACE  
+T_FUNC func
+T_WHITESPACE  
+T_ID print_int
+T_LPAREN (
+T_INT int
+T_RPAREN )
+T_WHITESPACE  
+T_ID void

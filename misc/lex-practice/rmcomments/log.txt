@@ -1,0 +1,21 @@
+INFO:root:path=dev
+INFO:root:Checking dev/07.out
+INFO:root:dev/07.out Correct!
+INFO:root:Checking dev/03.out
+INFO:root:dev/03.out Correct!
+INFO:root:Checking dev/02.out
+INFO:root:dev/02.out Correct!
+INFO:root:Checking dev/04.out
+INFO:root:dev/04.out Correct!
+INFO:root:Checking dev/05.out
+INFO:root:dev/05.out Correct!
+INFO:root:Checking dev/01.out
+INFO:root:dev/01.out Correct!
+INFO:root:Checking dev/06.out
+INFO:root:dev/06.out Correct!
+INFO:root:Checking dev/08.out
+INFO:root:dev/08.out Correct!
+INFO:root:Checking dev/09.out
+INFO:root:dev/09.out Correct!
+INFO:root:Checking dev/00.out
+INFO:root:dev/00.out Correct!

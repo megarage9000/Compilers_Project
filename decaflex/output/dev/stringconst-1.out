@@ -1,0 +1,10 @@
+T_ID extern
+T_WHITESPACE  
+T_FUNC func
+T_WHITESPACE  
+T_ID print_string
+T_LPAREN (
+T_ID string
+T_RPAREN )
+T_WHITESPACE  
+T_ID void

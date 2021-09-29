@@ -12,7 +12,7 @@ char [a-zA-Z]
 
 {num}           { return NUMBER; }
 {char}({char}|{num})*   { return IDENTIFIER; }
-[\n, " *"]              /* do nothing */
+["\n"," ","\t"]             /* do nothing */
 .       { return -1; }
 
 %%

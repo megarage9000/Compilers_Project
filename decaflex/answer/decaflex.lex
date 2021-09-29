@@ -8,9 +8,8 @@ using namespace std;
 
 %}
 
-char_literal [^"\'"]
-escaped_char \\(n|r|t|v|f|a|b|\\|\'|\")
-%x IN_CHAR
+char_literal [^\\']
+escaped_char \\(n|r|t|v|f|a|b|\\|'|\")
 
 %%
   /*
@@ -55,10 +54,7 @@ package                    { return 3; }
   /*
     Character Literals
   */
-"'"                                                     { BEGIN IN_CHAR;}
-<IN_CHAR>"'"                                            { BEGIN INITIAL;}
-<IN_CHAR>({char_literal}|{escaped_char})({char_literal}|{escaped_char})+    { BEGIN INITIAL;}
-<IN_CHAR>({char_literal}|{escaped_char})/"'"            { return 28; BEGIN INITIAL;}
+"'"({char_literal}|{escaped_char})"'"    { return 28;}
   /*
     EOF?
   */

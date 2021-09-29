@@ -8,22 +8,60 @@ using namespace std;
 
 %}
 
+char_literal [^"\'"]
+escaped_char \\(n|r|t|v|f|a|b|\\|\'|\")
+%x IN_CHAR
+
 %%
   /*
     Pattern definitions for all tokens
   */
-
-func                       { return 1; } 
-int                        { return 2; } 
+func                       { return 1; }
+int                        { return 2; }
 package                    { return 3; }
 \{                         { return 4; }
 \}                         { return 5; }
 \(                         { return 6; }
 \)                         { return 7; }
+;                           { return 27; }
+  /* 
+    Identifier 
+  */
 [a-zA-Z\_][a-zA-Z\_0-9]*   { return 8; }
+  /* 
+    Whitespace rules 
+  */
 [\t\r\a\v\b ]+             { return 9; }
-'\n'|'\r'|'\t'|'\v'|'\f'|' ' { return 10; }
-&&                         { return 11; }
+\n                         { return 10; }
+  /*
+    Binary operations
+  */
+&&                          { return 11; }
+=                           { return 12; }
+==                          { return 13; }
+\>=                         { return 14; }
+\>                          { return 15; }
+\<\<                        { return 16; }
+\<=                         { return 17; }
+\<                          { return 18; }
+"-"                         { return 19; }
+%                           { return 20; }
+\*                          { return 21; }
+!=                          { return 22; }
+\|\|                        { return 23; }
+\+                          { return 24; }
+\>\>                        { return 25; }
+\/                          { return 26;}
+  /*
+    Character Literals
+  */
+"'"                                                     { BEGIN IN_CHAR;}
+<IN_CHAR>"'"                                            { BEGIN INITIAL;}
+<IN_CHAR>({char_literal}|{escaped_char})({char_literal}|{escaped_char})+    { BEGIN INITIAL;}
+<IN_CHAR>({char_literal}|{escaped_char})/"'"            { return 28; BEGIN INITIAL;}
+  /*
+    EOF?
+  */
 .                          { cerr << "Error: unexpected character in input" << endl; return -1; }
 %%
 
@@ -44,7 +82,24 @@ int main () {
         case 8: cout << "T_ID " << lexeme << endl; break;
         case 9: cout << "T_WHITESPACE " << lexeme << endl; break;
         case 10: cout << "T_WHITESPACE \\n" << endl; break;
-        case 11: cout << "T_AND &&" << endl; break;
+        case 11: cout << "T_AND && " << endl; break;
+        case 12: cout << "T_ASSIGN = " << endl; break;
+        case 13: cout << "T_EQ == " << endl; break;
+        case 14: cout << "T_GEQ >= " << endl; break;
+        case 15: cout << "T_GT > " << endl; break;
+        case 16: cout << "T_LEFTSHIFT << " << endl; break;
+        case 17: cout << "T_LEQ <= " << endl; break;
+        case 18: cout << "T_LT < " << endl; break;
+        case 19: cout << "T_MINUS - " << endl; break;
+        case 20: cout << "T_MOD % " << endl; break;
+        case 21: cout << "T_MULT * " << endl; break;
+        case 22: cout << "T_NEQ != " << endl; break;
+        case 23: cout << "T_OR || " << endl; break;
+        case 24: cout << "T_PLUS + " << endl; break; 
+        case 25: cout << "T_RIGHTSHIFT >> " << endl; break;
+        case 26: cout << "T_DIV / " << endl; break;
+        case 27: cout << "T_SEMICOLON ;" << endl; break;
+        case 28: cout << "T_CHARCONSTANT " << lexeme << endl; break;
         default: exit(EXIT_FAILURE);
       }
     } else {

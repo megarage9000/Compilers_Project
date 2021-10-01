@@ -7,21 +7,13 @@
 
 using namespace std;
 
-string foundWhitespace = "";
-
-/* 
-<WHITESPACE>\r                  { foundWhitespace.append("\\r");}
-<WHITESPACE>\a                  { foundWhitespace.append("\\a");}
-<WHITESPACE>\v                  { foundWhitespace.append("\\v");}
-<WHITESPACE>\b                  { foundWhitespace.append("\\b");}
-<WHITESPACE>\n                  { foundWhitespace.append("\\n");}
-<WHITESPACE>" "                 { foundWhitespace.append(" ");} 
-*/
+string found_whitespace = "";
 
 %}
 
 char_literal [^\\']
 escaped_char \\(n|r|t|v|f|a|b|\\|'|\")
+not_whitespace [^\t\r\v\f\n ]
 whitespace [\t\r\v\f\n ]
 
 %%
@@ -42,15 +34,20 @@ package                    { return 3; }
 [a-zA-Z\_][a-zA-Z\_0-9]*  { return 8; }
   /* 
     Whitespace rules 
+    - For all whitespaces that do have following whitespaces, don't return
+    - For all whitespaces that do not have following whitespaces, return
   */
-
-\t                  { foundWhitespace.append("\\t");}
-\r                  { foundWhitespace.append("\\r");}
-\v                  { foundWhitespace.append("\\v");}
-\f                  { foundWhitespace.append("\\f");}
-" "                 { foundWhitespace.append("BLANK_SPACE");}
-\n                  { foundWhitespace.append("\\n"); return 9;}
-
+\t/{whitespace}                  { found_whitespace.append("\\t");}
+\r/{whitespace}                  { found_whitespace.append("\\r");}
+\v/{whitespace}                  { found_whitespace.append("\\v");}
+\f/{whitespace}                  { found_whitespace.append("\\f");}
+" "/{whitespace}                 { found_whitespace.append("BLANK_SPACE");}
+\t/{not_whitespace}                  { found_whitespace.append("\\t"); return 9;}
+\r/{not_whitespace}                  { found_whitespace.append("\\r"); return 9;}
+\v/{not_whitespace}                  { found_whitespace.append("\\v"); return 9;}
+\f/{not_whitespace}                  { found_whitespace.append("\\f"); return 9;}
+" "/{not_whitespace}                 { found_whitespace.append(" "); return 9;}
+\n                                   { found_whitespace.append("\\n"); return 9;}
   /*
     Binary operations
   */
@@ -95,7 +92,7 @@ int main () {
         case 6: cout << "T_LPAREN " << lexeme << endl; break;
         case 7: cout << "T_RPAREN " << lexeme << endl; break;
         case 8: cout << "T_ID " << lexeme << endl; break;
-        case 9: cout << "T_WHITESPACE " << foundWhitespace << endl; foundWhitespace=""; break;
+        case 9: cout << "T_WHITESPACE " << found_whitespace << endl; found_whitespace=""; break;
         case 10: cout << "T_WHITESPACE \\n" << endl; break;
         case 11: cout << "T_AND && " << endl; break;
         case 12: cout << "T_ASSIGN = " << endl; break;

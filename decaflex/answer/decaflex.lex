@@ -1,15 +1,28 @@
 
 %{
 
+#include <string>
 #include <iostream>
 #include <cstdlib>
 
 using namespace std;
 
+string foundWhitespace = "";
+
+/* 
+<WHITESPACE>\r                  { foundWhitespace.append("\\r");}
+<WHITESPACE>\a                  { foundWhitespace.append("\\a");}
+<WHITESPACE>\v                  { foundWhitespace.append("\\v");}
+<WHITESPACE>\b                  { foundWhitespace.append("\\b");}
+<WHITESPACE>\n                  { foundWhitespace.append("\\n");}
+<WHITESPACE>" "                 { foundWhitespace.append(" ");} 
+*/
+
 %}
 
 char_literal [^\\']
 escaped_char \\(n|r|t|v|f|a|b|\\|'|\")
+whitespace [\t\r\v\f\n ]
 
 %%
   /*
@@ -26,12 +39,18 @@ package                    { return 3; }
   /* 
     Identifier 
   */
-[a-zA-Z\_][a-zA-Z\_0-9]*   { return 8; }
+[a-zA-Z\_][a-zA-Z\_0-9]*  { return 8; }
   /* 
     Whitespace rules 
   */
-[\t\r\a\v\b ]+             { return 9; }
-\n                         { return 10; }
+
+\t                  { foundWhitespace.append("\\t");}
+\r                  { foundWhitespace.append("\\r");}
+\v                  { foundWhitespace.append("\\v");}
+\f                  { foundWhitespace.append("\\f");}
+" "                 { foundWhitespace.append("BLANK_SPACE");}
+\n                  { foundWhitespace.append("\\n"); return 9;}
+
   /*
     Binary operations
   */
@@ -76,7 +95,7 @@ int main () {
         case 6: cout << "T_LPAREN " << lexeme << endl; break;
         case 7: cout << "T_RPAREN " << lexeme << endl; break;
         case 8: cout << "T_ID " << lexeme << endl; break;
-        case 9: cout << "T_WHITESPACE " << lexeme << endl; break;
+        case 9: cout << "T_WHITESPACE " << foundWhitespace << endl; foundWhitespace=""; break;
         case 10: cout << "T_WHITESPACE \\n" << endl; break;
         case 11: cout << "T_AND && " << endl; break;
         case 12: cout << "T_ASSIGN = " << endl; break;

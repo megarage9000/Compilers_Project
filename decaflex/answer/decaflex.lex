@@ -13,8 +13,10 @@ string found_string = "";
 
 
 // Error source here:
-// https://people.cs.aau.dk/~marius/sw/flex/Advanced-Use-of-Flex.html (TODO: look at this!)
+// https://people.cs.aau.dk/~marius/sw/flex/Advanced-Use-of-Flex.html
 // https://stackoverflow.com/questions/656703/how-does-flex-support-bison-location-exactly#comment8854591_5811596
+// - Use YY_USER_ACTION to define function
+// that tracks line position and line column
 
 int prev_line_column = 1;
 int prev_line_position = 1;
@@ -24,9 +26,10 @@ int line_column = 1;
 void printError(std::string error){
   std::cout << error << std::endl;
   std::cout << "Lexical error: line " << prev_line_position << ", position = " << prev_line_column << std::endl;
-}
+} 
 
-// Updating line position
+// Updating line position and line column,
+// used for error checking
 static void update_position() {
   int len = yyleng;
   prev_line_column = line_column;
@@ -60,19 +63,41 @@ whitespace [\t\r\v\f\n ]
   /*
     Pattern definitions for all tokens
   */
+  /*
+    Keyword Rules
+  */
 func                       { return 1; }
 int                        { return 2; }
 package                    { return 3; }
+bool                       { return 29; }
+break                      { return 30; }
+continue                   { return 31; }
+else                       { return 32; }
+extern                     { return 33; }
+false                      { return 34; }
+for                        { return 35; }
+if                         { return 36; }
+null                       { return 37; }
+return                     { return 38; }
+string                     { return 39; }
+true                       { return 40; }
+var                        { return 41; }
+void                       { return 42; }
+while                      { return 43; }
+  /*
+    Special Character Rules
+  */
 \{                         { return 4; }
 \}                         { return 5; }
 \(                         { return 6; }
 \)                         { return 7; }
+;                           { return 27; }
   /* 
     Identifier 
   */
 [a-zA-Z\_][a-zA-Z\_0-9]*  { return 8; }
   /* 
-    Whitespace rules 
+    Whitespace Rules 
     - For all whitespaces that do have following whitespaces, don't return
     - For all whitespaces that do not have following whitespaces, return
   */
@@ -88,13 +113,13 @@ package                    { return 3; }
 " "/{not_whitespace}                 { found_whitespace.append(" "); return 9;}
 \n                                   { found_whitespace.append("\\\\n"); return 9;}
   /*
-    Comment rules
+    Comment Rules
   */
 \/\/                  { found_comment.append("/"); found_comment.append("/"); BEGIN COMMENT; }
 <COMMENT>.*           { found_comment.append(yytext);}
 <COMMENT>\n           { found_comment.append("\\\\n"); BEGIN INITIAL; return 10;}
   /*
-    Binary operations rules
+    Binary operations Rules
   */
 &&                          { return 11; }
 =                           { return 12; }
@@ -111,11 +136,7 @@ package                    { return 3; }
 \|\|                        { return 23; }
 \+                          { return 24; }
 \>\>                        { return 25; }
-\/                          { return 26;}
-  /*
-    Semicolon Rules
-  */
-;                           { return 27; }
+\/                          { return 26; }
   /*
     Character Literals Rules
   */
@@ -126,8 +147,8 @@ package                    { return 3; }
   */
 \"                          { found_string.append(yytext); BEGIN STRING; }
 <STRING>\"                  { found_string.append(yytext); BEGIN INITIAL; return 29; }    
-<STRING>\\/([^nrtvfab\\'\"]+|\n)       {printError("ERROR: unexpected escape sequence in string constant"); BEGIN INITIAL; found_string =""; return -1;}       
-<STRING>\n                        {printError("ERROR: newline in string constant"); BEGIN INITIAL;  found_string =""; return -1;}    
+<STRING>\\/([^nrtvfab\\'\"]+)       {printError("ERROR: unexpected escape sequence in string constant"); BEGIN INITIAL; found_string =""; return -1;}       
+<STRING>\n                          {printError("ERROR: newline in string constant"); BEGIN INITIAL;  found_string =""; return -1;}    
 <STRING>{char_literal}       {found_string.append(yytext);}
 <STRING>{escaped_char}       {found_string.append("\\"); found_string.append(yytext);}
   /*
@@ -144,7 +165,7 @@ int main () {
       lexeme.assign(yytext);
       switch(token) {
         case 1: cout << "T_FUNC " << lexeme << endl; break;
-        case 2: cout << "T_INT " << lexeme << endl; break;
+        case 2: cout << "T_INTTYPE " << lexeme << endl; break;
         case 3: cout << "T_PACKAGE " << lexeme << endl; break;
         case 4: cout << "T_LCB " << lexeme << endl; break;
         case 5: cout << "T_RCB " << lexeme << endl; break;
@@ -172,6 +193,20 @@ int main () {
         case 27: cout << "T_SEMICOLON ;" << endl; break;
         case 28: cout << "T_CHARCONSTANT " << lexeme << endl; break;
         case 29: cout << "T_STRINGCONSTANT " << found_string << endl; found_string=""; break;
+        case 30: cout << "T_BREAK " << endl; break;
+        case 31: cout << "T_CONTINUE " << endl; break;
+        case 32: cout << "T_ELSE " << endl; break;
+        case 33: cout << "T_EXTERN " << endl; break;
+        case 34: cout << "T_FALSE " << endl; break;
+        case 35: cout << "T_FOR " << endl; break;
+        case 36: cout << "T_IF " << endl; break;
+        case 37: cout << "T_NULL " << endl; break;
+        case 38: cout << "T_RETURN " << endl; break;
+        case 39: cout << "T_STRINGTYPE " << endl; break;
+        case 40: cout << "T_TRUE " << endl; break;
+        case 41: cout << "T_VAR " << endl; break;
+        case 42: cout << "T_VOID " << endl; break;
+        case 43: cout << "T_WHILE " << endl; break; 
         default: exit(EXIT_FAILURE);
       }
     } else {

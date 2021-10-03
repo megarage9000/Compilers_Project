@@ -11,6 +11,41 @@ string found_whitespace = "";
 string found_comment = "";
 string found_string = "";
 
+
+// Error source here:
+// https://people.cs.aau.dk/~marius/sw/flex/Advanced-Use-of-Flex.html (TODO: look at this!)
+// https://stackoverflow.com/questions/656703/how-does-flex-support-bison-location-exactly#comment8854591_5811596
+
+int prev_line_column = 1;
+int prev_line_position = 1;
+int line_position = 1;
+int line_column = 1;
+
+void printError(std::string error){
+  std::cout << error << std::endl;
+  std::cout << "Lexical error: line " << prev_line_position << ", position = " << prev_line_column << std::endl;
+}
+
+// Updating line position
+static void update_position() {
+  int len = yyleng;
+  prev_line_column = line_column;
+  prev_line_position = line_position;
+  for(int i = 0; i < len; i++){
+    if(yytext[i] == '\n'){
+      prev_line_column = line_column;
+      prev_line_position = line_position;
+      line_column = 1;
+      line_position++;
+    }
+    else{
+      line_column++;
+    }
+  }
+}
+
+#define YY_USER_ACTION  update_position();
+
 %}
 
 char_literal [^\\']
@@ -91,9 +126,9 @@ package                    { return 3; }
   */
 \"                          { found_string.append(yytext); BEGIN STRING; }
 <STRING>\"                  { found_string.append(yytext); BEGIN INITIAL; return 29; }    
-<STRING>\\[^nrtvfab\\'\"]*\"                  {std::cout << "ERROR: unexpected escape sequence in string constant\n"; BEGIN INITIAL; found_string =""; return -1;}       
-<STRING>\n                                    {std::cout << "ERROR: newline in string constant\n"; BEGIN INITIAL;  found_string =""; return -1;}    
-<STRING>{char_literal}         {found_string.append(yytext);}
+<STRING>\\/([^nrtvfab\\'\"]+|\n)       {printError("ERROR: unexpected escape sequence in string constant"); BEGIN INITIAL; found_string =""; return -1;}       
+<STRING>\n                        {printError("ERROR: newline in string constant"); BEGIN INITIAL;  found_string =""; return -1;}    
+<STRING>{char_literal}       {found_string.append(yytext);}
 <STRING>{escaped_char}       {found_string.append("\\"); found_string.append(yytext);}
   /*
     EOF?

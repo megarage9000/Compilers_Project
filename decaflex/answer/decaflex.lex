@@ -24,8 +24,8 @@ int line_position = 1;
 int line_column = 1;
 
 void printError(std::string error){
-  std::cout << error << std::endl;
-  std::cout << "Lexical error: line " << prev_line_position << ", position = " << prev_line_column << std::endl;
+  std::cerr << error << std::endl;
+  std::cerr << "Lexical error: line " << prev_line_position << ", position = " << prev_line_column << std::endl;
 } 
 
 // Updating line position and line column,
@@ -150,12 +150,16 @@ while                      { return 43; }
     Character Literals Rules
   */
 "'"({char_literal}|{escaped_char})"'"    { return 28; }
+"'"({char_literal}|{escaped_char})({char_literal}|{escaped_char})+"'"?    { printError("ERROR: char constant length is greater than one"); return -1; }
+"'"({char_literal}|{escaped_char})       { printError("ERROR: unterminated char constant"); return -1;}
+"'""'"                                   { printError("ERROR: char constant has zero width"); return -1;}
   /*
     String Rules
     - Use state to track escape sequences and newlines
   */
 \"                          { found_string.append(yytext); BEGIN STRING; }
 <STRING>\"                  { found_string.append(yytext); BEGIN INITIAL; return 29; }    
+<STRING><<EOF>>                     {printError("ERROR: string constant is missing closing delimiter"); return -1;}
 <STRING>\\/([^nrtvfab\\'\"]+)       {printError("ERROR: unexpected escape sequence in string constant"); BEGIN INITIAL; found_string =""; return -1;}       
 <STRING>\n                          {printError("ERROR: newline in string constant"); BEGIN INITIAL;  found_string =""; return -1;}    
 <STRING>{char_literal}|{escaped_char}       {found_string.append(yytext);}
@@ -186,23 +190,23 @@ int main () {
         case 8: cout << "T_ID " << lexeme << endl; break;
         case 9: cout << "T_WHITESPACE " << found_whitespace << endl; found_whitespace=""; break;
         case 10: cout << "T_COMMENT " << found_comment << endl; found_comment =""; break;
-        case 11: cout << "T_AND &&" << endl; break;
-        case 12: cout << "T_ASSIGN =" << endl; break;
-        case 13: cout << "T_EQ ==" << endl; break;
-        case 14: cout << "T_GEQ >=" << endl; break;
-        case 15: cout << "T_GT >" << endl; break;
-        case 16: cout << "T_LEFTSHIFT <<" << endl; break;
-        case 17: cout << "T_LEQ <=" << endl; break;
-        case 18: cout << "T_LT <" << endl; break;
-        case 19: cout << "T_MINUS -" << endl; break;
-        case 20: cout << "T_MOD %" << endl; break;
-        case 21: cout << "T_MULT *" << endl; break;
-        case 22: cout << "T_NEQ !=" << endl; break;
-        case 23: cout << "T_OR ||" << endl; break;
-        case 24: cout << "T_PLUS +" << endl; break; 
-        case 25: cout << "T_RIGHTSHIFT >>" << endl; break;
-        case 26: cout << "T_DIV /" << endl; break;
-        case 27: cout << "T_SEMICOLON ;" << endl; break;
+        case 11: cout << "T_AND " << lexeme << endl; break;
+        case 12: cout << "T_ASSIGN " << lexeme << endl; break;
+        case 13: cout << "T_EQ " << lexeme << endl; break;
+        case 14: cout << "T_GEQ " << lexeme << endl; break;
+        case 15: cout << "T_GT " << lexeme << endl; break;
+        case 16: cout << "T_LEFTSHIFT " << lexeme << endl; break;
+        case 17: cout << "T_LEQ " << lexeme << endl; break;
+        case 18: cout << "T_LT " << lexeme << endl; break;
+        case 19: cout << "T_MINUS " << lexeme << endl; break;
+        case 20: cout << "T_MOD " << lexeme << endl; break;
+        case 21: cout << "T_MULT " << lexeme << endl; break;
+        case 22: cout << "T_NEQ " << lexeme << endl; break;
+        case 23: cout << "T_OR " << lexeme << endl; break;
+        case 24: cout << "T_PLUS " << lexeme << endl; break; 
+        case 25: cout << "T_RIGHTSHIFT " << lexeme << endl; break;
+        case 26: cout << "T_DIV " << lexeme << endl; break;
+        case 27: cout << "T_SEMICOLON " << lexeme << endl; break;
         case 28: cout << "T_CHARCONSTANT " << lexeme << endl; break;
         case 29: cout << "T_STRINGCONSTANT " << found_string << endl; found_string=""; break;
         case 30: cout << "T_BREAK " << lexeme << endl; break;

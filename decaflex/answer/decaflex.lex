@@ -11,11 +11,7 @@ string found_whitespace = "";
 string found_comment = "";
 string found_string = "";
 
-
-// Error source here:
-// https://people.cs.aau.dk/~marius/sw/flex/Advanced-Use-of-Flex.html
-// https://stackoverflow.com/questions/656703/how-does-flex-support-bison-location-exactly#comment8854591_5811596
-// - Use YY_USER_ACTION to define function
+// Use YY_USER_ACTION to define function
 // that tracks line position and line column
 
 int prev_line_column = 1;
@@ -63,9 +59,6 @@ decimal_digit [0-9]+
 
 %%
   /*
-    Pattern definitions for all tokens
-  */
-  /*
     Keyword Rules
   */
 func                       { return 1; }
@@ -100,7 +93,7 @@ while                      { return 43; }
 \[                         { return 47; }
 \]                         { return 48; }
   /* 
-    Identifier 
+    Identifier Rule
   */
 [a-zA-Z\_][a-zA-Z\_0-9]*  { return 8; }
   /* 
@@ -119,7 +112,7 @@ while                      { return 43; }
 \v/{not_whitespace}                  { found_whitespace.append("\v"); return 9;}
 \f/{not_whitespace}                  { found_whitespace.append("\f"); return 9;}
 " "/{not_whitespace}                 { found_whitespace.append(" "); return 9;}
-\n                 { found_whitespace.append("\\n"); return 9;}
+\n                                   { found_whitespace.append("\\n"); return 9;}
 
   /*
     Comment Rules
@@ -160,7 +153,7 @@ while                      { return 43; }
 \"                          { found_string.append(yytext); BEGIN STRING; }
 <STRING>\"                  { found_string.append(yytext); BEGIN INITIAL; return 29; }    
 <STRING><<EOF>>                     {printError("ERROR: string constant is missing closing delimiter"); return -1;}
-<STRING>\\/([^nrtvfab\\'\"]+)       {printError("ERROR: unexpected escape sequence in string constant"); BEGIN INITIAL; found_string =""; return -1;}       
+<STRING>\\/([^nrtvfab\\'\"]*)       {printError("ERROR: unexpected escape sequence in string constant"); BEGIN INITIAL; found_string =""; return -1;}       
 <STRING>\n                          {printError("ERROR: newline in string constant"); BEGIN INITIAL;  found_string =""; return -1;}    
 <STRING>{char_literal}|{escaped_char}       {found_string.append(yytext);}
   /*

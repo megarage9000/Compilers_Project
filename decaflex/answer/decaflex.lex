@@ -55,6 +55,8 @@ char_literal [^\\']
 escaped_char \\(n|r|t|v|f|a|b|\\|'|\") 
 not_whitespace [^\t\r\v\f\n ]
 whitespace [\t\r\v\f\n ]
+hex_digit 0(x|X)[0-9a-zA-Z]+
+decimal_digit [0-9]+
 
 %x COMMENT
 %x STRING
@@ -69,7 +71,7 @@ whitespace [\t\r\v\f\n ]
 func                       { return 1; }
 int                        { return 2; }
 package                    { return 3; }
-bool                       { return 29; }
+bool                       { return 49; }
 break                      { return 30; }
 continue                   { return 31; }
 else                       { return 32; }
@@ -85,13 +87,18 @@ var                        { return 41; }
 void                       { return 42; }
 while                      { return 43; }
   /*
-    Special Character Rules
+    Special Character/Unary Operator Rules
   */
 \{                         { return 4; }
 \}                         { return 5; }
 \(                         { return 6; }
 \)                         { return 7; }
-;                           { return 27; }
+;                          { return 27; }
+,                          { return 44; }
+\.                         { return 45; }
+!                          { return 46; }
+\[                         { return 47; }
+\]                         { return 48; }
   /* 
     Identifier 
   */
@@ -101,23 +108,25 @@ while                      { return 43; }
     - For all whitespaces that do have following whitespaces, don't return
     - For all whitespaces that do not have following whitespaces, return
   */
-\t/{whitespace}                  { found_whitespace.append("\\t");}
-\r/{whitespace}                  { found_whitespace.append("\\r");}
-\v/{whitespace}                  { found_whitespace.append("\\v");}
-\f/{whitespace}                  { found_whitespace.append("\\f");}
+\t/{whitespace}                  { found_whitespace.append("\t");}
+\r/{whitespace}                  { found_whitespace.append("\r");}
+\v/{whitespace}                  { found_whitespace.append("\v");}
+\f/{whitespace}                  { found_whitespace.append("\f");}
 " "/{whitespace}                 { found_whitespace.append(" ");}
-\t/{not_whitespace}                  { found_whitespace.append("\\t"); return 9;}
-\r/{not_whitespace}                  { found_whitespace.append("\\r"); return 9;}
-\v/{not_whitespace}                  { found_whitespace.append("\\v"); return 9;}
-\f/{not_whitespace}                  { found_whitespace.append("\\f"); return 9;}
+\n/{whitespace}                  { found_whitespace.append("\\n");}
+\t/{not_whitespace}                  { found_whitespace.append("\t"); return 9;}
+\r/{not_whitespace}                  { found_whitespace.append("\r"); return 9;}
+\v/{not_whitespace}                  { found_whitespace.append("\v"); return 9;}
+\f/{not_whitespace}                  { found_whitespace.append("\f"); return 9;}
 " "/{not_whitespace}                 { found_whitespace.append(" "); return 9;}
-\n                                   { found_whitespace.append("\\\\n"); return 9;}
+\n                 { found_whitespace.append("\\n"); return 9;}
+
   /*
     Comment Rules
   */
 \/\/                  { found_comment.append("/"); found_comment.append("/"); BEGIN COMMENT; }
 <COMMENT>.*           { found_comment.append(yytext);}
-<COMMENT>\n           { found_comment.append("\\\\n"); BEGIN INITIAL; return 10;}
+<COMMENT>\n           { found_comment.append("\\n"); BEGIN INITIAL; return 10;}
   /*
     Binary operations Rules
   */
@@ -149,8 +158,11 @@ while                      { return 43; }
 <STRING>\"                  { found_string.append(yytext); BEGIN INITIAL; return 29; }    
 <STRING>\\/([^nrtvfab\\'\"]+)       {printError("ERROR: unexpected escape sequence in string constant"); BEGIN INITIAL; found_string =""; return -1;}       
 <STRING>\n                          {printError("ERROR: newline in string constant"); BEGIN INITIAL;  found_string =""; return -1;}    
-<STRING>{char_literal}       {found_string.append(yytext);}
-<STRING>{escaped_char}       {found_string.append("\\"); found_string.append(yytext);}
+<STRING>{char_literal}|{escaped_char}       {found_string.append(yytext);}
+  /*
+    Integer Rules
+  */
+{decimal_digit}|{hex_digit}       {return 50;} 
   /*
     EOF?
   */
@@ -174,39 +186,46 @@ int main () {
         case 8: cout << "T_ID " << lexeme << endl; break;
         case 9: cout << "T_WHITESPACE " << found_whitespace << endl; found_whitespace=""; break;
         case 10: cout << "T_COMMENT " << found_comment << endl; found_comment =""; break;
-        case 11: cout << "T_AND && " << endl; break;
-        case 12: cout << "T_ASSIGN = " << endl; break;
-        case 13: cout << "T_EQ == " << endl; break;
-        case 14: cout << "T_GEQ >= " << endl; break;
-        case 15: cout << "T_GT > " << endl; break;
-        case 16: cout << "T_LEFTSHIFT << " << endl; break;
-        case 17: cout << "T_LEQ <= " << endl; break;
-        case 18: cout << "T_LT < " << endl; break;
-        case 19: cout << "T_MINUS - " << endl; break;
-        case 20: cout << "T_MOD % " << endl; break;
-        case 21: cout << "T_MULT * " << endl; break;
-        case 22: cout << "T_NEQ != " << endl; break;
-        case 23: cout << "T_OR || " << endl; break;
-        case 24: cout << "T_PLUS + " << endl; break; 
-        case 25: cout << "T_RIGHTSHIFT >> " << endl; break;
-        case 26: cout << "T_DIV / " << endl; break;
+        case 11: cout << "T_AND &&" << endl; break;
+        case 12: cout << "T_ASSIGN =" << endl; break;
+        case 13: cout << "T_EQ ==" << endl; break;
+        case 14: cout << "T_GEQ >=" << endl; break;
+        case 15: cout << "T_GT >" << endl; break;
+        case 16: cout << "T_LEFTSHIFT <<" << endl; break;
+        case 17: cout << "T_LEQ <=" << endl; break;
+        case 18: cout << "T_LT <" << endl; break;
+        case 19: cout << "T_MINUS -" << endl; break;
+        case 20: cout << "T_MOD %" << endl; break;
+        case 21: cout << "T_MULT *" << endl; break;
+        case 22: cout << "T_NEQ !=" << endl; break;
+        case 23: cout << "T_OR ||" << endl; break;
+        case 24: cout << "T_PLUS +" << endl; break; 
+        case 25: cout << "T_RIGHTSHIFT >>" << endl; break;
+        case 26: cout << "T_DIV /" << endl; break;
         case 27: cout << "T_SEMICOLON ;" << endl; break;
         case 28: cout << "T_CHARCONSTANT " << lexeme << endl; break;
         case 29: cout << "T_STRINGCONSTANT " << found_string << endl; found_string=""; break;
-        case 30: cout << "T_BREAK " << endl; break;
-        case 31: cout << "T_CONTINUE " << endl; break;
-        case 32: cout << "T_ELSE " << endl; break;
-        case 33: cout << "T_EXTERN " << endl; break;
-        case 34: cout << "T_FALSE " << endl; break;
-        case 35: cout << "T_FOR " << endl; break;
-        case 36: cout << "T_IF " << endl; break;
-        case 37: cout << "T_NULL " << endl; break;
-        case 38: cout << "T_RETURN " << endl; break;
-        case 39: cout << "T_STRINGTYPE " << endl; break;
-        case 40: cout << "T_TRUE " << endl; break;
-        case 41: cout << "T_VAR " << endl; break;
-        case 42: cout << "T_VOID " << endl; break;
-        case 43: cout << "T_WHILE " << endl; break; 
+        case 30: cout << "T_BREAK " << lexeme << endl; break;
+        case 31: cout << "T_CONTINUE " << lexeme << endl; break;
+        case 32: cout << "T_ELSE " << lexeme << endl; break;
+        case 33: cout << "T_EXTERN " << lexeme << endl; break;
+        case 34: cout << "T_FALSE" << endl; break;
+        case 35: cout << "T_FOR " << lexeme << endl; break;
+        case 36: cout << "T_IF " << lexeme << endl; break;
+        case 37: cout << "T_NUL" << lexeme << endl; break;
+        case 38: cout << "T_RETURN " << lexeme << endl; break;
+        case 39: cout << "T_STRINGTYPE " << lexeme << endl; break;
+        case 40: cout << "T_TRUE" << endl; break;
+        case 41: cout << "T_VAR " << lexeme << endl; break;
+        case 42: cout << "T_VOID " << lexeme << endl; break;
+        case 43: cout << "T_WHILE " << lexeme << endl; break; 
+        case 44: cout << "T_COMMA " << lexeme << endl; break;
+        case 45: cout << "T_DOT" << endl; break;
+        case 46: cout << "T_NOT" << endl; break;
+        case 47: cout << "T_LSB " << lexeme << endl; break;
+        case 48: cout << "T_RSB " << lexeme << endl; break;
+        case 49: cout << "T_BOOLTYPE " << lexeme << endl; break;
+        case 50: cout << "T_INTCONSTANT " << lexeme << endl; break;
         default: exit(EXIT_FAILURE);
       }
     } else {

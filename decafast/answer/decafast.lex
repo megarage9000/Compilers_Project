@@ -8,8 +8,43 @@
 
 using namespace std;
 
-int lineno = 1;
-int tokenpos = 1;
+string found_whitespace = "";
+string found_comment = "";
+string found_string = "";
+
+// Use YY_USER_ACTION to define function
+// that tracks line position and line column
+
+int prev_line_column = 1;
+int prev_line_position = 1;
+int line_position = 1;
+int line_column = 1;
+
+void printError(std::string error){
+  std::cerr << error << std::endl;
+  std::cerr << "Lexical error: line " << prev_line_position << ", position = " << prev_line_column << std::endl;
+} 
+
+// Updating line position and line column,
+// used for error checking
+static void update_position() {
+  int len = yyleng;
+  prev_line_column = line_column;
+  prev_line_position = line_position;
+  for(int i = 0; i < len; i++){
+    if(yytext[i] == '\n'){
+      prev_line_column = line_column;
+      prev_line_position = line_position;
+      line_column = 1;
+      line_position++;
+    }
+    else{
+      line_column++;
+    }
+  }
+}
+
+#define YY_USER_ACTION  update_position();
 
 %}
 
@@ -32,37 +67,37 @@ decimal_digit [0-9]+
   /*
     Keyword Rules
   */
-func                       { return 1; }
-int                        { return 2; }
+func                       { return T_FUNC; }
+int                        { return T_INTTYPE; }
 package                    { return T_PACKAGE; }
-bool                       { return 49; }
-break                      { return 30; }
-continue                   { return 31; }
-else                       { return 32; }
-extern                     { return 33; }
-false                      { return 34; }
-for                        { return 35; }
-if                         { return 36; }
-null                       { return 37; }
-return                     { return 38; }
-string                     { return 39; }
-true                       { return 40; }
-var                        { return 41; }
-void                       { return 42; }
-while                      { return 43; }
+bool                       { return T_BOOLTYPE; }
+break                      { return T_BREAK; }
+continue                   { return T_CONTINUE; }
+else                       { return T_ELSE; }
+extern                     { return T_EXTERN; }
+false                      { return T_FALSE; }
+for                        { return T_FOR; }
+if                         { return T_IF; }
+null                       { return T_NULL; }
+return                     { return T_RETURN; }
+string                     { return T_STRINGTYPE; }
+true                       { return T_TRUE; }
+var                        { return T_VAR; }
+void                       { return T_VOID; }
+while                      { return T_WHILE; }
   /*
     Special Character/Unary Operator Rules
   */
 \{                         { return T_LCB; }
 \}                         { return T_RCB; }
-\(                         { return 6; }
-\)                         { return 7; }
-;                          { return 27; }
-,                          { return 44; }
-\.                         { return 45; }
-!                          { return 46; }
-\[                         { return 47; }
-\]                         { return 48; }
+\(                         { return T_LPAREN; }
+\)                         { return T_RPAREN; }
+;                          { return T_SEMICOLON; }
+,                          { return T_COMMA; }
+\.                         { return T_DOT; }
+!                          { return T_NOT; }
+\[                         { return T_LSB; }
+\]                         { return T_RSB; }
   /* 
     Identifier Rule
   */
@@ -93,30 +128,30 @@ while                      { return 43; }
   */
 \/\/                  { found_comment.append("/"); found_comment.append("/"); BEGIN COMMENT; }
 <COMMENT>.*           { found_comment.append(yytext);}
-<COMMENT>\n           { found_comment.append("\\n"); BEGIN INITIAL; return 10;}
+<COMMENT>\n           { found_comment.append("\\n"); BEGIN INITIAL; return T_COMMENT;}
   /*
     Binary operations Rules
   */
-&&                          { return 11; }
-=                           { return 12; }
-==                          { return 13; }
-\>=                         { return 14; }
-\>                          { return 15; }
-\<\<                        { return 16; }
-\<=                         { return 17; }
-\<                          { return 18; }
-"-"                         { return 19; }
-%                           { return 20; }
-\*                          { return 21; }
-!=                          { return 22; }
-\|\|                        { return 23; }
-\+                          { return 24; }
-\>\>                        { return 25; }
-\/                          { return 26; }
+&&                          { return T_AND; }
+=                           { return T_ASSIGN; }
+==                          { return T_EQ; }
+\>=                         { return T_GEQ; }
+\>                          { return T_GT; }
+\<\<                        { return T_LEFTSHIFT; }
+\<=                         { return T_LEQ; }
+\<                          { return T_LT; }
+"-"                         { return T_MINUS; }
+%                           { return T_MOD; }
+\*                          { return T_MULT; }
+!=                          { return T_NEQ; }
+\|\|                        { return T_OR; }
+\+                          { return T_PLUS; }
+\>\>                        { return T_RIGHTSHIFT; }
+\/                          { return T_DIV; }
   /*
     Character Literals Rules
   */
-"'"({char_literal}|{escaped_char})"'"    { return 28; }
+"'"({char_literal}|{escaped_char})"'"    { return T_CHARCONSTANT; }
 "'"({char_literal}|{escaped_char})({char_literal}|{escaped_char})+"'"?    { printError("ERROR: char constant length is greater than one"); return -1; }
 "'"({char_literal}|{escaped_char})       { printError("ERROR: unterminated char constant"); return -1;}
 "'""'"                                   { printError("ERROR: char constant has zero width"); return -1;}
@@ -125,7 +160,7 @@ while                      { return 43; }
     - Use state to track escape sequences and newlines
   */
 \"                          { found_string.append(yytext); BEGIN STRING; }
-<STRING>\"                  { found_string.append(yytext); BEGIN INITIAL; return 29; }    
+<STRING>\"                  { found_string.append(yytext); BEGIN INITIAL; return T_STRINGCONSTANT; }    
 <STRING><<EOF>>                     {printError("ERROR: string constant is missing closing delimiter"); return -1;}
 <STRING>\\/([^nrtvfab\\'\"]*)       {printError("ERROR: unexpected escape sequence in string constant"); BEGIN INITIAL; found_string =""; return -1;}       
 <STRING>\n                          {printError("ERROR: newline in string constant"); BEGIN INITIAL;  found_string =""; return -1;}    
@@ -133,7 +168,7 @@ while                      { return 43; }
   /*
     Integer Rules
   */
-{decimal_digit}|{hex_digit}       {return 50;} 
+{decimal_digit}|{hex_digit}       {return T_INTCONSTANT;} 
   /*
     EOF?
   */
@@ -141,7 +176,6 @@ while                      { return 43; }
 %%
 
 int yyerror(const char *s) {
-  cerr << lineno << ": " << s << " at char " << tokenpos << endl;
+  cerr << prev_line_position  << ": " << s << " at char " << prev_line_position  << endl;
   return 1;
 }
-

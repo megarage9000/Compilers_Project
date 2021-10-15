@@ -1,1 +1,2 @@
-Error: unexpected character in input
+ERROR: newline in string constant
+Lexical error: line 11, position = 27

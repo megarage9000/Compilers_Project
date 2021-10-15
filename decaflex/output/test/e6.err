@@ -1,1 +1,2 @@
-Error: unexpected character in input
+ERROR: char constant length is greater than one
+Lexical error: line 14, position = 2

@@ -1,0 +1,8 @@
+a = sqrt(9)
+b = log(10)
+c = exp(2)
+e = a + b - exp(c)
+f = log(10) + exp(a)
+
+
+

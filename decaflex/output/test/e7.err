@@ -1,1 +1,2 @@
-Error: unexpected character in input
+ERROR: char constant has zero width
+Lexical error: line 8, position = 12

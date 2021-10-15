@@ -151,7 +151,7 @@ while                      { return T_WHILE; }
   /*
     Character Literals Rules
   */
-"'"({char_literal}|{escaped_char})"'"    { return T_CHARCONSTANT; }
+"'"({char_literal}|{escaped_char})"'"    { yylval.sval = new string(yytext);return T_CHARCONSTANT; }
 "'"({char_literal}|{escaped_char})({char_literal}|{escaped_char})+"'"?    { printError("ERROR: char constant length is greater than one"); return -1; }
 "'"({char_literal}|{escaped_char})       { printError("ERROR: unterminated char constant"); return -1;}
 "'""'"                                   { printError("ERROR: char constant has zero width"); return -1;}
@@ -160,7 +160,7 @@ while                      { return T_WHILE; }
     - Use state to track escape sequences and newlines
   */
 \"                          { found_string.append(yytext); BEGIN STRING; }
-<STRING>\"                  { found_string.append(yytext); BEGIN INITIAL; return T_STRINGCONSTANT; }    
+<STRING>\"                  { found_string.append(yytext); yylval.sval = new string(found_string); BEGIN INITIAL; return T_STRINGCONSTANT; }    
 <STRING><<EOF>>                     {printError("ERROR: string constant is missing closing delimiter"); return -1;}
 <STRING>\\/([^nrtvfab\\'\"]*)       {printError("ERROR: unexpected escape sequence in string constant"); BEGIN INITIAL; found_string =""; return -1;}       
 <STRING>\n                          {printError("ERROR: newline in string constant"); BEGIN INITIAL;  found_string =""; return -1;}    
@@ -168,7 +168,7 @@ while                      { return T_WHILE; }
   /*
     Integer Rules
   */
-{decimal_digit}|{hex_digit}       {return T_INTCONSTANT;} 
+{decimal_digit}|{hex_digit}       {yylval.sval = new string(yytext); return T_INTCONSTANT;} 
   /*
     EOF?
   */
@@ -176,6 +176,6 @@ while                      { return T_WHILE; }
 %%
 
 int yyerror(const char *s) {
-  cerr << prev_line_position  << ": " << s << " at char " << prev_line_position  << endl;
+  printError(s);
   return 1;
 }

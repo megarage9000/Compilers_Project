@@ -15,6 +15,8 @@ bool printAST = true;
 
 using namespace std;
 
+extern string getString(decafAST * d);
+
 %}
 
 %define parse.error verbose
@@ -22,14 +24,13 @@ using namespace std;
 %union{
     class decafAST *ast;
     std::string *sval;
-    std::string np_sval;
  }
 
 %token T_PACKAGE
 %token T_LCB
 %token T_RCB
 // Operations
-%token<np_sval> T_AND T_ASSIGN T_DIV T_DOT T_EQ T_GEQ T_GT T_LEFTSHIFT T_RIGHTSHIFT T_LEQ T_LT T_MINUS T_MOD T_MULT T_NEQ T_NOT T_OR T_PLUS 
+%token<sval> T_AND T_ASSIGN T_DIV T_DOT T_EQ T_GEQ T_GT T_LEFTSHIFT T_RIGHTSHIFT T_LEQ T_LT T_MINUS T_MOD T_MULT T_NEQ T_NOT T_OR T_PLUS 
 // Special Characters
 %token T_COMMA T_LPAREN T_RPAREN T_LSB T_RSB T_SEMICOLON
 // Keywords
@@ -42,44 +43,55 @@ using namespace std;
 // Misc
 %token T_COMMENT T_WHITESPACE
 
+// Precedence
+%left T_OR
+%left T_AND
+%left T_EQ T_NEQ T_GT T_LT T_GEQ T_LEQ 
 %left T_PLUS T_MINUS
-%left T_MULT T_DIV
+%left T_MULT T_DIV T_RIGHTSHIFT T_LEFTSHIFT T_MOD
 %left T_LPAREN T_RPAREN
-%left UMINUS
+%left U_NOT
+%left U_MINUS
 
 // %type <ast> extern_list decafpackage
-%type <sval>  constant expression 
-%type <np_sval> binary_operator
+%type <ast>  constant unary_operation binary_operation expression 
 
 %%
 
 start: expression
 
-expression: constant                          {$$ = $1;}
-    | expression binary_operator expression   {std::cout << "Expression = " << ($1)* << $2 << ($3)* << '\n';}
-    | T_LPAREN expression T_RPAREN            {std::cout << "Braced Expression = (" << ($2)* << ")\n";}
+/* Expressions */
+expression: constant                          {$$ = $1; debugAST($$);}
+    | binary_operation                        {$$ = $1; debugAST($$);}
+    | unary_operation                         {$$ = $1; debugAST($$);}
+    | T_LPAREN expression T_RPAREN            {$$ = $2; debugAST($$);}
     ;
 
 /* Operators */
-binary_operator:  T_PLUS {$$ = "+";}
-    | T_MINUS   {$$ = "-";}
-    | T_MULT    {$$ = "*";}
-    | T_DIV     {$$ = "/";}
-    | T_GT      {$$ = ">";}
+binary_operation:  expression T_PLUS expression {$$ = new Binary_Expr($1, $3, PLUS);}
+    | expression T_MINUS expression   {$$ = new Binary_Expr($1, $3, MINUS);}
+    | expression T_MULT expression    {$$ = new Binary_Expr($1, $3, MULT);}
+    | expression T_DIV expression     {$$ = new Binary_Expr($1, $3, DIV);}
+    | expression T_MOD expression     {$$ = new Binary_Expr($1, $3, MOD);}
+    | expression T_LT expression      {$$ = new Binary_Expr($1, $3, LT);}
+    | expression T_GT expression      {$$ = new Binary_Expr($1, $3, GT);}
+    | expression T_GEQ expression     {$$ = new Binary_Expr($1, $3, GEQ);}
+    | expression T_EQ expression      {$$ = new Binary_Expr($1, $3, EQ);}
+    | expression T_NEQ expression     {$$ = new Binary_Expr($1, $3, NEQ);}
+    | expression T_AND expression     {$$ = new Binary_Expr($1, $3, AND);}
+    | expression T_OR expression      {$$ = new Binary_Expr($1, $3, NOT);}
     ;
 
+unary_operation: T_MINUS expression %prec U_MINUS {$$ = new Unary_Expr($2, UNARY_MINUS);}
+    | T_NOT expression %prec U_NOT {$$ = new Unary_Expr($2, NOT);}
 
 /* Constants */
-constant: T_STRINGCONSTANT  {std::cout << "constant = " << *($1) << '\n'; $$ = $1;}
-    | T_CHARCONSTANT {std::cout << "constant =" << *($1) << '\n'; $$ = $1;}
-    | T_INTCONSTANT  {std::cout << "constant =" << $1 << '\n'; $$ = $1;}
-    | T_MINUS T_INTCONSTANT %prec UMINUS {
-                                            std::string unaryConst = '-' + *($2); 
-                                            std::cout << "constant =" << unaryConst<< '\n'; 
-                                            $$ = new std::string(unaryConst);
-                                        }
+constant: T_STRINGCONSTANT  {$$ = new Constant_Expr($1, STRING);}
+    | T_CHARCONSTANT {$$ = new Constant_Expr($1, CHAR);}
+    | T_INTCONSTANT  {$$ = new Constant_Expr($1, INT);}
+    | T_FALSE        {$$ = new Constant_Expr($1, BOOL);}
+    | T_TRUE         {$$ = new Constant_Expr($1, BOOL);}
     ;
-
 %%
     // TODO remember to bring back!
 // start: program

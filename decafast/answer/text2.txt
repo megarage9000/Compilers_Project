@@ -1,1 +1,1 @@
-20 + 20
+"What the hell" < 100 >= true != 8 > -false

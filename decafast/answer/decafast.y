@@ -23,6 +23,8 @@ using namespace std;
 %union{
     class decafAST *ast;
     class decafStmtList *list;
+    class Typed_Symbol * typed_sym;
+    class Constant_Expr * constant_type;
     std::string *sval;
  }
 
@@ -53,12 +55,34 @@ using namespace std;
 %left U_MINUS
 
 // %type <ast> extern_list decafpackage
-%type<ast> constant unary_operation binary_operation expression 
-%type<ast> assign rvalue method_call
-%type<list> method_args
-
+%type<ast> unary_operation binary_operation expression statement 
+%type<ast> assign rvalue method_call field_decl
+%type<list> method_args statement_list
+%type<typed_sym> typed_symbol
+%type<constant_type> constant
 
 %%
+
+start: statement_list
+    | statement
+    ;
+
+statement_list: statement statement     {$$ = new decafStmtList(); $$->push_front($1); $$->push_back($2); debugAST($$);}
+        | statement_list statement      {$1->push_back($2); $$ = $1; debugAST($$);}
+
+/* statement */
+statement: assign T_SEMICOLON                {$$ = $1; debugAST($$);}
+        | method_call T_SEMICOLON            {$$ = $1; debugAST($$);}
+
+/* Field, Variable declarations */
+field_decl: typed_symbol {$$ = new Field_Decl($1, SCALAR); debugAST($$);}
+    | typed_symbol T_ASSIGN constant    {$$ = new Assign_Global($1, getString($3)); debugAST($$);}
+    | typed_symbol T_LSB constant T_RSB {$$ = new Field_Decl($1, ARRAY, $3->getValue()); debugAST($$);}
+
+typed_symbol: T_VAR T_ID T_BOOLTYPE {$$ = new Typed_Symbol($2, BOOL); debugAST($$);}
+    | T_VAR T_ID T_STRINGTYPE {$$ = new Typed_Symbol($2, STRING); debugAST($$); }
+    | T_VAR T_ID T_INTTYPE {$$ = new Typed_Symbol($2, INT); debugAST($$);}
+
 /* Variable Assignments */
 assign: T_ID T_ASSIGN expression {$$ = new Assign_Var($1, $3); debugAST($$);}
     | T_ID T_LSB expression T_RSB T_ASSIGN expression {$$ = new Assign_Arr_Loc($1, $3, $6); debugAST($$);}
@@ -72,7 +96,7 @@ method_call: T_ID T_LPAREN T_RPAREN {$$ = new Method_Call($1); debugAST($$);}
         | T_ID T_LPAREN method_args T_RPAREN    {$$ = new Method_Call($1, $3);}
 
 method_args: expression T_COMMA expression     {$$ = new decafStmtList(); $$->push_front($1); $$->push_back($3);}
-    | method_args T_COMMA expression           {$1->push_back($3); $$ = $1;}
+    | method_args T_COMMA expression           {$1->push_back($3); $$ = $1; }
     ;
 
 /* Expressions */

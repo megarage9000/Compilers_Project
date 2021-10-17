@@ -101,6 +101,7 @@ class Constant_Expr : public decafAST {
 public:
 	Constant_Expr(string * val, const_type val_type) : val_rep(*val), val_type(val_type){}
 	~Constant_Expr(){}
+	string getValue() {return val_rep; }
 	string str() {
 		string return_val;
 		switch (val_type){
@@ -300,5 +301,112 @@ public:
 			return "MethodCall(" + identifier + ")";
 		}
 		return "MethodCall(" + identifier +"," + getString(method_args) + ")";
+	}
+};
+
+// Variable declarations
+class Typed_Symbol : public decafAST {
+	string identifier;
+	const_type sym_type;
+public:
+	Typed_Symbol(string * id, const_type type) : identifier(*id), sym_type(type) {}
+	Typed_Symbol(string id , const_type type) : identifier(id), sym_type(type) {}
+	Typed_Symbol(const_type type) : identifier(""), sym_type(type) {}
+	~Typed_Symbol() {}
+	string str() {
+		string returnVal = "VarDef(";
+		if(identifier != "") {
+			returnVal += identifier + ",";
+		}
+		switch (sym_type) {
+			case INT:
+				return returnVal + "IntType)";
+				break;
+			case STRING:
+				return returnVal + "StringType)";
+				break;
+			case BOOL:
+				return returnVal + "BoolType)";
+				break;
+			default:
+				break;
+		}
+		return returnVal;
+	}
+	string getIdentifier() { return identifier; }
+	const_type getType()   { return sym_type; }
+}; 
+
+typedef enum {SCALAR, ARRAY} field_size;
+class Field_Decl : public decafAST{
+	field_size size;
+	string identifier;
+	const_type sym_type;
+	string val_size;
+public:
+	Field_Decl(Typed_Symbol * declaration, field_size sz) 
+	: identifier(declaration->getIdentifier()), sym_type(declaration->getType()), size(sz) {val_size="";}
+	Field_Decl(string * id, const_type type, field_size sz) 
+	: identifier(*id), sym_type(type), size(sz) {val_size="";}
+	Field_Decl(Typed_Symbol * declaration, field_size sz, string v_size) 
+	: identifier(declaration->getIdentifier()), sym_type(declaration->getType()), size(sz), val_size(v_size) {}
+	Field_Decl(string * id, const_type type, field_size sz, string v_size) 
+	: identifier(*id), sym_type(type), size(sz), val_size(v_size) {}	
+	~Field_Decl() {}
+	string str() {
+		string returnVal = "FieldDecl(";
+		if(identifier != "") {
+			returnVal += identifier + ",";
+		}
+		switch (sym_type) {
+			case INT:
+				returnVal += "IntType";
+				break;
+			case STRING:
+				returnVal += "StringType";
+				break;
+			case BOOL:
+				returnVal += "BoolType";
+				break;
+			default:
+				break;
+		}
+		if(size == SCALAR) {
+			returnVal += ",Scalar)";
+		}
+		else if (val_size != ""){
+			returnVal += ",Array(" + val_size + "))";
+		}
+		return returnVal;
+	}
+};
+
+class Assign_Global : public decafAST {
+	string identifier;
+	string value;
+	const_type sym_type;
+public:
+	Assign_Global(Typed_Symbol * declaration, string val):
+	identifier(declaration->getIdentifier()), sym_type(declaration->getType()), value(val) {}
+	Assign_Global(string id, const_type type, string val):
+	identifier(id), sym_type(type), value(val) {}
+	~Assign_Global() {}
+	string str() {
+		string returnVal = "AssignGlobalVar(" + identifier + ",";
+		switch (sym_type) {
+			case INT:
+				returnVal += "IntType";
+				break;
+			case STRING:
+				returnVal += "StringType";
+				break;
+			case BOOL:
+				returnVal += "BoolType";
+				break;
+			default:
+				break;
+		}
+		returnVal += "," + value + ")";
+		return returnVal;
 	}
 };

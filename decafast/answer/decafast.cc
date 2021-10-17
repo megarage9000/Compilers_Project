@@ -89,7 +89,7 @@ public:
 	string str() { return string("Program") + "(" + getString(ExternList) + "," + getString(PackageDef) + ")"; }
 };
 
-/// Expression Constants
+/// Constant Expressions 
 /// - For String, Int and Boolean values
 typedef enum {
 	STRING, INT, BOOL, CHAR
@@ -125,7 +125,7 @@ public:
 	}
 };
 
-/// Operator Expression
+/// Operator Expressions
 typedef enum {
 	PLUS, MINUS, MULT, DIV, 
 	LEFT_SHIFT, RIGHT_SHIFT, 
@@ -142,8 +142,8 @@ class Binary_Expr : public decafAST {
 public:
 	Binary_Expr(decafAST * l_val, decafAST * r_val, type_op op) : left_val(l_val), right_val(r_val), operator_type(op) {}
 	~Binary_Expr() {
-		if (!left_val) {delete left_val;}
-		if (!right_val) {delete right_val;}
+		if (left_val) {delete left_val;}
+		if (right_val) {delete right_val;}
 	}
 	string str() {
 		string return_val = "BinaryExpr(";
@@ -208,7 +208,7 @@ class Unary_Expr: public decafAST {
 public:
 	Unary_Expr(decafAST * val, type_op op) : value(val), operator_type(op) {}
 	~Unary_Expr() {
-		if (!value) {delete value;}
+		if (value) {delete value;}
 	}
 	string str() {
 		string return_val = "UnaryExpr(";
@@ -225,5 +225,80 @@ public:
 				break;
 		}
 		return return_val + getString(value) + ")";
+	}
+};
+
+/// Variable / Array Assignments and Expressions
+class Assign_Var: public decafAST {
+	decafAST * value;
+	string identifier;
+public:
+	Assign_Var(string * id, decafAST * val) : value(val), identifier(*id) {}
+	~Assign_Var() {
+		if(value) { delete value; }
+	}
+	string str() {
+		return "AssignVar(" + identifier + "," + getString(value) + ")";
+	}	
+};
+
+class Assign_Arr_Loc: public decafAST {
+	decafAST * value;
+	decafAST * index;
+	string identifier;
+public:
+	Assign_Arr_Loc(string * id, decafAST * loc, decafAST * val) : identifier(*id), index(loc), value(val) {}
+	~Assign_Arr_Loc() {
+		if(value) { delete value; }
+		if(index) { delete index; }
+	}
+	string str() {
+		return "AssignArrayLoc(" + identifier + "," + getString(index) + "," + getString(value) + ")";
+	}
+};
+
+class Var_Expr: public decafAST {
+	string identifier;
+public:
+	Var_Expr(string * id) : identifier(*id) {}
+	~Var_Expr() {}
+	string str() {
+		return "VariableExpr(" + identifier + ")";
+	}	
+};
+
+class Arr_Loc_Expr: public decafAST {
+	decafAST * index;
+	string identifier;
+public:
+	Arr_Loc_Expr(string * id, decafAST * loc) : identifier(*id), index(loc){}
+	~Arr_Loc_Expr() {
+		if(index) { delete index; }
+	}
+	string str() {
+		return "ArrayLocExpr(" + identifier + "," + getString(index) + ")";
+	}
+};
+
+/// Methods
+class Method_Call: public decafAST {
+	// Use statement list for method_args
+	decafStmtList * method_args;
+	string identifier;
+public:
+	Method_Call(string * id, decafStmtList * args_list): identifier(*id), method_args(args_list) {}
+	Method_Call(string * id, decafAST * single_arg): identifier(*id) {
+		method_args = new decafStmtList();
+		method_args->push_back(single_arg);
+	}
+	Method_Call(string * id) : identifier(*id), method_args(NULL) {}
+	~Method_Call(){
+		if(method_args) { delete method_args; }
+	}
+	string str() {
+		if(!method_args) {
+			return "MethodCall(" + identifier + ")";
+		}
+		return "MethodCall(" + identifier +"," + getString(method_args) + ")";
 	}
 };

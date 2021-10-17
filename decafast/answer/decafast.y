@@ -15,7 +15,6 @@ bool printAST = true;
 
 using namespace std;
 
-extern string getString(decafAST * d);
 
 %}
 
@@ -23,6 +22,7 @@ extern string getString(decafAST * d);
 
 %union{
     class decafAST *ast;
+    class decafStmtList *list;
     std::string *sval;
  }
 
@@ -40,7 +40,6 @@ extern string getString(decafAST * d);
 // Types
 %token<sval> T_ID
 
-// Misc
 %token T_COMMENT T_WHITESPACE
 
 // Precedence
@@ -54,16 +53,34 @@ extern string getString(decafAST * d);
 %left U_MINUS
 
 // %type <ast> extern_list decafpackage
-%type <ast>  constant unary_operation binary_operation expression 
+%type<ast> constant unary_operation binary_operation expression 
+%type<ast> assign rvalue method_call
+%type<list> method_args
+
 
 %%
+/* Variable Assignments */
+assign: T_ID T_ASSIGN expression {$$ = new Assign_Var($1, $3); debugAST($$);}
+    | T_ID T_LSB expression T_RSB T_ASSIGN expression {$$ = new Assign_Arr_Loc($1, $3, $6); debugAST($$);}
+    ;
 
-start: expression
+/* Methods and Method args*/
+method_call: T_ID T_LPAREN T_RPAREN {$$ = new Method_Call($1); debugAST($$);}
+        /* Single arg*/
+        | T_ID T_LPAREN expression T_RPAREN     {$$ = new Method_Call($1, $3); debugAST($$);}
+        /* Mutliple args*/
+        | T_ID T_LPAREN method_args T_RPAREN    {$$ = new Method_Call($1, $3);}
+
+method_args: expression T_COMMA expression     {$$ = new decafStmtList(); $$->push_front($1); $$->push_back($3);}
+    | method_args T_COMMA expression           {$1->push_back($3); $$ = $1;}
+    ;
 
 /* Expressions */
 expression: constant                          {$$ = $1; debugAST($$);}
     | binary_operation                        {$$ = $1; debugAST($$);}
     | unary_operation                         {$$ = $1; debugAST($$);}
+    | rvalue                                  {$$ = $1; debugAST($$);}
+    | method_call                             {$$ = $1; debugAST($$);}
     | T_LPAREN expression T_RPAREN            {$$ = $2; debugAST($$);}
     ;
 
@@ -82,6 +99,11 @@ binary_operation:  expression T_PLUS expression {$$ = new Binary_Expr($1, $3, PL
     | expression T_OR expression      {$$ = new Binary_Expr($1, $3, NOT);}
     ;
 
+/* R Values */
+rvalue: T_ID T_LSB expression T_RSB   {$$ = new Arr_Loc_Expr($1, $3); debugAST($$);} 
+    | T_ID                            {$$ = new Var_Expr($1); debugAST($$);}
+    ;
+
 unary_operation: T_MINUS expression %prec U_MINUS {$$ = new Unary_Expr($2, UNARY_MINUS);}
     | T_NOT expression %prec U_NOT {$$ = new Unary_Expr($2, NOT);}
 
@@ -93,7 +115,7 @@ constant: T_STRINGCONSTANT  {$$ = new Constant_Expr($1, STRING);}
     | T_TRUE         {$$ = new Constant_Expr($1, BOOL);}
     ;
 %%
-    // TODO remember to bring back!
+// TODO remember to bring back!
 // start: program
 // program: extern_list decafpackage
 //     { 

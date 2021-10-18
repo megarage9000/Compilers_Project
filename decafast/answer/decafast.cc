@@ -481,20 +481,20 @@ public:
 	Block(decafAST * declaration, decafStmtList * stmts) {
 		statement_list = stmts;
 		variable_decls = new decafStmtList();
-		if(!declaration) {variable_decls->push_front(declaration);}
+		if(declaration) {variable_decls->push_front(declaration);}
 		
 	}
 	Block(decafStmtList * decls, decafAST * statement) {
 		variable_decls = decls;
 		statement_list = new decafStmtList();
-		if(!statement) {statement_list->push_front(statement);}
+		if(statement) {statement_list->push_front(statement);}
 	}
 	// If only one statement and one declaration
 	Block(decafAST * declaration, decafAST * statement) {
 		variable_decls = new decafStmtList();
-		if(!declaration) {variable_decls->push_front(declaration);}
+		if(declaration) {variable_decls->push_front(declaration);}
 		statement_list = new decafStmtList();
-		if(!statement) {statement_list->push_front(statement);}
+		if(statement) {statement_list->push_front(statement);}
 	}
 	~Block() {
 		if(variable_decls) { delete variable_decls; }

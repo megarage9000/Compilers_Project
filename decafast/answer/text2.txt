@@ -1,0 +1,7 @@
+{
+    var x, y, z int;
+    {
+        var h bool;
+        h = true;
+    }
+}

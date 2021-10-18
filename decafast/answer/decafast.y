@@ -75,19 +75,23 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 
 %%
 
-start: field_decl {debugAST($1);}
-    | field_decl_list     {debugAST($1);}
+start: statement        {debugAST($1);}
+    | statement_list    {debugAST($1);}
     ;
 
 /* Blocks */
 
-method_block: block     {$$ = new Method_Block($1);}
+method_block: block     {$$ = new Method_Block(dynamic_cast<Block *>($1));}
 
 block: T_LCB typed_symbol_list_decl statement_list T_RCB {$$ = new Block($2, $3);}
     | T_LCB typed_symbol_decl statement_list T_RCB {$$ = new Block($2, $3);}
     | T_LCB typed_symbol_list_decl statement T_RCB {$$ = new Block($2, $3);}
     | T_LCB typed_symbol_decl statement T_RCB      {$$ = new Block($2, $3);}
-    | T_LCB T_RCB                                  {$$ = new Block(nullptr, nullptr);}
+    | T_LCB typed_symbol_decl T_RCB                {$$ = new Block($2, new decafStmtList());}
+    | T_LCB typed_symbol_list_decl T_RCB           {$$ = new Block($2, new decafStmtList());}
+    | T_LCB statement T_RCB                        {$$ = new Block(new decafStmtList(), $2);}
+    | T_LCB statement_list T_RCB                   {$$ = new Block(new decafStmtList(), $2);}
+    | T_LCB T_RCB                                  {$$ = new Block(new decafStmtList(), new decafStmtList());}
 
 /* Statement and Statements */
 statement_list: statement statement     {$$ = initialize_recursive_list($1, $2); }
@@ -95,6 +99,7 @@ statement_list: statement statement     {$$ = initialize_recursive_list($1, $2);
 
 statement: assign T_SEMICOLON                {$$ = $1; }
         | method_call T_SEMICOLON            {$$ = $1; }
+        | block                 {$$ = $1; }
 
 /* Field declarations */
 field_decl_list: field_decl field_decl {
@@ -177,7 +182,7 @@ method_call: T_ID T_LPAREN T_RPAREN {$$ = new Method_Call($1); }
         /* Mutliple args*/
         | T_ID T_LPAREN method_args T_RPAREN    {$$ = new Method_Call($1, $3);}
 
-method_args: expression T_COMMA expression     {$$ = initialize_recursive_list($1, $3)}
+method_args: expression T_COMMA expression     {$$ = initialize_recursive_list($1, $3);}
     | method_args T_COMMA expression           {$1->push_back($3); $$ = $1; }
     ;
 

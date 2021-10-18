@@ -25,7 +25,9 @@ using namespace std;
     class decafStmtList *list;
     class Typed_Symbol * typed_sym;
     class Constant_Expr * constant_type;
+    class Untyped_Symbols * untyped_list;
     std::string *sval;
+    
  }
 
 %token T_PACKAGE
@@ -45,6 +47,8 @@ using namespace std;
 %token T_COMMENT T_WHITESPACE
 
 // Precedence
+%left VAR_DECL
+%left FIELD_DECL
 %left T_OR
 %left T_AND
 %left T_EQ T_NEQ T_GT T_LT T_GEQ T_LEQ 
@@ -56,15 +60,15 @@ using namespace std;
 
 // %type <ast> extern_list decafpackage
 %type<ast> unary_operation binary_operation expression statement 
-%type<ast> assign rvalue method_call field_decl
+%type<ast> assign rvalue method_call field_decl typed_symbols
 %type<list> method_args statement_list
 %type<typed_sym> typed_symbol
 %type<constant_type> constant
+%type<untyped_list> untyped_symbols
 
 %%
 
-start: statement_list
-    | statement
+start: field_decl T_SEMICOLON
     ;
 
 statement_list: statement statement     {$$ = new decafStmtList(); $$->push_front($1); $$->push_back($2); debugAST($$);}
@@ -75,9 +79,25 @@ statement: assign T_SEMICOLON                {$$ = $1; debugAST($$);}
         | method_call T_SEMICOLON            {$$ = $1; debugAST($$);}
 
 /* Field, Variable declarations */
+
 field_decl: typed_symbol {$$ = new Field_Decl($1, SCALAR); debugAST($$);}
     | typed_symbol T_ASSIGN constant    {$$ = new Assign_Global($1, getString($3)); debugAST($$);}
     | typed_symbol T_LSB constant T_RSB {$$ = new Field_Decl($1, ARRAY, $3->getValue()); debugAST($$);}
+    | typed_symbols {$$ = createFieldDeclList(dynamic_cast<decafStmtList *>($1)); debugAST($$);}
+    | typed_symbols T_LSB constant T_RSB {$$ = createFieldDeclListArr(dynamic_cast<decafStmtList *>($1), $3->getValue()); debugAST($$);}
+
+
+typed_symbols: T_VAR untyped_symbols T_BOOLTYPE { $$ = createTypedSymbolList($2, BOOL); debugAST($$);}
+    | T_VAR untyped_symbols T_STRINGTYPE { $$ = createTypedSymbolList($2, STRING); debugAST($$);}
+    | T_VAR untyped_symbols T_INTTYPE { $$ = createTypedSymbolList($2, INT); debugAST($$);}
+
+untyped_symbols: T_ID T_COMMA T_ID {
+        $$ = new Untyped_Symbols();
+        $$->push_front(new Untyped_Symbol($1)); 
+        $$->push_back(new Untyped_Symbol($3)); 
+    }
+    | untyped_symbols T_COMMA T_ID          {$1->push_back(new Untyped_Symbol($3)); $$ = $1;}
+
 
 typed_symbol: T_VAR T_ID T_BOOLTYPE {$$ = new Typed_Symbol($2, BOOL); debugAST($$);}
     | T_VAR T_ID T_STRINGTYPE {$$ = new Typed_Symbol($2, STRING); debugAST($$); }

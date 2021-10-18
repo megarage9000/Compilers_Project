@@ -44,6 +44,7 @@ string commaList(list<T> vec) {
     return s;
 }
 
+
 /// decafStmtList - List of Decaf statements
 class decafStmtList : public decafAST {
 	list<decafAST *> stmts;
@@ -58,6 +59,7 @@ public:
 	void push_front(decafAST *e) { stmts.push_front(e); }
 	void push_back(decafAST *e) { stmts.push_back(e); }
 	string str() { return commaList<class decafAST *>(stmts); }
+	list<decafAST *> values() { return stmts; }
 };
 
 class PackageAST : public decafAST {
@@ -337,7 +339,43 @@ public:
 	const_type getType()   { return sym_type; }
 }; 
 
+// Special case of multiple statements
+class Untyped_Symbol {
+	string identifier;
+public:
+	Untyped_Symbol(string * id) : identifier(*id) {}
+	~Untyped_Symbol() {}
+	string getId() { return identifier; }
+};
+
+class Untyped_Symbols {
+	list<Untyped_Symbol*> values;
+public:
+	Untyped_Symbols() {}
+	~Untyped_Symbols() {
+		for(Untyped_Symbol * sym: values) {
+			delete sym;
+		}
+	}
+	void push_back(Untyped_Symbol * symbol) { values.push_back(symbol);}
+	void push_front(Untyped_Symbol * symbol) { values.push_front(symbol);}
+	list<Untyped_Symbol*> getSymbols() { return values; }
+};
+
+decafStmtList * createTypedSymbolList(Untyped_Symbols * untyped_syms, const_type type) {
+	decafStmtList * typed_syms = new decafStmtList();
+	list<Untyped_Symbol *> untyped_vals = untyped_syms->getSymbols();
+	for(list<Untyped_Symbol *>::iterator it = untyped_vals.begin(); it != untyped_vals.end(); ++it) {
+		typed_syms->push_back(new Typed_Symbol(
+			(*it)->getId(),
+			type
+		));
+	}
+	return typed_syms;
+}
+
 typedef enum {SCALAR, ARRAY} field_size;
+
 class Field_Decl : public decafAST{
 	field_size size;
 	string identifier;
@@ -380,6 +418,28 @@ public:
 		return returnVal;
 	}
 };
+
+decafStmtList * createFieldDeclList(decafStmtList * typed_syms) {
+	decafStmtList * field_decls = new decafStmtList();
+	list<decafAST *> typed_vals = typed_syms->values();
+
+	for(list<decafAST *>::iterator it = typed_vals.begin(); it != typed_vals.end(); ++it) {
+		Typed_Symbol * symbol = dynamic_cast<Typed_Symbol *>(*it);
+		field_decls->push_back(new Field_Decl(symbol, SCALAR));
+	}
+	return field_decls;
+}
+
+decafStmtList * createFieldDeclListArr(decafStmtList * typed_syms, string size) {
+	decafStmtList * field_decls = new decafStmtList();
+	list<decafAST *> typed_vals = typed_syms->values();
+
+	for(list<decafAST *>::iterator it = typed_vals.begin(); it != typed_vals.end(); ++it) {
+		Typed_Symbol * symbol = dynamic_cast<Typed_Symbol *>(*it);
+		field_decls->push_back(new Field_Decl(symbol, ARRAY, size));
+	}
+	return field_decls;
+}
 
 class Assign_Global : public decafAST {
 	string identifier;

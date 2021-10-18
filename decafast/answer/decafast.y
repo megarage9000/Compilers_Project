@@ -15,6 +15,12 @@ bool printAST = true;
 
 using namespace std;
 
+decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
+    decafStmtList * list = new decafStmtList();
+    list->push_front(a); list->push_back(b);
+    return list;
+}
+
 
 %}
 
@@ -60,18 +66,19 @@ using namespace std;
 
 // %type <ast> extern_list decafpackage
 %type<ast> unary_operation binary_operation expression statement 
-%type<ast> assign rvalue method_call field_decl typed_symbols
-%type<list> method_args statement_list
-%type<typed_sym> typed_symbol
+%type<ast> assign rvalue method_call field_decl typed_symbols_multi typed_symbol
+%type<list> method_args statement_list typed_symbol_list field_decl_list
+%type<typed_sym> typed_symbol_sing
 %type<constant_type> constant
 %type<untyped_list> untyped_symbols
 
 %%
 
 start: field_decl T_SEMICOLON
+    | field_decl_list 
     ;
 
-statement_list: statement statement     {$$ = new decafStmtList(); $$->push_front($1); $$->push_back($2); debugAST($$);}
+statement_list: statement statement     {$$ = initialize_recursive_list($1, $2); debugAST($$);}
         | statement_list statement      {$1->push_back($2); $$ = $1; debugAST($$);}
 
 /* statement */
@@ -79,17 +86,38 @@ statement: assign T_SEMICOLON                {$$ = $1; debugAST($$);}
         | method_call T_SEMICOLON            {$$ = $1; debugAST($$);}
 
 /* Field, Variable declarations */
+field_decl_list: field_decl T_SEMICOLON field_decl T_SEMICOLON {
+        $$ = initialize_recursive_list($1, $3);
+        debugAST($$);
+    }
+    | field_decl_list field_decl T_SEMICOLON {
+        $1->push_back($2); $$ = $1;
+        debugAST($$);
+    }
 
-field_decl: typed_symbol {$$ = new Field_Decl($1, SCALAR); debugAST($$);}
-    | typed_symbol T_ASSIGN constant    {$$ = new Assign_Global($1, getString($3)); debugAST($$);}
-    | typed_symbol T_LSB constant T_RSB {$$ = new Field_Decl($1, ARRAY, $3->getValue()); debugAST($$);}
-    | typed_symbols {$$ = createFieldDeclList(dynamic_cast<decafStmtList *>($1)); debugAST($$);}
-    | typed_symbols T_LSB constant T_RSB {$$ = createFieldDeclListArr(dynamic_cast<decafStmtList *>($1), $3->getValue()); debugAST($$);}
+field_decl: typed_symbol_sing {$$ = new Field_Decl($1, SCALAR); debugAST($$);}
+    | typed_symbol_sing T_ASSIGN constant    {$$ = new Assign_Global($1, getString($3)); debugAST($$);}
+    | typed_symbol_sing T_LSB constant T_RSB {$$ = new Field_Decl($1, ARRAY, $3->getValue()); debugAST($$);}
+    | typed_symbols_multi {$$ = createFieldDeclList(dynamic_cast<decafStmtList *>($1)); debugAST($$);}
+    | typed_symbols_multi T_LSB constant T_RSB {$$ = createFieldDeclListArr(dynamic_cast<decafStmtList *>($1), $3->getValue()); debugAST($$);}
 
+typed_symbol_list: typed_symbol T_SEMICOLON typed_symbol T_SEMICOLON {
+        $$ = initialize_recursive_list($1, $3);
+    }
+    |   typed_symbol_list typed_symbol T_SEMICOLON  {
+        $1->push_back($2); $$=$1;
+    }
 
-typed_symbols: T_VAR untyped_symbols T_BOOLTYPE { $$ = createTypedSymbolList($2, BOOL); debugAST($$);}
+typed_symbol: typed_symbols_multi {$$ = $1;}
+    |   typed_symbol {$$ = 1;}
+
+typed_symbols_multi: T_VAR untyped_symbols T_BOOLTYPE { $$ = createTypedSymbolList($2, BOOL); debugAST($$);}
     | T_VAR untyped_symbols T_STRINGTYPE { $$ = createTypedSymbolList($2, STRING); debugAST($$);}
     | T_VAR untyped_symbols T_INTTYPE { $$ = createTypedSymbolList($2, INT); debugAST($$);}
+
+typed_symbol_sing: T_VAR T_ID T_BOOLTYPE {$$ = new Typed_Symbol($2, BOOL); debugAST($$);}
+    | T_VAR T_ID T_STRINGTYPE {$$ = new Typed_Symbol($2, STRING); debugAST($$); }
+    | T_VAR T_ID T_INTTYPE {$$ = new Typed_Symbol($2, INT); debugAST($$);}
 
 untyped_symbols: T_ID T_COMMA T_ID {
         $$ = new Untyped_Symbols();
@@ -99,9 +127,6 @@ untyped_symbols: T_ID T_COMMA T_ID {
     | untyped_symbols T_COMMA T_ID          {$1->push_back(new Untyped_Symbol($3)); $$ = $1;}
 
 
-typed_symbol: T_VAR T_ID T_BOOLTYPE {$$ = new Typed_Symbol($2, BOOL); debugAST($$);}
-    | T_VAR T_ID T_STRINGTYPE {$$ = new Typed_Symbol($2, STRING); debugAST($$); }
-    | T_VAR T_ID T_INTTYPE {$$ = new Typed_Symbol($2, INT); debugAST($$);}
 
 /* Variable Assignments */
 assign: T_ID T_ASSIGN expression {$$ = new Assign_Var($1, $3); debugAST($$);}
@@ -115,7 +140,7 @@ method_call: T_ID T_LPAREN T_RPAREN {$$ = new Method_Call($1); debugAST($$);}
         /* Mutliple args*/
         | T_ID T_LPAREN method_args T_RPAREN    {$$ = new Method_Call($1, $3);}
 
-method_args: expression T_COMMA expression     {$$ = new decafStmtList(); $$->push_front($1); $$->push_back($3);}
+method_args: expression T_COMMA expression     {$$ = initialize_recursive_list($1, $3)}
     | method_args T_COMMA expression           {$1->push_back($3); $$ = $1; }
     ;
 

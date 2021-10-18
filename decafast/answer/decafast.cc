@@ -470,3 +470,54 @@ public:
 		return returnVal;
 	}
 };
+
+/* Blocks and Method Blocks */
+class Block : public decafAST {
+public:
+	decafStmtList * variable_decls;
+	decafStmtList * statement_list;
+	Block(decafStmtList * decls, decafStmtList * stmts) : variable_decls(decls), statement_list(stmts) {}
+	// Handle cases where there is either one declaration or one statement in the block only
+	Block(decafAST * declaration, decafStmtList * stmts) {
+		statement_list = stmts;
+		variable_decls = new decafStmtList();
+		if(!declaration) {variable_decls->push_front(declaration);}
+		
+	}
+	Block(decafStmtList * decls, decafAST * statement) {
+		variable_decls = decls;
+		statement_list = new decafStmtList();
+		if(!statement) {statement_list->push_front(statement);}
+	}
+	// If only one statement and one declaration
+	Block(decafAST * declaration, decafAST * statement) {
+		variable_decls = new decafStmtList();
+		if(!declaration) {variable_decls->push_front(declaration);}
+		statement_list = new decafStmtList();
+		if(!statement) {statement_list->push_front(statement);}
+	}
+	~Block() {
+		if(variable_decls) { delete variable_decls; }
+		if(statement_list) { delete statement_list; }
+	}
+	string str() {
+		return "Block(" + getString(variable_decls) + "," + getString(statement_list) + ")";
+	}
+};
+
+class Method_Block : public decafAST {
+	decafStmtList * variable_decls;
+	decafStmtList * statement_list;
+public:
+	Method_Block(Block * block) {
+		variable_decls = block->variable_decls;
+		statement_list = block->statement_list;
+	}
+	~Method_Block() {
+		if(variable_decls) { delete variable_decls; }
+		if(statement_list) { delete statement_list; }
+	}
+	string str() {
+		return "MethodBlock(" + getString(variable_decls) + "," + getString(statement_list) + ")";
+	}
+};

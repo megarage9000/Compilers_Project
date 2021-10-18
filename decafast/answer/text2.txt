@@ -1,3 +1,0 @@
-var a, b, d int;
-var c, e, f bool[100];
-var k, l, no string[100];

@@ -53,8 +53,8 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 %token T_COMMENT T_WHITESPACE
 
 // Precedence
-%left VAR_DECL
-%left FIELD_DECL
+%left IF
+%left IF_ELSE
 %left T_OR
 %left T_AND
 %left T_EQ T_NEQ T_GT T_LT T_GEQ T_LEQ 
@@ -67,7 +67,7 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 // %type <ast> extern_list decafpackage
 %type<ast> unary_operation binary_operation expression statement 
 %type<ast> assign rvalue method_call field_decl typed_symbols_multi typed_symbol typed_symbol_decl
-%type<ast> method_block block
+%type<ast> method_block block if_else if_stmt
 %type<list> method_args statement_list typed_symbol_list typed_symbol_list_decl field_decl_list typed_symbol_extern_list
 %type<typed_sym> typed_symbol_sing typed_symbol_extern
 %type<constant_type> constant
@@ -75,13 +75,21 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 
 %%
 
-start: statement        {debugAST($1);}
-    | statement_list    {debugAST($1);}
+start: statement_list    {debugAST($1); delete $1;}
     ;
 
-/* Blocks */
+/* If-Else */
+if_else: if_stmt T_ELSE block {
+        If_Else * temp = dynamic_cast<If_Else *>($1);
+        temp->setElse(dynamic_cast<Block *>($3));
+        $$ = temp;
+    }
 
-method_block: block     {$$ = new Method_Block(dynamic_cast<Block *>($1));}
+if_stmt: T_IF T_LPAREN expression T_RPAREN block {
+        $$ = new If_Else($3, dynamic_cast<Block *> ($5));
+    }
+/* Blocks */
+method_block: block     {$$ = new Method_Block(&(dynamic_cast<Block *>($1)));}
 
 block: T_LCB typed_symbol_list_decl statement_list T_RCB {$$ = new Block($2, $3);}
     | T_LCB typed_symbol_decl statement_list T_RCB {$$ = new Block($2, $3);}
@@ -99,7 +107,9 @@ statement_list: statement statement     {$$ = initialize_recursive_list($1, $2);
 
 statement: assign T_SEMICOLON                {$$ = $1; }
         | method_call T_SEMICOLON            {$$ = $1; }
-        | block                 {$$ = $1; }
+        | block                              {$$ = $1; }
+        | if_stmt                            {$$ = $1; }
+        | if_else                            {$$ = $1; }
 
 /* Field declarations */
 field_decl_list: field_decl field_decl {
@@ -151,36 +161,39 @@ typed_symbol_list: typed_symbol_sing T_COMMA typed_symbol_sing {
         $1->push_back($3); $$=$1;
     }
 
+/* Comment for now, not sure where this is needed */
+/*
 typed_symbol: T_VAR typed_symbols_multi {$$ = $2;}
-    |   T_VAR typed_symbol {$$ = $2;}
+    |   T_VAR typed_symbol_sing {$$ = $2;}
+*/
 
 /* General typed symbols, will be used in declarations, field declarations, method and extern function args */
-typed_symbols_multi: untyped_symbols T_BOOLTYPE { $$ = createTypedSymbolList($1, BOOL); }
-    | untyped_symbols T_STRINGTYPE { $$ = createTypedSymbolList($1, STRING); }
-    | untyped_symbols T_INTTYPE { $$ = createTypedSymbolList($1, INT); }
+typed_symbols_multi: untyped_symbols T_BOOLTYPE { $$ = createTypedSymbolList(&($1), BOOL); }
+    | untyped_symbols T_STRINGTYPE { $$ = createTypedSymbolList(&($1), STRING); }
+    | untyped_symbols T_INTTYPE { $$ = createTypedSymbolList(&($1), INT); }
 
-typed_symbol_sing: T_ID T_BOOLTYPE {$$ = new Typed_Symbol($1, BOOL); }
-    | T_ID T_STRINGTYPE {$$ = new Typed_Symbol($1, STRING); }
-    | T_ID T_INTTYPE {$$ = new Typed_Symbol($1, INT); }
+typed_symbol_sing: T_ID T_BOOLTYPE {$$ = new Typed_Symbol(&($1), BOOL); }
+    | T_ID T_STRINGTYPE {$$ = new Typed_Symbol(&($1), STRING); }
+    | T_ID T_INTTYPE {$$ = new Typed_Symbol(&($1), INT); }
 
 untyped_symbols: T_ID T_COMMA T_ID {
         $$ = new Untyped_Symbols();
-        $$->push_front(new Untyped_Symbol($1)); 
-        $$->push_back(new Untyped_Symbol($3)); 
+        $$->push_front(new Untyped_Symbol(&($1))); 
+        $$->push_back(new Untyped_Symbol(&($3))); 
     }
-    | untyped_symbols T_COMMA T_ID          {$1->push_back(new Untyped_Symbol($3)); $$ = $1;}
+    | untyped_symbols T_COMMA T_ID          {$1->push_back(new Untyped_Symbol(&($3))); $$ = $1;}
 
 /* Variable Assignments */
-assign: T_ID T_ASSIGN expression {$$ = new Assign_Var($1, $3); }
-    | T_ID T_LSB expression T_RSB T_ASSIGN expression {$$ = new Assign_Arr_Loc($1, $3, $6); }
+assign: T_ID T_ASSIGN expression {$$ = new Assign_Var(&($1), $3); }
+    | T_ID T_LSB expression T_RSB T_ASSIGN expression {$$ = new Assign_Arr_Loc(&($1), $3, $6); }
     ;
 
 /* Methods and Method args*/
-method_call: T_ID T_LPAREN T_RPAREN {$$ = new Method_Call($1); }
+method_call: T_ID T_LPAREN T_RPAREN {$$ = new Method_Call(&($1)); }
         /* Single arg*/
-        | T_ID T_LPAREN expression T_RPAREN     {$$ = new Method_Call($1, $3); }
+        | T_ID T_LPAREN expression T_RPAREN     {$$ = new Method_Call(&($1), $3); }
         /* Mutliple args*/
-        | T_ID T_LPAREN method_args T_RPAREN    {$$ = new Method_Call($1, $3);}
+        | T_ID T_LPAREN method_args T_RPAREN    {$$ = new Method_Call(&($1), $3);}
 
 method_args: expression T_COMMA expression     {$$ = initialize_recursive_list($1, $3);}
     | method_args T_COMMA expression           {$1->push_back($3); $$ = $1; }
@@ -211,19 +224,19 @@ binary_operation:  expression T_PLUS expression {$$ = new Binary_Expr($1, $3, PL
     ;
 
 /* R Values */
-rvalue: T_ID T_LSB expression T_RSB   {$$ = new Arr_Loc_Expr($1, $3); } 
-    | T_ID                            {$$ = new Var_Expr($1); }
+rvalue: T_ID T_LSB expression T_RSB   {$$ = new Arr_Loc_Expr(&($1), $3); } 
+    | T_ID                            {$$ = new Var_Expr(&($1)); }
     ;
 
 unary_operation: T_MINUS expression %prec U_MINUS {$$ = new Unary_Expr($2, UNARY_MINUS);}
     | T_NOT expression %prec U_NOT {$$ = new Unary_Expr($2, NOT);}
 
 /* Constants */
-constant: T_STRINGCONSTANT  {$$ = new Constant_Expr($1, STRING);}
-    | T_CHARCONSTANT {$$ = new Constant_Expr($1, CHAR);}
-    | T_INTCONSTANT  {$$ = new Constant_Expr($1, INT);}
-    | T_FALSE        {$$ = new Constant_Expr($1, BOOL);}
-    | T_TRUE         {$$ = new Constant_Expr($1, BOOL);}
+constant: T_STRINGCONSTANT  {$$ = new Constant_Expr(&($1), STRING);}
+    | T_CHARCONSTANT {$$ = new Constant_Expr(&($1), CHAR);}
+    | T_INTCONSTANT  {$$ = new Constant_Expr(&($1), INT);}
+    | T_FALSE        {$$ = new Constant_Expr(&($1), BOOL);}
+    | T_TRUE         {$$ = new Constant_Expr(&($1), BOOL);}
     ;
 %%
 // TODO remember to bring back!

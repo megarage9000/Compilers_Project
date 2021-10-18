@@ -101,7 +101,9 @@ class Constant_Expr : public decafAST {
 	string val_rep;
 	const_type val_type;
 public:
-	Constant_Expr(string * val, const_type val_type) : val_rep(*val), val_type(val_type){}
+	Constant_Expr(string ** val, const_type val_type) : val_rep(*(*val)), val_type(val_type){
+		delete *val;
+	}
 	~Constant_Expr(){}
 	string getValue() {return val_rep; }
 	string str() {
@@ -236,7 +238,9 @@ class Assign_Var: public decafAST {
 	decafAST * value;
 	string identifier;
 public:
-	Assign_Var(string * id, decafAST * val) : value(val), identifier(*id) {}
+	Assign_Var(string ** id, decafAST * val) : value(val), identifier(*(*id)) {
+		delete *id;
+	}
 	~Assign_Var() {
 		if(value) { delete value; }
 	}
@@ -250,7 +254,9 @@ class Assign_Arr_Loc: public decafAST {
 	decafAST * index;
 	string identifier;
 public:
-	Assign_Arr_Loc(string * id, decafAST * loc, decafAST * val) : identifier(*id), index(loc), value(val) {}
+	Assign_Arr_Loc(string ** id, decafAST * loc, decafAST * val) : identifier(*(*id)), index(loc), value(val) {
+		delete *id;
+	}
 	~Assign_Arr_Loc() {
 		if(value) { delete value; }
 		if(index) { delete index; }
@@ -263,7 +269,9 @@ public:
 class Var_Expr: public decafAST {
 	string identifier;
 public:
-	Var_Expr(string * id) : identifier(*id) {}
+	Var_Expr(string ** id) : identifier(*(*id)) {
+		delete *id;
+	}
 	~Var_Expr() {}
 	string str() {
 		return "VariableExpr(" + identifier + ")";
@@ -274,7 +282,9 @@ class Arr_Loc_Expr: public decafAST {
 	decafAST * index;
 	string identifier;
 public:
-	Arr_Loc_Expr(string * id, decafAST * loc) : identifier(*id), index(loc){}
+	Arr_Loc_Expr(string ** id, decafAST * loc) : identifier(*(*id)), index(loc){
+		delete *id;
+	}
 	~Arr_Loc_Expr() {
 		if(index) { delete index; }
 	}
@@ -289,12 +299,17 @@ class Method_Call: public decafAST {
 	decafStmtList * method_args;
 	string identifier;
 public:
-	Method_Call(string * id, decafStmtList * args_list): identifier(*id), method_args(args_list) {}
-	Method_Call(string * id, decafAST * single_arg): identifier(*id) {
+	Method_Call(string ** id, decafStmtList * args_list): identifier(*(*id)), method_args(args_list) {
+		delete *id;
+	}
+	Method_Call(string ** id, decafAST * single_arg): identifier(*(*id)) {
 		method_args = new decafStmtList();
 		method_args->push_back(single_arg);
+		delete *id;
 	}
-	Method_Call(string * id) : identifier(*id), method_args(NULL) {}
+	Method_Call(string ** id) : identifier(*(*id)), method_args(NULL) {
+		delete *id;
+	}
 	~Method_Call(){
 		if(method_args) { delete method_args; }
 	}
@@ -311,7 +326,9 @@ class Typed_Symbol : public decafAST {
 	string identifier;
 	const_type sym_type;
 public:
-	Typed_Symbol(string * id, const_type type) : identifier(*id), sym_type(type) {}
+	Typed_Symbol(string ** id, const_type type) : identifier(*(*id)), sym_type(type) {
+		delete *id;
+	}
 	Typed_Symbol(string id , const_type type) : identifier(id), sym_type(type) {}
 	Typed_Symbol(const_type type) : identifier(""), sym_type(type) {}
 	~Typed_Symbol() {}
@@ -343,7 +360,9 @@ public:
 class Untyped_Symbol {
 	string identifier;
 public:
-	Untyped_Symbol(string * id) : identifier(*id) {}
+	Untyped_Symbol(string ** id) : identifier(*(*id)) {
+		delete *id;
+	}
 	~Untyped_Symbol() {}
 	string getId() { return identifier; }
 };
@@ -362,8 +381,9 @@ public:
 	list<Untyped_Symbol*> getSymbols() { return values; }
 };
 
-decafStmtList * createTypedSymbolList(Untyped_Symbols * untyped_syms, const_type type) {
+decafStmtList * createTypedSymbolList(Untyped_Symbols ** untyped_syms_ptr, const_type type) {
 	decafStmtList * typed_syms = new decafStmtList();
+	Untyped_Symbols * untyped_syms = *untyped_syms_ptr;
 	list<Untyped_Symbol *> untyped_vals = untyped_syms->getSymbols();
 	for(list<Untyped_Symbol *>::iterator it = untyped_vals.begin(); it != untyped_vals.end(); ++it) {
 		typed_syms->push_back(new Typed_Symbol(
@@ -371,6 +391,7 @@ decafStmtList * createTypedSymbolList(Untyped_Symbols * untyped_syms, const_type
 			type
 		));
 	}
+	delete *(untyped_syms_ptr);
 	return typed_syms;
 }
 
@@ -384,12 +405,12 @@ class Field_Decl : public decafAST{
 public:
 	Field_Decl(Typed_Symbol * declaration, field_size sz) 
 	: identifier(declaration->getIdentifier()), sym_type(declaration->getType()), size(sz) {val_size="";}
-	Field_Decl(string * id, const_type type, field_size sz) 
-	: identifier(*id), sym_type(type), size(sz) {val_size="";}
+	Field_Decl(string ** id, const_type type, field_size sz) 
+	: identifier(*(*id)), sym_type(type), size(sz) {val_size=""; delete *id;}
 	Field_Decl(Typed_Symbol * declaration, field_size sz, string v_size) 
 	: identifier(declaration->getIdentifier()), sym_type(declaration->getType()), size(sz), val_size(v_size) {}
-	Field_Decl(string * id, const_type type, field_size sz, string v_size) 
-	: identifier(*id), sym_type(type), size(sz), val_size(v_size) {}	
+	Field_Decl(string ** id, const_type type, field_size sz, string v_size) 
+	: identifier(*(*id)), sym_type(type), size(sz), val_size(v_size) { delete *id;}	
 	~Field_Decl() {}
 	string str() {
 		string returnVal = "FieldDecl(";
@@ -427,6 +448,7 @@ decafStmtList * createFieldDeclList(decafStmtList * typed_syms) {
 		Typed_Symbol * symbol = dynamic_cast<Typed_Symbol *>(*it);
 		field_decls->push_back(new Field_Decl(symbol, SCALAR));
 	}
+	delete typed_syms;
 	return field_decls;
 }
 
@@ -438,6 +460,7 @@ decafStmtList * createFieldDeclListArr(decafStmtList * typed_syms, string size) 
 		Typed_Symbol * symbol = dynamic_cast<Typed_Symbol *>(*it);
 		field_decls->push_back(new Field_Decl(symbol, ARRAY, size));
 	}
+	delete typed_syms;
 	return field_decls;
 }
 
@@ -509,9 +532,10 @@ class Method_Block : public decafAST {
 	decafStmtList * variable_decls;
 	decafStmtList * statement_list;
 public:
-	Method_Block(Block * block) {
-		variable_decls = block->variable_decls;
-		statement_list = block->statement_list;
+	Method_Block(Block ** block) {
+		variable_decls = (*block)->variable_decls;
+		statement_list = (*block)->statement_list;
+		delete (*block);
 	}
 	~Method_Block() {
 		if(variable_decls) { delete variable_decls; }
@@ -519,5 +543,31 @@ public:
 	}
 	string str() {
 		return "MethodBlock(" + getString(variable_decls) + "," + getString(statement_list) + ")";
+	}
+};
+
+
+/// If else, For, While
+
+class If_Else: public decafAST {
+	decafAST * expression;
+	Block * if_block;
+	Block * else_block;
+public: 
+	If_Else(decafAST * expr, Block * if_blk) 
+	: expression(expr), if_block(if_blk) {}
+	~If_Else() {
+		if(expression) {delete expression;}
+		if(if_block) {delete if_block;}
+		if(else_block) {delete else_block;}
+	}
+	void setElse(Block * else_blk) {
+		else_block = else_blk;
+	}
+	string str() {
+		if(else_block){
+			return "IfSmt(" + getString(expression) + "," + getString(if_block) + "," + getString(else_block) + ")";
+		}
+		return "IfSmt(" + getString(expression) + "," + getString(if_block) + ")";
 	}
 };

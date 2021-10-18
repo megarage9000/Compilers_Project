@@ -1,7 +1,23 @@
 {
     var x, y, z int;
+    if(x == true)
     {
         var h bool;
         h = true;
+        if(y == true) {
+            var u bool;
+            u = true;
+        }
+        else {
+            var I_am_else int;
+            I_am_elsee = 10;
+        }
     }
+    else {
+        var I_am_second_else int;
+        I_am_second_else = 20;
+    }
+}
+{
+    var x,y int;
 }

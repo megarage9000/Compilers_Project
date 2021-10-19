@@ -106,7 +106,8 @@ public:
 typedef enum {
 	INTTYPE,
 	BOOLTYPE,
-	STRINGTYPE
+	STRINGTYPE,
+	VOIDTYPE
 }	val_type;
 
 class Type: public decafAST {
@@ -122,6 +123,8 @@ public:
 				return "BoolType";
 			case STRINGTYPE:
 				return "StringType";
+			case VOIDTYPE:
+				return "VoidType";
 			default:
 				return "None";
 		}

@@ -3,14 +3,19 @@
     if(x == 9)
     {
         var h bool;
+        var j, l bool;
         h = true;
-        if(y == "yes") {
+        i = 100;
+        if(y == 53) {
             var u bool;
-            u = "no";
+            var second_decl int;
+            u = 76;
         }
         else {
             var I_am_else int;
+            var second_decl int;
             I_am_elsee = 10;
+            das = 90;
         }
     }
     else {

@@ -321,6 +321,9 @@ public:
 		push_back(identifiers);
 		push_back(type);
 	}
+	Var_Def(Type * type) : decafStmtList() {
+		push_back(type);
+	}
 	string str() {
 		return "VarDef(" + decafStmtList::str() + ")";
 	}
@@ -479,14 +482,29 @@ public:
 };
 
 /// Extern and method declarations
-// class Extern_Func: public  decafAST {
-// 	decafStmtList * structure;
-// public:
-// 	Extern_Func(decafAST * ID, decafAST * return_type, decafAST * typeList){}
-// 	~Extern_Func() {
-// 		if(structure) {delete structure;}
-// 	}
-// 	string str() {
-// 		return "ExternFunction(" + getString(structure) + ")";
-// 	}
-// };
+class Extern_Func: public decafStmtList {
+public:
+	Extern_Func(Identifier * id, Type * return_type, decafAST * typeList)
+	 : decafStmtList(){
+		push_back(id);
+		push_back(return_type);
+		push_back(typeList);
+	 }
+	string str() {
+		return "ExternFunction(" + decafStmtList::str() + ")";
+	}
+};
+
+class Method_Decl: public decafStmtList {
+	public:
+	Method_Decl(Identifier * id, Type * return_type, decafAST * param_list, Block * block)
+	: decafStmtList() {
+		push_back(id);
+		push_back(return_type);
+		push_back(param_list);
+		push_back(block);
+	}
+	string str() {
+		return "Method(" + decafStmtList::str() + ")";
+	}
+};

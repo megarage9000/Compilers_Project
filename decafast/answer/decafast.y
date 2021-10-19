@@ -21,6 +21,18 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
     return list;
 }
 
+// alternate_decl_stmts : typed_symbols_decl statement     {$$ = initialize_recursive_list($1, $2); }  
+//     | statement typed_symbols_decl                      {$$ = initialize_recursive_list($1, $2); }
+//     | typed_symbols_decls statement                     {$$ = initialize_recursive_list($1, $2); }
+//     | statement typed_symbols_decls                     {$$ = initialize_recursive_list($1, $2); }
+//     | typed_symbols_decl statement_list                 {$$ = initialize_recursive_list($1, $2); }
+//     | statement_list typed_symbols_decl                 {$$ = initialize_recursive_list($1, $2); }
+//     | typed_symbols_decls statement_list                {$$ = initialize_recursive_list($1, $2); }
+//     | statement_list typed_symbols_decls                {$$ = initialize_recursive_list($1, $2); }
+//     | alternate_decl_stmts typed_symbols_decl           {$1->push_back($2); $$ = $1; }
+//     | alternate_decl_stmts typed_symbols_decls          {$1->push_back($2); $$ = $1; }
+//     | alternate_decl_stmts statement                    {$1->push_back($2); $$ = $1; }
+//     | alternate_decl_stmts statement_list               {$1->push_back($2); $$ = $1; }
 
 %}
 
@@ -77,8 +89,8 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 
 %%
 
-start: typed_symbols {debugAST($1); delete $1;}
-    | method_decl_args  {debugAST($1); delete $1;}
+start: statement     {debugAST($1); delete $1;}
+    | statement_list {debugAST($1); delete $1;}
     ;
 
 program: extern_list decafpackage
@@ -99,26 +111,26 @@ decafpackage: T_PACKAGE T_ID T_LCB T_RCB
     { $$ = new PackageAST(*$2, new decafStmtList(), new decafStmtList()); delete $2; }
     ; 
 
-// /* If-Else */
+/* If-Else */
 if_stmt: T_IF T_LPAREN expression T_RPAREN block {
         $$ = new If_Else($3, dynamic_cast<Block *> ($5));
     }
     | T_IF T_LPAREN expression T_RPAREN block T_ELSE block {
         $$ = new If_Else($3, dynamic_cast<Block *> ($5), dynamic_cast<Block *> ($7));
     }
+    
 /* Blocks */
 method_block: block     {$$ = new Method_Block(&(dynamic_cast<Block *>($1)));}
 
-block: T_LCB typed_symbols_decls statement_list T_RCB   {$$ = new Block($2, $3);}
-    | T_LCB typed_symbols_decl statement_list T_RCB     {$$ = new Block($2, $3);}
-    | T_LCB typed_symbols_decls statement T_RCB         {$$ = new Block($2, $3);}
-    | T_LCB typed_symbols_decl statement T_RCB          {$$ = new Block($2, $3);}
+block: T_LCB typed_symbols_decls statement_list T_RCB               {$$ = new Block($2, $3);} 
+    | T_LCB typed_symbols_decl statement_list T_RCB                 {$$ = new Block($2, $3);} 
+    | T_LCB typed_symbols_decls statement T_RCB                     {$$ = new Block($2, $3);} 
+    | T_LCB typed_symbols_decl statement T_RCB                      {$$ = new Block($2, $3);} 
     | T_LCB typed_symbols_decl T_RCB                    {$$ = new Block($2, new decafStmtList());}
     | T_LCB typed_symbols_decls T_RCB                   {$$ = new Block($2, new decafStmtList());}
     | T_LCB statement T_RCB                             {$$ = new Block(new decafStmtList(), $2);}
     | T_LCB statement_list T_RCB                        {$$ = new Block(new decafStmtList(), $2);}
     | T_LCB T_RCB                                       {$$ = new Block(new decafStmtList(), new decafStmtList());}
-
 
 /* Statements */
 statement_list: statement statement     {$$ = initialize_recursive_list($1, $2); }
@@ -151,7 +163,7 @@ method_decl_arg: identifier value_type                        {$$ = new Var_Def(
 typed_symbols_decls: typed_symbols_decl typed_symbols_decl {$$ = initialize_recursive_list($1, $2);}
     | typed_symbols_decls typed_symbols_decl         {$1->push_back($2); $$ = $1; }
 
-typed_symbols_decl: typed_symbols T_SEMICOLON     {$$=$1}
+typed_symbols_decl: typed_symbols T_SEMICOLON     {$$=$1;}
 
 typed_symbols: T_VAR identifier value_type               {$$ = new Var_Def($2, dynamic_cast<Type *>($3));}
     | T_VAR identifier_list value_type                   {$$ = new Var_Def($2, dynamic_cast<Type *>($3));}
@@ -186,8 +198,8 @@ assign: identifier T_ASSIGN expression {$$ = new Assign_Var(dynamic_cast<Identif
     ;
 
 /* Rvalues */
-rvalue: identifier  {$$ = new Var_Expr($1);}
-    | identifier T_LSB expression T_RSB {$$ = new Arr_Loc_Expr($1, $3);}
+rvalue: identifier  {$$ = new Var_Expr(dynamic_cast<Identifier *>($1));}
+    | identifier T_LSB expression T_RSB {$$ = new Arr_Loc_Expr(dynamic_cast<Identifier *>($1), $3);}
 
 
 /* Expressions */

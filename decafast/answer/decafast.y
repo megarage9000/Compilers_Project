@@ -68,16 +68,15 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 %type<untyped_list> untyped_symbols
 */
 
-%type<ast> program extern_list decafpackage expression constant identifier extern_func
+%type<ast> program decafpackage expression constant identifier extern_func
 %type<ast> binary_operation unary_operation assign statement method_call method_arg method_type decaf_type extern_type
 %type<ast> typed_symbols field_decls method_decl_sing_arg typed_symbols_decl method_decl
 %type<ast> block method_block if_stmt rvalue for_loop while_loop for_loop_assigns method_decl_args
-%type<list> assign_list statement_list method_args identifier_list method_decl_multi_args typed_symbols_decls extern_func_args
+%type<list> assign_list statement_list method_args identifier_list method_decl_multi_args typed_symbols_decls extern_func_args method_decl_list extern_list 
 
 %%
 
-start: statement     {debugAST($1); delete $1;}
-    | statement_list {debugAST($1); delete $1;}
+start: program
     ;
 
 program: extern_list decafpackage
@@ -89,20 +88,26 @@ program: extern_list decafpackage
         delete prog;
     }
     ;
-decafpackage: T_PACKAGE T_ID T_LCB T_RCB
-    { $$ = new PackageAST(*$2, new decafStmtList(), new decafStmtList()); delete $2; }
+decafpackage: T_PACKAGE identifier T_LCB field_decls method_decl_list T_RCB
+    {   
+        string id_name = $2->str();
+        decafStmtList * fieldDecls = new decafStmtList();
+        fieldDecls->push_back($4);
+        $$ = new PackageAST(id_name, fieldDecls, dynamic_cast<decafStmtList *>($5)); 
+    }
     ; 
 
 /* Externs */
-extern_list: /* extern_list can be empty */
-    { decafStmtList *slist = new decafStmtList(); $$ = slist; }
+extern_list: { decafStmtList *slist = new decafStmtList(); $$ = slist; }
+    | extern_func extern_func   {$$ = initialize_recursive_list($1, $2);}
+    | extern_list extern_func   {$1->push_back($2); $$ = $1;}
     ;
 
-extern_func: T_EXTERN T_FUNC identifier T_LPAREN extern_func_args T_LPAREN method_type T_SEMICOLON {
-        $$ = Extern_Func(dynamic_cast<Identifier *>($3), dynamic_cast<Type *>($7), $5);
+extern_func: T_EXTERN T_FUNC identifier T_LPAREN extern_func_args T_RPAREN method_type T_SEMICOLON {
+        $$ = new Extern_Func(dynamic_cast<Identifier *>($3), dynamic_cast<Type *>($7), $5);
     }
-    | T_EXTERN T_FUNC identifier T_LPAREN extern_type T_LPAREN method_type T_SEMICOLON {
-        $$ = Extern_Func(dynamic_cast<Identifier *>($3), dynamic_cast<Type *>($7), $5);
+    | T_EXTERN T_FUNC identifier T_LPAREN extern_type T_RPAREN method_type T_SEMICOLON {
+        $$ = new Extern_Func(dynamic_cast<Identifier *>($3), dynamic_cast<Type *>($7), $5);
     }
 
 extern_func_args: extern_type T_COMMA extern_type   {$$ = initialize_recursive_list($1, $3);}
@@ -132,7 +137,7 @@ if_stmt: T_IF T_LPAREN expression T_RPAREN block {
     }
     
 /* Blocks */
-method_block: block     {$$ = new Method_Block(&(dynamic_cast<Block *>($1)));}
+method_block: block                                                 {$$ = new Method_Block(&(dynamic_cast<Block *>($1)));}
 
 block: T_LCB typed_symbols_decls statement_list T_RCB               {$$ = new Block($2, $3);} 
     | T_LCB typed_symbols_decl statement_list T_RCB                 {$$ = new Block($2, $3);} 
@@ -157,7 +162,8 @@ statement: assign T_SEMICOLON           {$$ = $1;}
     ;
 
 /* Field Declarations */
-field_decls: typed_symbols T_SEMICOLON {
+field_decls:                   {$$ = new decafStmtList();}
+    | typed_symbols T_SEMICOLON {
         $$ = new Field_Decl(dynamic_cast<Var_Def *>($1), new Field_Size());
     }
     | typed_symbols T_LSB T_INTCONSTANT T_RSB T_SEMICOLON {
@@ -168,14 +174,20 @@ field_decls: typed_symbols T_SEMICOLON {
     ;
 
 /* Method declaration */
+method_decl_list:                  {$$ = new decafStmtList();}
+    | method_decl method_decl_args {$$ = initialize_recursive_list ($1, $2);}
+    | method_decl_list method_decl             {$1->push_back($2), $$=$1;}
+
+
 method_decl: T_FUNC identifier method_type T_LPAREN method_decl_args T_RPAREN block {
-    $$ = Method_Decl(dynamic_cast<Identifier *>($2), dynamic_cast<Type *>($3), $5, $7);
+    $$ = new Method_Decl(dynamic_cast<Identifier *>($2), dynamic_cast<Type *>($3), $5, dynamic_cast<Block *>($7));
 }
 
 method_decl_args: method_decl_multi_args {$$ = $1;}
     | method_decl_sing_arg {$$ = $1;}
 
-method_decl_multi_args: method_decl_sing_arg T_COMMA method_decl_sing_arg     {$$ = initialize_recursive_list($1, $3);}
+method_decl_multi_args:                                     {$$ = new decafStmtList();}
+    | method_decl_sing_arg T_COMMA method_decl_sing_arg     {$$ = initialize_recursive_list($1, $3);}
     | method_decl_multi_args T_COMMA method_decl_sing_arg        {$1->push_back($3); $$=$1;}
 
 method_decl_sing_arg: identifier decaf_type                      {$$ = new Var_Def($2, dynamic_cast<Type *>($1)); }
@@ -259,11 +271,12 @@ constant: T_CHARCONSTANT {$$ = new Constant_Expr(&($1), INTTYPE);}
     ;
 
 /* Value types */
-method_type: T_VOID    {$$ = new TYPE(VOIDTYPE);}
+method_type: T_VOID    {$$ = new Type(VOIDTYPE);}
     | decaf_type       {$$ = $1;}
+    ;
 
-extern_type: T_STRINGTYPE     {$$ = new Var_Def(new TYPE(STRINGTYPE));}
-    | decaf_type              {$$ = new Var_Def($1);}
+extern_type: T_STRINGTYPE     {$$ = new Var_Def(new Type(STRINGTYPE));}
+    | decaf_type              {$$ = new Var_Def(dynamic_cast<Type *>($1));}
 
 decaf_type: T_BOOLTYPE {$$ = new Type(BOOLTYPE);}
     | T_INTTYPE        {$$ = new Type(INTTYPE);}

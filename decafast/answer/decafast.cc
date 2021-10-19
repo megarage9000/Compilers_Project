@@ -91,6 +91,19 @@ public:
 	string str() { return string("Program") + "(" + getString(ExternList) + "," + getString(PackageDef) + ")"; }
 };
 
+// Identifiers to deal with strings
+class Identifier : public decafAST {
+	string id_name;
+public:
+	Identifier(string ** id) : id_name(*(*id)) {
+		delete *id;
+	}
+	~Identifier(){}
+	string str() {
+		return id_name;
+	}
+};
+
 /// Constant Expressions 
 /// - For String, Int and Boolean values
 typedef enum {
@@ -548,7 +561,6 @@ public:
 
 
 /// If else, For, While
-
 class If_Else: public decafAST {
 	decafAST * expression;
 	Block * if_block;
@@ -571,3 +583,88 @@ public:
 		return "IfSmt(" + getString(expression) + "," + getString(if_block) + ")";
 	}
 };
+
+/// At this point, most loops are decafstmtlists
+class For_Loop: public decafAST {
+	decafStmtList * data;
+public:
+	For_Loop(decafAST * assign, decafAST * expression, decafAST * after_assign, Block * block) {
+		data = new decafStmtList();
+		data->push_back(assign);
+		data->push_back(expression);
+		data->push_back(after_assign);
+		data->push_back(block);
+	}
+	~For_Loop() {
+		if(data) { delete data; }
+	}
+	string str() {
+		return "ForStmt(" + getString(data) + ")";
+	}
+};
+
+class While_Loop: public decafAST {
+	decafStmtList * data;
+public:
+	While_Loop(decafAST * expression, Block * block) {
+		data = new decafStmtList();
+		data->push_back(expression);
+		data->push_back(block);
+	}
+	~While_Loop() {
+		delete data;
+	}
+	string str() {
+		return "WhileStmt(" + getString(data) + ")";
+	}
+};
+
+/// Keywords
+class Return_Stmt: public decafAST {
+	decafStmtList * structure;
+public:
+	Return_Stmt() {
+		structure = new decafStmtList();
+	}
+	Return_Stmt(decafAST * returnVal) {
+		structure = new decafStmtList();
+		structure->push_back(returnVal);
+	}
+	~Return_Stmt() {
+		if(structure) {delete structure;}
+	}
+	string str() {
+		return "ReturnStmt(" + getString(structure) + ")";
+	}
+};
+
+class Continue: public decafAST {
+public:
+	Continue() {}
+	~Continue() {}
+	string str() {
+		return "ContinueStmt";
+	}
+};
+
+class Break: public decafAST {
+public:
+	Break() {}
+	~Break() {}
+	string str() {
+		return "BreakStmt";
+	}
+};
+
+/// Extern and method declarations
+// class Extern_Func: public  decafAST {
+// 	decafStmtList * structure;
+// public:
+// 	Extern_Func(decafAST * ID, decafAST * return_type, decafAST * typeList){}
+// 	~Extern_Func() {
+// 		if(structure) {delete structure;}
+// 	}
+// 	string str() {
+// 		return "ExternFunction(" + getString(structure) + ")";
+// 	}
+// };

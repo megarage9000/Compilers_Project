@@ -64,19 +64,39 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 %left U_NOT
 %left U_MINUS
 
-// %type <ast> extern_list decafpackage
-%type<ast> unary_operation binary_operation expression statement 
+%type<ast> unary_operation binary_operation expression statement extern_list decafpackage
 %type<ast> assign rvalue method_call field_decl typed_symbols_multi typed_symbol typed_symbol_decl
 %type<ast> method_block block if_else if_stmt
-%type<list> method_args statement_list typed_symbol_list typed_symbol_list_decl field_decl_list typed_symbol_extern_list
+%type<list> method_args statement_list typed_symbol_list typed_symbol_list_decl field_decl_list typed_symbol_extern_list assign_list
 %type<typed_sym> typed_symbol_sing typed_symbol_extern
 %type<constant_type> constant
 %type<untyped_list> untyped_symbols
 
 %%
 
-start: statement_list    {debugAST($1); delete $1;}
+start: statement_list {debugAST($1); delete $1;}
     ;
+program: extern_list decafpackage
+    { 
+        ProgramAST *prog = new ProgramAST((decafStmtList *)$1, (PackageAST *)$2); 
+        if (printAST) {
+            cout << getString(prog) << endl;
+        }
+        delete prog;
+    }
+    ;
+
+/* Externs */
+extern_list: /* extern_list can be empty */
+    { decafStmtList *slist = new decafStmtList(); $$ = slist; }
+    ;
+
+decafpackage: T_PACKAGE T_ID T_LCB T_RCB
+    { $$ = new PackageAST(*$2, new decafStmtList(), new decafStmtList()); delete $2; }
+    ; 
+
+/* While */
+
 
 /* If-Else */
 if_else: if_stmt T_ELSE block {
@@ -184,6 +204,9 @@ untyped_symbols: T_ID T_COMMA T_ID {
     | untyped_symbols T_COMMA T_ID          {$1->push_back(new Untyped_Symbol(&($3))); $$ = $1;}
 
 /* Variable Assignments */
+assign_list : assign T_COMMA assign {$$ = initialize_recursive_list($1, $3);}
+    | assign_list T_COMMA assign {$1->push_back($3);}
+
 assign: T_ID T_ASSIGN expression {$$ = new Assign_Var(&($1), $3); }
     | T_ID T_LSB expression T_RSB T_ASSIGN expression {$$ = new Assign_Arr_Loc(&($1), $3, $6); }
     ;
@@ -240,25 +263,7 @@ constant: T_STRINGCONSTANT  {$$ = new Constant_Expr(&($1), STRING);}
     ;
 %%
 // TODO remember to bring back!
-// start: program
-// program: extern_list decafpackage
-//     { 
-//         ProgramAST *prog = new ProgramAST((decafStmtList *)$1, (PackageAST *)$2); 
-//         if (printAST) {
-//             cout << getString(prog) << endl;
-//         }
-//         delete prog;
-//     }
 
-
-// /* Externs */
-// extern_list: /* extern_list can be empty */
-//     { decafStmtList *slist = new decafStmtList(); $$ = slist; }
-//     ;
-
-// decafpackage: T_PACKAGE T_ID T_LCB T_RCB
-//     { $$ = new PackageAST(*$2, new decafStmtList(), new decafStmtList()); delete $2; }
-//     ; 
 
 int main() {
   // parse the input and create the abstract syntax tree

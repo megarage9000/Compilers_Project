@@ -1,12 +1,12 @@
 {
     var x, y, z int;
-    if(x == true)
+    if(x == 9)
     {
         var h bool;
         h = true;
-        if(y == true) {
+        if(y == "yes") {
             var u bool;
-            u = true;
+            u = "no";
         }
         else {
             var I_am_else int;

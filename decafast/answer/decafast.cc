@@ -376,154 +376,107 @@ public:
 	}
 };
 
-// /* Blocks and Method Blocks */
-// class Block : public decafAST {
-// public:
-// 	decafStmtList * variable_decls;
-// 	decafStmtList * statement_list;
-// 	Block(decafStmtList * decls, decafStmtList * stmts) : variable_decls(decls), statement_list(stmts) {}
-// 	// Handle cases where there is either one declaration or one statement in the block only
-// 	Block(decafAST * declaration, decafStmtList * stmts) {
-// 		statement_list = stmts;
-// 		variable_decls = new decafStmtList();
-// 		if(declaration) {variable_decls->push_front(declaration);}
-		
-// 	}
-// 	Block(decafStmtList * decls, decafAST * statement) {
-// 		variable_decls = decls;
-// 		statement_list = new decafStmtList();
-// 		if(statement) {statement_list->push_front(statement);}
-// 	}
-// 	// If only one statement and one declaration
-// 	Block(decafAST * declaration, decafAST * statement) {
-// 		variable_decls = new decafStmtList();
-// 		if(declaration) {variable_decls->push_front(declaration);}
-// 		statement_list = new decafStmtList();
-// 		if(statement) {statement_list->push_front(statement);}
-// 	}
-// 	~Block() {
-// 		if(variable_decls) { delete variable_decls; }
-// 		if(statement_list) { delete statement_list; }
-// 	}
-// 	string str() {
-// 		return "Block(" + getString(variable_decls) + "," + getString(statement_list) + ")";
-// 	}
-// };
+/* Blocks and Method Blocks */
+class Block : public decafStmtList {
+public:
+	Block(decafAST * declarations, decafAST * statements) : decafStmtList() {
+		push_back(declarations);
+		push_back(statements);
+	}
+	string str() {
+		return "Block(" + decafStmtList::str() + ")";
+	}
+	string get_content() {
+		return decafStmtList::str();
+	}
+};
 
-// class Method_Block : public decafAST {
-// 	decafStmtList * variable_decls;
-// 	decafStmtList * statement_list;
-// public:
-// 	Method_Block(Block ** block) {
-// 		variable_decls = (*block)->variable_decls;
-// 		statement_list = (*block)->statement_list;
-// 		delete (*block);
-// 	}
-// 	~Method_Block() {
-// 		if(variable_decls) { delete variable_decls; }
-// 		if(statement_list) { delete statement_list; }
-// 	}
-// 	string str() {
-// 		return "MethodBlock(" + getString(variable_decls) + "," + getString(statement_list) + ")";
-// 	}
-// };
+class Method_Block : public decafAST {
+	Block * content;
+public:
+	Method_Block(Block * block) {
+		content = block;
+	}
+	~Method_Block() {
+		if(content) {delete content;}
+	}
+	string str() {
+		return "MethodBlock(" + content->get_content() + ")";
+	}
+};
 
 
-// /// If else, For, While
-// class If_Else: public decafAST {
-// 	decafAST * expression;
-// 	Block * if_block;
-// 	Block * else_block;
-// public: 
-// 	If_Else(decafAST * expr, Block * if_blk) 
-// 	: expression(expr), if_block(if_blk) {}
-// 	~If_Else() {
-// 		if(expression) {delete expression;}
-// 		if(if_block) {delete if_block;}
-// 		if(else_block) {delete else_block;}
-// 	}
-// 	void setElse(Block * else_blk) {
-// 		else_block = else_blk;
-// 	}
-// 	string str() {
-// 		if(else_block){
-// 			return "IfSmt(" + getString(expression) + "," + getString(if_block) + "," + getString(else_block) + ")";
-// 		}
-// 		return "IfSmt(" + getString(expression) + "," + getString(if_block) + ")";
-// 	}
-// };
+/// If else, For, While
+class If_Else: public decafStmtList {
+public: 
+	If_Else(decafAST * expr, Block * if_blk) : decafStmtList() {
+		push_back(expr);
+		push_back(if_blk);
+	}
+	If_Else(decafAST * expr, Block * if_blk, Block * else_blk) : decafStmtList() {
+		push_back(expr);
+		push_back(if_blk);
+		push_back(else_blk);
+	}
+	string str() {
+		return "IfSmt(" + decafStmtList::str() + ")";
+	}
+};
 
-// /// At this point, most loops are decafstmtlists
-// class For_Loop: public decafAST {
-// 	decafStmtList * data;
-// public:
-// 	For_Loop(decafAST * assign, decafAST * expression, decafAST * after_assign, Block * block) {
-// 		data = new decafStmtList();
-// 		data->push_back(assign);
-// 		data->push_back(expression);
-// 		data->push_back(after_assign);
-// 		data->push_back(block);
-// 	}
-// 	~For_Loop() {
-// 		if(data) { delete data; }
-// 	}
-// 	string str() {
-// 		return "ForStmt(" + getString(data) + ")";
-// 	}
-// };
+/// At this point, most loops are decafstmtlists
+class For_Loop: public decafStmtList {
+public:
+	For_Loop(decafAST * assign, decafAST * expression, decafAST * after_assign, Block * block) : decafStmtList(){
+		push_back(assign);
+		push_back(expression);
+		push_back(after_assign);
+		push_back(block);
+	}
+	string str() {
+		return "ForStmt(" + decafStmtList::str() + ")";
+	}
+};
 
-// class While_Loop: public decafAST {
-// 	decafStmtList * data;
-// public:
-// 	While_Loop(decafAST * expression, Block * block) {
-// 		data = new decafStmtList();
-// 		data->push_back(expression);
-// 		data->push_back(block);
-// 	}
-// 	~While_Loop() {
-// 		delete data;
-// 	}
-// 	string str() {
-// 		return "WhileStmt(" + getString(data) + ")";
-// 	}
-// };
+class While_Loop: public decafStmtList {
+public:
+	While_Loop(decafAST * expression, Block * block) : decafStmtList(){
+		push_back(expression);
+		push_back(block);
+	}
+	string str() {
+		return "WhileStmt(" + decafStmtList::str() + ")";
+	}
+};
 
-// /// Keywords
-// class Return_Stmt: public decafAST {
-// 	decafStmtList * structure;
-// public:
-// 	Return_Stmt() {
-// 		structure = new decafStmtList();
-// 	}
-// 	Return_Stmt(decafAST * returnVal) {
-// 		structure = new decafStmtList();
-// 		structure->push_back(returnVal);
-// 	}
-// 	~Return_Stmt() {
-// 		if(structure) {delete structure;}
-// 	}
-// 	string str() {
-// 		return "ReturnStmt(" + getString(structure) + ")";
-// 	}
-// };
+/// Keywords
+class Return_Stmt: public decafStmtList {
+public:
+	Return_Stmt() : decafStmtList(){}
+	Return_Stmt(decafAST * returnVal) : decafStmtList() {
+		push_back(returnVal);
+	}
+	string str() {
+		return "ReturnStmt(" + decafStmtList::str() + ")";
+	}
+};
 
-// class Continue: public decafAST {
-// public:
-// 	Continue() {}
-// 	~Continue() {}
-// 	string str() {
-// 		return "ContinueStmt";
-// 	}
-// };
+class Continue: public decafAST {
+public:
+	Continue() {}
+	~Continue() {}
+	string str() {
+		return "ContinueStmt";
+	}
+};
 
-// class Break: public decafAST {
-// public:
-// 	Break() {}
-// 	~Break() {}
-// 	string str() {
-// 		return "BreakStmt";
-// 	}
-// };
+class Break: public decafAST {
+public:
+	Break() {}
+	~Break() {}
+	string str() {
+		return "BreakStmt";
+	}
+};
 
 /// Extern and method declarations
 // class Extern_Func: public  decafAST {

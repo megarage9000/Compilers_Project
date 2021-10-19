@@ -21,19 +21,6 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
     return list;
 }
 
-// alternate_decl_stmts : typed_symbols_decl statement     {$$ = initialize_recursive_list($1, $2); }  
-//     | statement typed_symbols_decl                      {$$ = initialize_recursive_list($1, $2); }
-//     | typed_symbols_decls statement                     {$$ = initialize_recursive_list($1, $2); }
-//     | statement typed_symbols_decls                     {$$ = initialize_recursive_list($1, $2); }
-//     | typed_symbols_decl statement_list                 {$$ = initialize_recursive_list($1, $2); }
-//     | statement_list typed_symbols_decl                 {$$ = initialize_recursive_list($1, $2); }
-//     | typed_symbols_decls statement_list                {$$ = initialize_recursive_list($1, $2); }
-//     | statement_list typed_symbols_decls                {$$ = initialize_recursive_list($1, $2); }
-//     | alternate_decl_stmts typed_symbols_decl           {$1->push_back($2); $$ = $1; }
-//     | alternate_decl_stmts typed_symbols_decls          {$1->push_back($2); $$ = $1; }
-//     | alternate_decl_stmts statement                    {$1->push_back($2); $$ = $1; }
-//     | alternate_decl_stmts statement_list               {$1->push_back($2); $$ = $1; }
-
 %}
 
 %define parse.error verbose
@@ -84,7 +71,7 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 %type<ast> program extern_list decafpackage expression constant value_type identifier
 %type<ast> binary_operation unary_operation assign statement method_call method_arg
 %type<ast> typed_symbols field_decls method_decl_arg typed_symbols_decl
-%type<ast> block method_block if_stmt rvalue
+%type<ast> block method_block if_stmt rvalue for_loop while_loop
 %type<list> assign_list statement_list method_args identifier_list method_decl_args typed_symbols_decls
 
 %%
@@ -110,6 +97,31 @@ extern_list: /* extern_list can be empty */
 decafpackage: T_PACKAGE T_ID T_LCB T_RCB
     { $$ = new PackageAST(*$2, new decafStmtList(), new decafStmtList()); delete $2; }
     ; 
+
+
+/* While-Loop */
+while_loop: T_WHILE T_LPAREN expression T_RPAREN block {
+    $$ = new While_Loop($3, dynamic_cast<Block *>($5));
+}
+
+/* For-Loop */
+for_loop: T_FOR T_LPAREN assign_list T_SEMICOLON expression T_SEMICOLON assign_list T_RPAREN block {
+        $$ = new For_Loop($3, $5, $7, dynamic_cast<Block *>($9));
+        debugAST($$);
+    }
+    | T_FOR T_LPAREN assign T_SEMICOLON expression T_SEMICOLON assign T_RPAREN block {
+        $$ = new For_Loop($3, $5, $7, dynamic_cast<Block *>($9));
+        debugAST($$);
+    }
+    | T_FOR T_LPAREN assign_list T_SEMICOLON expression T_SEMICOLON assign T_RPAREN block {
+        $$ = new For_Loop($3, $5, $7, dynamic_cast<Block *>($9));
+        debugAST($$);
+    }
+    | T_FOR T_LPAREN assign T_SEMICOLON expression T_SEMICOLON assign_list T_RPAREN block {
+        $$ = new For_Loop($3, $5, $7, dynamic_cast<Block *>($9));
+        debugAST($$);
+    }
+
 
 /* If-Else */
 if_stmt: T_IF T_LPAREN expression T_RPAREN block {
@@ -139,6 +151,8 @@ statement_list: statement statement     {$$ = initialize_recursive_list($1, $2);
 statement: assign T_SEMICOLON           {$$ = $1;}
     | method_call T_SEMICOLON           {$$ = $1;}
     | if_stmt                           {$$ = $1;}
+    | while_loop                        {$$ = $1;}
+    | for_loop                          {$$ = $1;}
     | block                             {$$ = $1;}
     ;
 

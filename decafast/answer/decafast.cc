@@ -220,6 +220,14 @@ public:
 				return "None";
 		}
 	}
+	string get_num() {
+		if(const_type == INTTYPE) {
+			return val_rep;
+		}
+		else {
+			return "None";
+		}
+	}
 };
 
 /// Expressions
@@ -246,266 +254,127 @@ public:
 	}
 };
 
-// /// Variable / Array Assignments and Expressions
-// class Assign_Var: public decafAST {
-// 	decafAST * value;
-// 	string identifier;
-// public:
-// 	Assign_Var(string ** id, decafAST * val) : value(val), identifier(*(*id)) {
-// 		delete *id;
-// 	}
-// 	~Assign_Var() {
-// 		if(value) { delete value; }
-// 	}
-// 	string str() {
-// 		return "AssignVar(" + identifier + "," + getString(value) + ")";
-// 	}	
-// };
+/// Variable / Array Assignments and Expressions
+class Assign_Var: public decafStmtList {
+public:
+	Assign_Var(Identifier * id, decafAST * expression) : decafStmtList() {
+		push_back(id);
+		push_back(expression);
+	}
+	string str() {
+		return "AssignVar(" + decafStmtList::str() + ")";
+	}	
+};
 
-// class Assign_Arr_Loc: public decafAST {
-// 	decafAST * value;
-// 	decafAST * index;
-// 	string identifier;
-// public:
-// 	Assign_Arr_Loc(string ** id, decafAST * loc, decafAST * val) : identifier(*(*id)), index(loc), value(val) {
-// 		delete *id;
-// 	}
-// 	~Assign_Arr_Loc() {
-// 		if(value) { delete value; }
-// 		if(index) { delete index; }
-// 	}
-// 	string str() {
-// 		return "AssignArrayLoc(" + identifier + "," + getString(index) + "," + getString(value) + ")";
-// 	}
-// };
+class Assign_Arr_Loc: public decafStmtList {
+public:
+	Assign_Arr_Loc(Identifier * id, decafAST * index, decafAST * expression) : decafStmtList() {
+		push_back(id);
+		push_back(index);
+		push_back(expression);
+	}
+	string str() {
+		return "AssignArrayLoc(" + decafStmtList::str() + ")";
+	}
+};
 
-// class Var_Expr: public decafAST {
-// 	string identifier;
-// public:
-// 	Var_Expr(string ** id) : identifier(*(*id)) {
-// 		delete *id;
-// 	}
-// 	~Var_Expr() {}
-// 	string str() {
-// 		return "VariableExpr(" + identifier + ")";
-// 	}	
-// };
+class Var_Expr: public decafAST{
+	Identifier * identifier;
+public:
+	Var_Expr(Identifier * id) : identifier(id) {}
+	~Var_Expr() { if(identifier) {delete identifier;}}
+	string str() {
+		return "VariableExpr(" + getString(identifier) + ")";
+	}	
+};
 
-// class Arr_Loc_Expr: public decafAST {
-// 	decafAST * index;
-// 	string identifier;
-// public:
-// 	Arr_Loc_Expr(string ** id, decafAST * loc) : identifier(*(*id)), index(loc){
-// 		delete *id;
-// 	}
-// 	~Arr_Loc_Expr() {
-// 		if(index) { delete index; }
-// 	}
-// 	string str() {
-// 		return "ArrayLocExpr(" + identifier + "," + getString(index) + ")";
-// 	}
-// };
+class Arr_Loc_Expr: public decafStmtList{;
+public:
+	Arr_Loc_Expr(Identifier * id, decafAST * expression) : decafStmtList(){
+		push_back(id);
+		push_back(expression);
+	}
+	string str() {
+		return "ArrayLocExpr(" + decafStmtList::str() + ")";
+	}
+};
 
 // /// Methods
-// class Method_Call: public decafAST {
-// 	// Use statement list for method_args
-// 	decafStmtList * method_args;
-// 	string identifier;
-// public:
-// 	Method_Call(string ** id, decafStmtList * args_list): identifier(*(*id)), method_args(args_list) {
-// 		delete *id;
-// 	}
-// 	Method_Call(string ** id, decafAST * single_arg): identifier(*(*id)) {
-// 		method_args = new decafStmtList();
-// 		method_args->push_back(single_arg);
-// 		delete *id;
-// 	}
-// 	Method_Call(string ** id) : identifier(*(*id)), method_args(NULL) {
-// 		delete *id;
-// 	}
-// 	~Method_Call(){
-// 		if(method_args) { delete method_args; }
-// 	}
-// 	string str() {
-// 		if(!method_args) {
-// 			return "MethodCall(" + identifier + ")";
-// 		}
-// 		return "MethodCall(" + identifier +"," + getString(method_args) + ")";
-// 	}
-// };
+class Method_Call: public decafStmtList {
+public:
+	Method_Call(Identifier * name, decafAST * method_args): decafStmtList()  {
+		push_back(name);
+		push_back(method_args);
+	}
+	Method_Call(Identifier * name): decafStmtList() {
+		push_back(name);
+	}
+	string str() {
+		return "MethodCall(" + decafStmtList::str() + ")";
+	}
+};
 
-// // Variable declarations
-// class Typed_Symbol : public decafAST {
-// 	string identifier;
-// 	const_type sym_type;
-// public:
-// 	Typed_Symbol(string ** id, const_type type) : identifier(*(*id)), sym_type(type) {
-// 		delete *id;
-// 	}
-// 	Typed_Symbol(string id , const_type type) : identifier(id), sym_type(type) {}
-// 	Typed_Symbol(const_type type) : identifier(""), sym_type(type) {}
-// 	~Typed_Symbol() {}
-// 	string str() {
-// 		string returnVal = "VarDef(";
-// 		if(identifier != "") {
-// 			returnVal += identifier + ",";
-// 		}
-// 		switch (sym_type) {
-// 			case INT:
-// 				return returnVal + "IntType)";
-// 				break;
-// 			case STRING:
-// 				return returnVal + "StringType)";
-// 				break;
-// 			case BOOL:
-// 				return returnVal + "BoolType)";
-// 				break;
-// 			default:
-// 				break;
-// 		}
-// 		return returnVal;
-// 	}
-// 	string getIdentifier() { return identifier; }
-// 	const_type getType()   { return sym_type; }
-// }; 
+// Variable declarations
+class Var_Def : public decafStmtList {
+public:
+	Var_Def(decafAST * identifiers, Type * type) : decafStmtList() {
+		push_back(identifiers);
+		push_back(type);
+	}
+	string str() {
+		return "VarDef(" + decafStmtList::str() + ")";
+	}
+	// For Field delarations, since FieldDecl and VarDef are similar
+	string get_structure() {
+		return decafStmtList::str();
+	}
+};
 
-// // Special case of multiple statements
-// class Untyped_Symbol {
-// 	string identifier;
-// public:
-// 	Untyped_Symbol(string ** id) : identifier(*(*id)) {
-// 		delete *id;
-// 	}
-// 	~Untyped_Symbol() {}
-// 	string getId() { return identifier; }
-// };
+/// Field declarations
+class Field_Size : public decafAST {
+	string size;
+public: 
+	Field_Size() {size = "";}
+	Field_Size(Constant_Expr ** arr_size) {
+		size = (*arr_size)->get_num();
+		if(size == "None") {
+			size = "";
+		}
+		delete *arr_size;
+	}
+	string str() {
+		if(size == "") {
+			return "Scalar";
+		}
+		return "Array(" + size + ")";
+	}
+};
 
-// class Untyped_Symbols {
-// 	list<Untyped_Symbol*> values;
-// public:
-// 	Untyped_Symbols() {}
-// 	~Untyped_Symbols() {
-// 		for(Untyped_Symbol * sym: values) {
-// 			delete sym;
-// 		}
-// 	}
-// 	void push_back(Untyped_Symbol * symbol) { values.push_back(symbol);}
-// 	void push_front(Untyped_Symbol * symbol) { values.push_front(symbol);}
-// 	list<Untyped_Symbol*> getSymbols() { return values; }
-// };
+class Field_Decl : public decafAST{
+	Field_Size * size;
+	Var_Def * symbols;
+public:
+	Field_Decl(Var_Def * syms, Field_Size * sz) : symbols(syms), size(sz){}
+	~Field_Decl() {
+		if(size) {delete size;}
+		if(symbols) {delete symbols;}
+	}
+	string str() {
+		return "FieldDecl(" + symbols->get_structure() + "," + size->str() + ")";
+	}
+};
 
-// decafStmtList * createTypedSymbolList(Untyped_Symbols ** untyped_syms_ptr, const_type type) {
-// 	decafStmtList * typed_syms = new decafStmtList();
-// 	Untyped_Symbols * untyped_syms = *untyped_syms_ptr;
-// 	list<Untyped_Symbol *> untyped_vals = untyped_syms->getSymbols();
-// 	for(list<Untyped_Symbol *>::iterator it = untyped_vals.begin(); it != untyped_vals.end(); ++it) {
-// 		typed_syms->push_back(new Typed_Symbol(
-// 			(*it)->getId(),
-// 			type
-// 		));
-// 	}
-// 	delete *(untyped_syms_ptr);
-// 	return typed_syms;
-// }
-
-// typedef enum {SCALAR, ARRAY} field_size;
-
-// class Field_Decl : public decafAST{
-// 	field_size size;
-// 	string identifier;
-// 	const_type sym_type;
-// 	string val_size;
-// public:
-// 	Field_Decl(Typed_Symbol * declaration, field_size sz) 
-// 	: identifier(declaration->getIdentifier()), sym_type(declaration->getType()), size(sz) {val_size="";}
-// 	Field_Decl(string ** id, const_type type, field_size sz) 
-// 	: identifier(*(*id)), sym_type(type), size(sz) {val_size=""; delete *id;}
-// 	Field_Decl(Typed_Symbol * declaration, field_size sz, string v_size) 
-// 	: identifier(declaration->getIdentifier()), sym_type(declaration->getType()), size(sz), val_size(v_size) {}
-// 	Field_Decl(string ** id, const_type type, field_size sz, string v_size) 
-// 	: identifier(*(*id)), sym_type(type), size(sz), val_size(v_size) { delete *id;}	
-// 	~Field_Decl() {}
-// 	string str() {
-// 		string returnVal = "FieldDecl(";
-// 		if(identifier != "") {
-// 			returnVal += identifier + ",";
-// 		}
-// 		switch (sym_type) {
-// 			case INT:
-// 				returnVal += "IntType";
-// 				break;
-// 			case STRING:
-// 				returnVal += "StringType";
-// 				break;
-// 			case BOOL:
-// 				returnVal += "BoolType";
-// 				break;
-// 			default:
-// 				break;
-// 		}
-// 		if(size == SCALAR) {
-// 			returnVal += ",Scalar)";
-// 		}
-// 		else if (val_size != ""){
-// 			returnVal += ",Array(" + val_size + "))";
-// 		}
-// 		return returnVal;
-// 	}
-// };
-
-// decafStmtList * createFieldDeclList(decafStmtList * typed_syms) {
-// 	decafStmtList * field_decls = new decafStmtList();
-// 	list<decafAST *> typed_vals = typed_syms->values();
-
-// 	for(list<decafAST *>::iterator it = typed_vals.begin(); it != typed_vals.end(); ++it) {
-// 		Typed_Symbol * symbol = dynamic_cast<Typed_Symbol *>(*it);
-// 		field_decls->push_back(new Field_Decl(symbol, SCALAR));
-// 	}
-// 	delete typed_syms;
-// 	return field_decls;
-// }
-
-// decafStmtList * createFieldDeclListArr(decafStmtList * typed_syms, string size) {
-// 	decafStmtList * field_decls = new decafStmtList();
-// 	list<decafAST *> typed_vals = typed_syms->values();
-
-// 	for(list<decafAST *>::iterator it = typed_vals.begin(); it != typed_vals.end(); ++it) {
-// 		Typed_Symbol * symbol = dynamic_cast<Typed_Symbol *>(*it);
-// 		field_decls->push_back(new Field_Decl(symbol, ARRAY, size));
-// 	}
-// 	delete typed_syms;
-// 	return field_decls;
-// }
-
-// class Assign_Global : public decafAST {
-// 	string identifier;
-// 	string value;
-// 	const_type sym_type;
-// public:
-// 	Assign_Global(Typed_Symbol * declaration, string val):
-// 	identifier(declaration->getIdentifier()), sym_type(declaration->getType()), value(val) {}
-// 	Assign_Global(string id, const_type type, string val):
-// 	identifier(id), sym_type(type), value(val) {}
-// 	~Assign_Global() {}
-// 	string str() {
-// 		string returnVal = "AssignGlobalVar(" + identifier + ",";
-// 		switch (sym_type) {
-// 			case INT:
-// 				returnVal += "IntType";
-// 				break;
-// 			case STRING:
-// 				returnVal += "StringType";
-// 				break;
-// 			case BOOL:
-// 				returnVal += "BoolType";
-// 				break;
-// 			default:
-// 				break;
-// 		}
-// 		returnVal += "," + value + ")";
-// 		return returnVal;
-// 	}
-// };
+class Assign_Global : public decafStmtList {
+public:
+	Assign_Global(Identifier * identifier, Type * type, Constant_Expr * const_expr) : decafStmtList() {
+		push_back(identifier);
+		push_back(type);
+		push_back(const_expr);
+	}
+	string str() {
+		return "AssignGlobalVar(" + decafStmtList::str() + ")";
+	}
+};
 
 // /* Blocks and Method Blocks */
 // class Block : public decafAST {

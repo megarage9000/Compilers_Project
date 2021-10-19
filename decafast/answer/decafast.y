@@ -30,7 +30,6 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
     class decafAST *ast;
     class decafStmtList *list;
     std::string *sval;
-    
  }
 
 %token T_PACKAGE
@@ -70,12 +69,14 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 %type<untyped_list> untyped_symbols
 */
 
-%type<ast> program extern_list decafpackage expression constant value_type 
-%type<ast> binary_operation unary_operation
+%type<ast> program extern_list decafpackage expression constant value_type identifier
+%type<ast> binary_operation unary_operation assign statement method_call method_arg
+%type<ast> typed_symbols field_decls
+%type<list> assign_list statement_list method_args identifier_list
 
 %%
 
-start: expression   {debugAST($1); delete $1;}
+start: typed_symbols {debugAST($1); delete $1;}
     ;
 
 program: extern_list decafpackage
@@ -96,11 +97,63 @@ decafpackage: T_PACKAGE T_ID T_LCB T_RCB
     { $$ = new PackageAST(*$2, new decafStmtList(), new decafStmtList()); delete $2; }
     ; 
 
+/* Statements */
+statement_list: statement statement     {$$ = initialize_recursive_list($1, $2); }
+        | statement_list statement      {$1->push_back($2); $$ = $1; }
+
+statement: assign T_SEMICOLON           {$$ = $1;}
+    ;
+
+/* Field Declarations */
+field_decls: typed_symbols T_SEMICOLON {
+        $$ = new Field_Decl(dynamic_cast<Var_Def *>($1), new Field_Size());
+    }
+    | typed_symbols T_LSB T_INTCONSTANT T_RSB T_SEMICOLON {
+        Constant_Expr * arrSize = new Constant_Expr(&($3), INTTYPE);
+        $$ = new Field_Decl(dynamic_cast<Var_Def *>($1), 
+                            new Field_Size(&arrSize));
+    }
+    ;
+
+/* Typed Symbols */
+typed_symbols: T_VAR identifier value_type      {$$ = new Var_Def($2, dynamic_cast<Type *>($3));}
+    | T_VAR identifier_list value_type          {$$ = new Var_Def($2, dynamic_cast<Type *>($3));}
+    ;
+
+identifier_list: identifier T_COMMA identifier {$$ = initialize_recursive_list($1, $3);}
+    | identifier_list T_COMMA identifier       {$1->push_back($3); $$ = $1;}
+    ;
+
+/* Methods and Method args*/
+method_call: identifier T_LPAREN T_RPAREN {$$ = new Method_Call(dynamic_cast<Identifier *>($1)); }
+        /* Single arg*/
+        | identifier T_LPAREN expression T_RPAREN     {$$ = new Method_Call(dynamic_cast<Identifier *>($1), $3); }
+        /* Mutliple args*/
+        | identifier T_LPAREN method_args T_RPAREN    {$$ = new Method_Call(dynamic_cast<Identifier *>($1), $3);}
+        ;
+
+method_args: method_arg T_COMMA method_arg     {$$ = initialize_recursive_list($1, $3);}
+    | method_args T_COMMA method_arg          {$1->push_back($3); $$ = $1; }
+    ;
+
+method_arg: T_STRINGCONSTANT  {$$ = new Constant_Expr(&($1), STRINGTYPE);}
+    | expression              {$$ = $1;}
+
+/* Assignments */ 
+assign_list : assign T_COMMA assign {$$ = initialize_recursive_list($1, $3);}
+    | assign_list T_COMMA assign {$1->push_back($3); $$ = $1;}
+    ;
+
+assign: identifier T_ASSIGN expression {$$ = new Assign_Var(dynamic_cast<Identifier *>($1), $3); }
+    | identifier T_LSB expression T_RSB T_ASSIGN expression {$$ = new Assign_Arr_Loc(dynamic_cast<Identifier *>($1), $3, $6); }
+    ;
+
 /* Expressions */
 expression: constant                          {$$ = $1;}
     | binary_operation                        {$$ = $1;}
     | unary_operation                         {$$ = $1;}
     | T_LPAREN expression T_RPAREN            {$$ = $2;}
+    | method_call                             {$$ = $1;}
     ;
 
 /* Operators */
@@ -120,12 +173,10 @@ binary_operation:  expression T_PLUS expression {$$ = new Binary_Expr($1, $3, ne
 
 unary_operation:  T_MINUS expression %prec U_MINUS {$$ = new Unary_Expr($2, new Unary_Operator(UNARY_MINUS));}
     | T_NOT expression %prec U_NOT {$$ = new Unary_Expr($2, new Unary_Operator(NOT));}
-
-
+    ;
 
 /* Constants */
-constant: T_STRINGCONSTANT  {$$ = new Constant_Expr(&($1), STRINGTYPE);}
-    | T_CHARCONSTANT {$$ = new Constant_Expr(&($1), INTTYPE);}
+constant: T_CHARCONSTANT {$$ = new Constant_Expr(&($1), INTTYPE);}
     | T_INTCONSTANT  {$$ = new Constant_Expr(&($1), INTTYPE);}
     | T_FALSE        {$$ = new Constant_Expr(&($1), BOOLTYPE);}
     | T_TRUE         {$$ = new Constant_Expr(&($1), BOOLTYPE);}
@@ -134,7 +185,11 @@ constant: T_STRINGCONSTANT  {$$ = new Constant_Expr(&($1), STRINGTYPE);}
 /* Value types */
 value_type: T_BOOLTYPE {$$ = new Type(BOOLTYPE);}
     | T_INTTYPE        {$$ = new Type(INTTYPE);}
-    | T_STRINGTYPE     {$$ = new Type(STRINGTYPE)}
+    | T_STRINGTYPE     {$$ = new Type(STRINGTYPE);}
+    ;
+
+identifier: T_ID       {$$ = new Identifier(&($1));}
+    ;
 %%
 // TODO remember to bring back!
 

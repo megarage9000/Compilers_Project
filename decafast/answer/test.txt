@@ -1,2 +1,1 @@
-var b, c, l bool;
-var b, c, l bool;
+var b bool, var x int, var s string

@@ -71,12 +71,14 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 
 %type<ast> program extern_list decafpackage expression constant value_type identifier
 %type<ast> binary_operation unary_operation assign statement method_call method_arg
-%type<ast> typed_symbols field_decls
-%type<list> assign_list statement_list method_args identifier_list
+%type<ast> typed_symbols field_decls typed_symbol
+%type<list> assign_list statement_list method_args identifier_list method_decl_args
 
 %%
 
 start: typed_symbols {debugAST($1); delete $1;}
+    | typed_symbol   {debugAST($1); delete $1;}
+    | method_decl_args  {debugAST($1); delete $1;}
     ;
 
 program: extern_list decafpackage
@@ -113,15 +115,27 @@ field_decls: typed_symbols T_SEMICOLON {
         $$ = new Field_Decl(dynamic_cast<Var_Def *>($1), 
                             new Field_Size(&arrSize));
     }
+    | typed_symbol T_SEMICOLON {
+        $$ = new Field_Decl(dynamic_cast<Var_Def *>($1), new Field_Size());
+    }
+    | typed_symbol T_LSB T_INTCONSTANT T_RSB T_SEMICOLON {
+        Constant_Expr * arrSize = new Constant_Expr(&($3), INTTYPE);
+        $$ = new Field_Decl(dynamic_cast<Var_Def *>($1), 
+                            new Field_Size(&arrSize));
+    }
     ;
+
+/* Method declaration */
+method_decl_args: typed_symbol T_COMMA typed_symbol   {$$ = initialize_recursive_list($1, $3);}
+    | method_decl_args T_COMMA typed_symbol           {$1->push_back($3);}
 
 /* Typed Symbols */
-typed_symbols: T_VAR identifier value_type      {$$ = new Var_Def($2, dynamic_cast<Type *>($3));}
-    | T_VAR identifier_list value_type          {$$ = new Var_Def($2, dynamic_cast<Type *>($3));}
+typed_symbols: T_VAR identifier_list value_type         {$$ = new Var_Def($2, dynamic_cast<Type *>($3));}
     ;
+typed_symbol: T_VAR identifier value_type               {$$ = new Var_Def($2, dynamic_cast<Type *>($3));}
 
-identifier_list: identifier T_COMMA identifier {$$ = initialize_recursive_list($1, $3);}
-    | identifier_list T_COMMA identifier       {$1->push_back($3); $$ = $1;}
+identifier_list: identifier T_COMMA identifier          {$$ = initialize_recursive_list($1, $3);}
+    | identifier_list T_COMMA identifier                {$1->push_back($3); $$ = $1;}
     ;
 
 /* Methods and Method args*/

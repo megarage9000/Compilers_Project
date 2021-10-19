@@ -1,0 +1,769 @@
+INFO:root:path=dev
+INFO:root:Checking dev/4.ret
+INFO:root:dev/4.ret Correct!
+INFO:root:Checking dev/charescapevals-7.out
+INFO:root:Diff between reference and your output for dev/charescapevals-7.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(8))))))'
+INFO:root:Checking dev/charvals-2.out
+INFO:root:Diff between reference and your output for dev/charvals-2.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(90))))))'
+INFO:root:Checking dev/e1.ret
+INFO:root:dev/e1.ret Correct!
+INFO:root:Checking dev/charescapevals-3.out
+INFO:root:Diff between reference and your output for dev/charescapevals-3.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(13))))))'
+INFO:root:Checking dev/charescapevals-1.out
+INFO:root:Diff between reference and your output for dev/charescapevals-1.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(9))))))'
+INFO:root:Checking dev/externs.out
+INFO:root:Diff between reference and your output for dev/externs.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),ExternFunction(print_int,VoidType,VarDef(IntType)),Package(QuickSort,FieldDecl(x,IntType,Scalar),Method(main,VoidType,None,MethodBlock(None,None))))'
+INFO:root:Checking dev/2.ret
+INFO:root:dev/2.ret Correct!
+INFO:root:Checking dev/8.ret
+INFO:root:dev/8.ret Correct!
+INFO:root:Checking dev/returnempty.out
+INFO:root:Diff between reference and your output for dev/returnempty.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,VoidType,None,MethodBlock(None,ReturnStmt(None)))))'
+INFO:root:Checking dev/empty.ret
+INFO:root:dev/empty.ret Correct!
+INFO:root:Checking dev/method0.out
+INFO:root:Diff between reference and your output for dev/method0.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(QuickSort,FieldDecl(x,IntType,Scalar),Method(main,VoidType,None,MethodBlock(None,None))))'
+INFO:root:Checking dev/externprintstring.out
+INFO:root:Diff between reference and your output for dev/externprintstring.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,VoidType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(1))))))'
+INFO:root:Checking dev/charvals-1.out
+INFO:root:Diff between reference and your output for dev/charvals-1.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(97))))))'
+INFO:root:Checking dev/charvals-10.out
+INFO:root:Diff between reference and your output for dev/charvals-10.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(109))))))'
+INFO:root:Checking dev/charescapevals-5.out
+INFO:root:Diff between reference and your output for dev/charescapevals-5.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(7))))))'
+INFO:root:Checking dev/charvals-4.out
+INFO:root:Diff between reference and your output for dev/charvals-4.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(94))))))'
+INFO:root:Checking dev/expr-testfile-7.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-7.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),VarDef(y,BoolType),AssignVar(x,BinaryExpr(Plus,BinaryExpr(Plus,BinaryExpr(Plus,NumberExpr(2),BinaryExpr(Mult,NumberExpr(2),NumberExpr(3))),NumberExpr(5)),BinaryExpr(Minus,BinaryExpr(Mult,NumberExpr(43),NumberExpr(23)),NumberExpr(44)))),Block(VarDef(y,IntType),AssignVar(y,BinaryExpr(Plus,BinaryExpr(Mult,VariableExpr(x),UnaryExpr(UnaryMinus,NumberExpr(30))),BinaryExpr(Mult,NumberExpr(40),NumberExpr(2)))),AssignVar(x,UnaryExpr(UnaryMinus,VariableExpr(y)))),AssignVar(y,UnaryExpr(Not,BoolExpr(True))),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/charvals-13.out
+INFO:root:Diff between reference and your output for dev/charvals-13.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(77))))))'
+INFO:root:Checking dev/arith2.ret
+INFO:root:dev/arith2.ret Correct!
+INFO:root:Checking dev/19.ret
+INFO:root:dev/19.ret Correct!
+INFO:root:Checking dev/if-func4.out
+INFO:root:Diff between reference and your output for dev/if-func4.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,BoolType,None,MethodBlock(None,ReturnStmt(BoolExpr(True)))),Method(main,VoidType,None,MethodBlock(None,IfStmt(MethodCall(f,None),Block(None,AssignVar(x,NumberExpr(1))),None)))))'
+INFO:root:Checking dev/methodcall2.out
+INFO:root:Diff between reference and your output for dev/methodcall2.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,VoidType,None,MethodBlock(None,MethodCall(g,NumberExpr(1),NumberExpr(2))))))'
+INFO:root:Checking dev/stringescapes-5.out
+INFO:root:Diff between reference and your output for dev/stringescapes-5.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_string,StringConstant("\\a"))))))'
+INFO:root:Checking dev/11.ret
+INFO:root:dev/11.ret Correct!
+INFO:root:Checking dev/expr-testfile-2.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-2.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),VarDef(y,BoolType),VarDef(z,BoolType),AssignVar(x,BinaryExpr(Plus,BinaryExpr(Plus,BinaryExpr(Plus,NumberExpr(2),BinaryExpr(Mult,NumberExpr(2),NumberExpr(3))),NumberExpr(5)),BinaryExpr(Minus,BinaryExpr(Mult,NumberExpr(43),NumberExpr(23)),NumberExpr(44)))),AssignVar(x,UnaryExpr(UnaryMinus,VariableExpr(x))),AssignVar(y,BoolExpr(True)),AssignVar(z,BoolExpr(False)),AssignVar(y,BinaryExpr(Or,BinaryExpr(And,BoolExpr(True),VariableExpr(y)),VariableExpr(z))),MethodCall(print_int,UnaryExpr(UnaryMinus,VariableExpr(x)))))))'
+INFO:root:Checking dev/stringescapes-9.out
+INFO:root:Diff between reference and your output for dev/stringescapes-9.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_string,StringConstant("\\""))))))'
+INFO:root:Checking dev/sum.out
+INFO:root:Diff between reference and your output for dev/sum.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(read_int,IntType,None),ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(i,IntType),VarDef(sum,IntType),AssignVar(sum,NumberExpr(0)),ForStmt(AssignVar(i,NumberExpr(0)),BinaryExpr(Lt,VariableExpr(i),NumberExpr(10)),AssignVar(i,BinaryExpr(Plus,VariableExpr(i),NumberExpr(1))),Block(None,AssignVar(sum,BinaryExpr(Plus,MethodCall(read_int,None),VariableExpr(sum))))),MethodCall(print_int,VariableExpr(sum))))))'
+INFO:root:Checking dev/charescapes-7.out
+INFO:root:Diff between reference and your output for dev/charescapes-7.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(c,IntType),AssignVar(c,NumberExpr(8))))))'
+INFO:root:Checking dev/expr-testfile-1.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-1.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,BinaryExpr(Plus,BinaryExpr(Plus,NumberExpr(2),BinaryExpr(Mult,NumberExpr(2),NumberExpr(3))),NumberExpr(5))),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/externsmultinocomma.ret
+INFO:root:dev/externsmultinocomma.ret Correct!
+INFO:root:Checking dev/charescapevals-8.out
+INFO:root:Diff between reference and your output for dev/charescapevals-8.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(92))))))'
+INFO:root:Checking dev/if-func5.out
+INFO:root:Diff between reference and your output for dev/if-func5.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,BoolType,None,MethodBlock(None,ReturnStmt(VariableExpr(True)))),Method(main,VoidType,None,MethodBlock(None,IfStmt(MethodCall(f,None),Block(None,AssignVar(x,NumberExpr(1))),None)))))'
+INFO:root:Checking dev/returnmismatch-intofchar-ok.out
+INFO:root:Diff between reference and your output for dev/returnmismatch-intofchar-ok.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(Test,None,Method(test,IntType,None,MethodBlock(None,ReturnStmt(NumberExpr(120)))),Method(main,IntType,None,MethodBlock(None,None))))'
+INFO:root:Checking dev/charvals-5.out
+INFO:root:Diff between reference and your output for dev/charvals-5.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(55))))))'
+INFO:root:Checking dev/charvar.out
+INFO:root:Diff between reference and your output for dev/charvar.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(97))))))'
+INFO:root:Checking dev/prec.out
+INFO:root:Diff between reference and your output for dev/prec.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(QuickSort,None,Method(main,VoidType,None,MethodBlock(None,AssignVar(a,BinaryExpr(Plus,BinaryExpr(Rightshift,NumberExpr(1),NumberExpr(2)),NumberExpr(3))),AssignVar(b,BinaryExpr(Plus,NumberExpr(1),BinaryExpr(Mult,NumberExpr(2),NumberExpr(3)))),AssignVar(c,BinaryExpr(Or,UnaryExpr(Not,BoolExpr(False)),BoolExpr(True))),AssignVar(d,BinaryExpr(Plus,BinaryExpr(Div,NumberExpr(1),NumberExpr(2)),UnaryExpr(UnaryMinus,NumberExpr(3))))))))'
+INFO:root:Checking dev/whileloop.out
+INFO:root:Diff between reference and your output for dev/whileloop.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,VoidType,None,MethodBlock(None,WhileStmt(BoolExpr(True),Block(None,AssignVar(x,NumberExpr(1))))))))'
+INFO:root:Checking dev/stringescapes-7.out
+INFO:root:Diff between reference and your output for dev/stringescapes-7.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_string,StringConstant("\\b"))))))'
+INFO:root:Checking dev/charescapevals-9.out
+INFO:root:Diff between reference and your output for dev/charescapevals-9.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(39))))))'
+INFO:root:Checking dev/expr-testfile-9.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-9.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(10)),MethodCall(print_int,VariableExpr(x)),AssignVar(x,BinaryExpr(Plus,VariableExpr(x),NumberExpr(10))),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/stringconst-1.out
+INFO:root:Diff between reference and your output for dev/stringconst-1.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_string,StringConstant("hello, world\\n"))))))'
+INFO:root:Checking dev/forloop.out
+INFO:root:Diff between reference and your output for dev/forloop.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,VoidType,None,MethodBlock(None,ForStmt(AssignVar(i,NumberExpr(0)),BinaryExpr(Lt,VariableExpr(i),VariableExpr(size)),AssignVar(i,BinaryExpr(Plus,VariableExpr(i),NumberExpr(1))),Block(None,AssignVar(x,NumberExpr(1))))))))'
+INFO:root:Checking dev/14.ret
+INFO:root:dev/14.ret Correct!
+INFO:root:Checking dev/catalan.out
+INFO:root:Diff between reference and your output for dev/catalan.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),ExternFunction(read_int,IntType,None),Package(Catalan,None,Method(main,VoidType,None,MethodBlock(None,MethodCall(print_int,MethodCall(cat,MethodCall(read_int,None))))),Method(fact,IntType,VarDef(n,IntType),MethodBlock(None,IfStmt(BinaryExpr(Eq,VariableExpr(n),NumberExpr(1)),Block(None,ReturnStmt(NumberExpr(1))),Block(None,ReturnStmt(BinaryExpr(Mult,VariableExpr(n),MethodCall(fact,BinaryExpr(Minus,VariableExpr(n),NumberExpr(1))))))))),Method(choose,IntType,VarDef(a,IntType),VarDef(b,IntType),MethodBlock(None,ReturnStmt(BinaryExpr(Div,MethodCall(fact,VariableExpr(a)),BinaryExpr(Mult,MethodCall(fact,VariableExpr(b)),MethodCall(fact,BinaryExpr(Minus,VariableExpr(a),VariableExpr(b)))))))),Method(cat,IntType,VarDef(n,IntType),MethodBlock(None,ReturnStmt(BinaryExpr(Div,MethodCall(choose,BinaryExpr(Mult,NumberExpr(2),VariableExpr(n)),VariableExpr(n)),BinaryExpr(Plus,VariableExpr(n),NumberExpr(1))))))))'
+INFO:root:Checking dev/returnemptyparans.out
+INFO:root:Diff between reference and your output for dev/returnemptyparans.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,VoidType,None,MethodBlock(None,ReturnStmt(None)))))'
+INFO:root:Checking dev/charescapes-8.out
+INFO:root:Diff between reference and your output for dev/charescapes-8.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(c,IntType),AssignVar(c,NumberExpr(92))))))'
+INFO:root:Checking dev/decls.out
+INFO:root:Diff between reference and your output for dev/decls.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,FieldDecl(x,IntType,Scalar),FieldDecl(size,IntType,Scalar),Method(f,VoidType,None,MethodBlock(VarDef(x,IntType),VarDef(i,IntType),AssignVar(size,NumberExpr(100))))))'
+INFO:root:Checking dev/if-func1.out
+INFO:root:Diff between reference and your output for dev/if-func1.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,VoidType,None,MethodBlock(None,None)),Method(main,VoidType,None,MethodBlock(None,IfStmt(MethodCall(f,None),Block(None,AssignVar(x,NumberExpr(1))),None)))))'
+INFO:root:Checking dev/15.ret
+INFO:root:dev/15.ret Correct!
+INFO:root:Checking dev/e-sum.ret
+INFO:root:dev/e-sum.ret Correct!
+INFO:root:Checking dev/charexpr-3.out
+INFO:root:Diff between reference and your output for dev/charexpr-3.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,BinaryExpr(Minus,NumberExpr(92),NumberExpr(39)))))))'
+INFO:root:Checking dev/if.out
+INFO:root:Diff between reference and your output for dev/if.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,VoidType,None,MethodBlock(None,IfStmt(BinaryExpr(Geq,VariableExpr(leftPtr),VariableExpr(rightPtr)),Block(None,AssignVar(x,NumberExpr(1))),None)))))'
+INFO:root:Checking dev/block.out
+INFO:root:Diff between reference and your output for dev/block.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,VoidType,None,MethodBlock(None,Block(None,AssignVar(x,NumberExpr(1)))))))'
+INFO:root:Checking dev/stringescapes-4.out
+INFO:root:Diff between reference and your output for dev/stringescapes-4.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_string,StringConstant("\\n"))))))'
+INFO:root:Checking dev/assignmismatch-intofchar-ok.out
+INFO:root:Diff between reference and your output for dev/assignmismatch-intofchar-ok.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(120))))))'
+INFO:root:Checking dev/stringescapes-1.out
+INFO:root:Diff between reference and your output for dev/stringescapes-1.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_string,StringConstant("\\t"))))))'
+INFO:root:Checking dev/method2.out
+INFO:root:Diff between reference and your output for dev/method2.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(QuickSort,FieldDecl(x,IntType,Scalar),Method(main,VoidType,VarDef(a,IntType),VarDef(b,IntType),MethodBlock(None,None))))'
+INFO:root:Checking dev/methodcall0.out
+INFO:root:Diff between reference and your output for dev/methodcall0.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,VoidType,None,MethodBlock(None,MethodCall(g,None)))))'
+INFO:root:Checking dev/18.ret
+INFO:root:dev/18.ret Correct!
+INFO:root:Checking dev/21.ret
+INFO:root:dev/21.ret Correct!
+INFO:root:Checking dev/stringconst-3.out
+INFO:root:Diff between reference and your output for dev/stringconst-3.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_string,StringConstant("hello,")),MethodCall(print_string,StringConstant(" world")),MethodCall(print_string,StringConstant("\\n"))))))'
+INFO:root:Checking dev/returnnoparens.ret
+INFO:root:dev/returnnoparens.ret Correct!
+INFO:root:Checking dev/expr-testfile-6.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-6.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,UnaryExpr(Not,BoolExpr(True))),MethodCall(print_int,UnaryExpr(Not,BoolExpr(False)))))))'
+INFO:root:Checking dev/stringescapes-8.out
+INFO:root:Diff between reference and your output for dev/stringescapes-8.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_string,StringConstant("\\\\"))))))'
+INFO:root:Checking dev/charvals-3.out
+INFO:root:Diff between reference and your output for dev/charvals-3.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(48))))))'
+INFO:root:Checking dev/onlyfields.out
+INFO:root:Diff between reference and your output for dev/onlyfields.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(QuickSort,FieldDecl(x,IntType,Scalar),None))'
+INFO:root:Checking dev/charvals-12.out
+INFO:root:Diff between reference and your output for dev/charvals-12.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(65))))))'
+INFO:root:Checking dev/charvals-7.out
+INFO:root:Diff between reference and your output for dev/charvals-7.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(45))))))'
+INFO:root:Checking dev/arith1.out
+INFO:root:Diff between reference and your output for dev/arith1.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(foo,None,Method(main,VoidType,None,MethodBlock(None,AssignVar(size,BinaryExpr(Minus,BinaryExpr(Plus,BinaryExpr(Rightshift,NumberExpr(1),NumberExpr(3)),BinaryExpr(Mod,BinaryExpr(Div,NumberExpr(1),UnaryExpr(UnaryMinus,NumberExpr(2))),NumberExpr(10))),BinaryExpr(Leftshift,BinaryExpr(Div,BinaryExpr(Mult,NumberExpr(5),NumberExpr(2)),NumberExpr(20)),NumberExpr(2)))),AssignVar(flag,BinaryExpr(Or,VariableExpr(a),BinaryExpr(And,VariableExpr(b),UnaryExpr(Not,VariableExpr(c)))))))))'
+INFO:root:Checking dev/e2.ret
+INFO:root:dev/e2.ret Correct!
+INFO:root:Checking dev/expr-testfile-4.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-4.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,UnaryExpr(UnaryMinus,BinaryExpr(Plus,BinaryExpr(Plus,NumberExpr(2),BinaryExpr(Mult,NumberExpr(2),NumberExpr(3))),UnaryExpr(UnaryMinus,NumberExpr(5)))))))))'
+INFO:root:Checking dev/quicksort.out
+INFO:root:Diff between reference and your output for dev/quicksort.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),ExternFunction(print_int,VoidType,VarDef(IntType)),Package(QuickSort,FieldDecl(list,IntType,Array(100)),Method(cr,VoidType,None,MethodBlock(None,MethodCall(print_string,StringConstant("\\n")))),Method(displayList,VoidType,VarDef(start,IntType),VarDef(len,IntType),MethodBlock(VarDef(j,IntType),MethodCall(print_string,StringConstant("List:\\n")),ForStmt(AssignVar(j,VariableExpr(start)),BinaryExpr(Lt,VariableExpr(j),BinaryExpr(Plus,VariableExpr(start),VariableExpr(len))),AssignVar(j,BinaryExpr(Plus,VariableExpr(j),NumberExpr(1))),Block(None,MethodCall(print_int,ArrayLocExpr(list,VariableExpr(j))),MethodCall(print_string,StringConstant(" ")),IfStmt(BinaryExpr(Or,BinaryExpr(Eq,BinaryExpr(Mod,BinaryExpr(Plus,BinaryExpr(Minus,VariableExpr(j),VariableExpr(start)),NumberExpr(1)),NumberExpr(20)),NumberExpr(0)),BinaryExpr(Eq,BinaryExpr(Plus,VariableExpr(j),NumberExpr(1)),BinaryExpr(Plus,VariableExpr(start),VariableExpr(len)))),Block(None,MethodCall(cr,None)),None))))),Method(initList,VoidType,VarDef(size,IntType),MethodBlock(VarDef(i,IntType),ForStmt(AssignVar(i,NumberExpr(0)),BinaryExpr(Lt,VariableExpr(i),VariableExpr(size)),AssignVar(i,BinaryExpr(Plus,VariableExpr(i),NumberExpr(1))),Block(None,AssignArrayLoc(list,VariableExpr(i),BinaryExpr(Mod,BinaryExpr(Mult,VariableExpr(i),NumberExpr(2382983)),NumberExpr(100))))))),Method(swap,VoidType,VarDef(leftPtr,IntType),VarDef(rightPtr,IntType),MethodBlock(VarDef(temp,IntType),AssignVar(temp,ArrayLocExpr(list,VariableExpr(leftPtr))),AssignArrayLoc(list,VariableExpr(leftPtr),ArrayLocExpr(list,VariableExpr(rightPtr))),AssignArrayLoc(list,VariableExpr(rightPtr),VariableExpr(temp)))),Method(quickSort,VoidType,VarDef(left,IntType),VarDef(right,IntType),MethodBlock(None,IfStmt(BinaryExpr(Leq,BinaryExpr(Minus,VariableExpr(right),VariableExpr(left)),NumberExpr(0)),Block(None,ReturnStmt(None)),Block(VarDef(pivot,IntType),VarDef(part,IntType),AssignVar(pivot,ArrayLocExpr(list,VariableExpr(right))),AssignVar(part,MethodCall(partition,VariableExpr(left),VariableExpr(right),VariableExpr(pivot))),MethodCall(quickSort,VariableExpr(left),BinaryExpr(Minus,VariableExpr(part),NumberExpr(1))),MethodCall(quickSort,BinaryExpr(Plus,VariableExpr(part),NumberExpr(1)),VariableExpr(right)))))),Method(main,VoidType,None,MethodBlock(VarDef(size,IntType),AssignVar(size,NumberExpr(100)),MethodCall(initList,VariableExpr(size)),MethodCall(displayList,NumberExpr(0),VariableExpr(size)),MethodCall(quickSort,NumberExpr(0),BinaryExpr(Minus,VariableExpr(size),NumberExpr(1))),MethodCall(print_string,StringConstant("After sorting:\\n")),MethodCall(displayList,NumberExpr(0),VariableExpr(size)))),Method(partition,IntType,VarDef(left,IntType),VarDef(right,IntType),VarDef(pivot,IntType),MethodBlock(VarDef(leftPtr,IntType),VarDef(rightPtr,IntType),AssignVar(leftPtr,BinaryExpr(Minus,VariableExpr(left),NumberExpr(1))),AssignVar(rightPtr,VariableExpr(right)),WhileStmt(BoolExpr(True),Block(None,WhileStmt(BoolExpr(True),Block(None,AssignVar(leftPtr,BinaryExpr(Plus,VariableExpr(leftPtr),NumberExpr(1))),IfStmt(BinaryExpr(Geq,ArrayLocExpr(list,VariableExpr(leftPtr)),VariableExpr(pivot)),Block(None,BreakStmt),None))),WhileStmt(BoolExpr(True),Block(None,IfStmt(BinaryExpr(Leq,VariableExpr(rightPtr),NumberExpr(0)),Block(None,BreakStmt),None),AssignVar(rightPtr,BinaryExpr(Minus,VariableExpr(rightPtr),NumberExpr(1))),IfStmt(BinaryExpr(Leq,ArrayLocExpr(list,VariableExpr(rightPtr)),VariableExpr(pivot)),Block(None,BreakStmt),None))),IfStmt(BinaryExpr(Geq,VariableExpr(leftPtr),VariableExpr(rightPtr)),Block(None,BreakStmt),Block(None,MethodCall(swap,VariableExpr(leftPtr),VariableExpr(rightPtr)))))),MethodCall(swap,VariableExpr(leftPtr),VariableExpr(right)),ReturnStmt(VariableExpr(leftPtr))))))'
+INFO:root:Checking dev/charvals-6.out
+INFO:root:Diff between reference and your output for dev/charvals-6.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(57))))))'
+INFO:root:Checking dev/3.ret
+INFO:root:dev/3.ret Correct!
+INFO:root:Checking dev/charescapes-9.out
+INFO:root:Diff between reference and your output for dev/charescapes-9.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(c,IntType),AssignVar(c,NumberExpr(39))))))'
+INFO:root:Checking dev/returnexpr.out
+INFO:root:Diff between reference and your output for dev/returnexpr.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,VoidType,None,MethodBlock(None,ReturnStmt(VariableExpr(x))))))'
+INFO:root:Checking dev/expr-testfile-10.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-10.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(foo,IntType,None,MethodBlock(None,ReturnStmt(NumberExpr(10)))),Method(bar,IntType,VarDef(x,IntType),MethodBlock(None,ReturnStmt(BinaryExpr(Plus,VariableExpr(x),NumberExpr(10))))),Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,MethodCall(foo,None)),MethodCall(print_int,MethodCall(bar,NumberExpr(10)))))))'
+INFO:root:Checking dev/1.ret
+INFO:root:dev/1.ret Correct!
+INFO:root:Checking dev/onlymethods.out
+INFO:root:Diff between reference and your output for dev/onlymethods.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(QuickSort,None,Method(main,VoidType,None,MethodBlock(None,None))))'
+INFO:root:Checking dev/charescapes-2.out
+INFO:root:Diff between reference and your output for dev/charescapes-2.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(c,IntType),AssignVar(c,NumberExpr(11))))))'
+INFO:root:Checking dev/ifelse-prev.ret
+INFO:root:dev/ifelse-prev.ret Correct!
+INFO:root:Checking dev/e3.ret
+INFO:root:dev/e3.ret Correct!
+INFO:root:Checking dev/charescapes-6.out
+INFO:root:Diff between reference and your output for dev/charescapes-6.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(c,IntType),AssignVar(c,NumberExpr(12))))))'
+INFO:root:Checking dev/e4.ret
+INFO:root:dev/e4.ret Correct!
+INFO:root:Checking dev/stringescapes-6.out
+INFO:root:Diff between reference and your output for dev/stringescapes-6.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_string,StringConstant("\\f"))))))'
+INFO:root:Checking dev/no-main.out
+INFO:root:dev/no-main.out Correct!
+INFO:root:Checking dev/stringescapes-3.out
+INFO:root:Diff between reference and your output for dev/stringescapes-3.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_string,StringConstant("\\r"))))))'
+INFO:root:Checking dev/break.out
+INFO:root:Diff between reference and your output for dev/break.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,VoidType,None,MethodBlock(None,WhileStmt(BoolExpr(True),Block(None,BreakStmt))))))'
+INFO:root:Checking dev/charescapes-5.out
+INFO:root:Diff between reference and your output for dev/charescapes-5.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(c,IntType),AssignVar(c,NumberExpr(7))))))'
+INFO:root:Checking dev/16.ret
+INFO:root:dev/16.ret Correct!
+INFO:root:Checking dev/ifelse.out
+INFO:root:Diff between reference and your output for dev/ifelse.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,VoidType,None,MethodBlock(None,IfStmt(BinaryExpr(Geq,VariableExpr(leftPtr),VariableExpr(rightPtr)),Block(None,AssignVar(x,NumberExpr(1))),Block(None,AssignVar(x,NumberExpr(2))))))))'
+INFO:root:Checking dev/if-func3.out
+INFO:root:Diff between reference and your output for dev/if-func3.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,BoolType,None,MethodBlock(None,ReturnStmt(NumberExpr(1)))),Method(main,VoidType,None,MethodBlock(None,IfStmt(MethodCall(f,None),Block(None,AssignVar(x,NumberExpr(1))),None)))))'
+INFO:root:Checking dev/externsmulti.ret
+INFO:root:dev/externsmulti.ret Correct!
+INFO:root:Checking dev/5.ret
+INFO:root:dev/5.ret Correct!
+INFO:root:Checking dev/parens.ret
+INFO:root:dev/parens.ret Correct!
+INFO:root:Checking dev/13.ret
+INFO:root:dev/13.ret Correct!
+INFO:root:Checking dev/expr-testfile-3.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-3.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(y,BoolType),AssignVar(y,BoolExpr(True)),MethodCall(print_int,VariableExpr(y))))))'
+INFO:root:Checking dev/arith3.ret
+INFO:root:dev/arith3.ret Correct!
+INFO:root:Checking dev/default-passes.out
+INFO:root:Diff between reference and your output for dev/default-passes.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(Test,None,Method(main,IntType,None,MethodBlock(None,None))))'
+INFO:root:Checking dev/methodcall1.out
+INFO:root:Diff between reference and your output for dev/methodcall1.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,VoidType,None,MethodBlock(None,MethodCall(g,NumberExpr(1))))))'
+INFO:root:Checking dev/7.ret
+INFO:root:dev/7.ret Correct!
+INFO:root:Checking dev/expr-testfile-0.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-0.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,BinaryExpr(Plus,BinaryExpr(Plus,NumberExpr(2),BinaryExpr(Mult,NumberExpr(2),NumberExpr(3))),NumberExpr(5)))))))'
+INFO:root:Checking dev/10.ret
+INFO:root:dev/10.ret Correct!
+INFO:root:Checking dev/9.ret
+INFO:root:dev/9.ret Correct!
+INFO:root:Checking dev/12.ret
+INFO:root:dev/12.ret Correct!
+INFO:root:Checking dev/charescapevals-2.out
+INFO:root:Diff between reference and your output for dev/charescapevals-2.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(11))))))'
+INFO:root:Checking dev/arith4.out
+INFO:root:Diff between reference and your output for dev/arith4.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(foo,None,Method(main,VoidType,None,MethodBlock(None,AssignVar(size,BinaryExpr(Minus,BinaryExpr(Plus,BinaryExpr(Rightshift,NumberExpr(1),NumberExpr(3)),BinaryExpr(Mod,BinaryExpr(Div,NumberExpr(1),UnaryExpr(UnaryMinus,NumberExpr(2))),NumberExpr(10))),BinaryExpr(Leftshift,BinaryExpr(Div,BinaryExpr(Mult,NumberExpr(5),NumberExpr(2)),NumberExpr(20)),NumberExpr(2)))),AssignVar(x,UnaryExpr(Not,VariableExpr(size)))))))'
+INFO:root:Checking dev/charescapevals-4.out
+INFO:root:Diff between reference and your output for dev/charescapevals-4.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(10))))))'
+INFO:root:Checking dev/stringconst-2.out
+INFO:root:Diff between reference and your output for dev/stringconst-2.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_string,StringConstant("hello,")),MethodCall(print_string,StringConstant(" world\\n"))))))'
+INFO:root:Checking dev/charescapes-3.out
+INFO:root:Diff between reference and your output for dev/charescapes-3.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(c,IntType),AssignVar(c,NumberExpr(13))))))'
+INFO:root:Checking dev/gcd.out
+INFO:root:Diff between reference and your output for dev/gcd.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(GreatestCommonDivisor,AssignGlobalVar(a,IntType,NumberExpr(10)),AssignGlobalVar(b,IntType,NumberExpr(20)),Method(main,IntType,None,MethodBlock(VarDef(x,IntType),VarDef(y,IntType),VarDef(z,IntType),AssignVar(x,VariableExpr(a)),AssignVar(y,VariableExpr(b)),AssignVar(z,MethodCall(gcd,VariableExpr(x),VariableExpr(y))),MethodCall(print_int,VariableExpr(z)))),Method(gcd,IntType,VarDef(a,IntType),VarDef(b,IntType),MethodBlock(None,IfStmt(BinaryExpr(Eq,VariableExpr(b),NumberExpr(0)),Block(None,ReturnStmt(VariableExpr(a))),Block(None,ReturnStmt(MethodCall(gcd,VariableExpr(b),BinaryExpr(Mod,VariableExpr(a),VariableExpr(b))))))))))'
+INFO:root:Checking dev/charexprprint.out
+INFO:root:Diff between reference and your output for dev/charexprprint.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,BinaryExpr(Minus,NumberExpr(102),NumberExpr(97))),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/charexpr-2.out
+INFO:root:Diff between reference and your output for dev/charexpr-2.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,BinaryExpr(Minus,NumberExpr(34),NumberExpr(34)))))))'
+INFO:root:Checking dev/charescapes-1.out
+INFO:root:Diff between reference and your output for dev/charescapes-1.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(c,IntType),AssignVar(c,NumberExpr(9))))))'
+INFO:root:Checking dev/escapes.out
+INFO:root:Diff between reference and your output for dev/escapes.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Print,None,Method(main,VoidType,None,MethodBlock(None,MethodCall(print_string,StringConstant("\\t\\v\\r\\n\\a\\f\\b\\\\"))))))'
+INFO:root:Checking dev/expr-testfile-8.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-8.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),VarDef(y,BoolType),AssignVar(x,BinaryExpr(Plus,BinaryExpr(Plus,BinaryExpr(Plus,NumberExpr(2),BinaryExpr(Mult,NumberExpr(2),NumberExpr(3))),NumberExpr(5)),BinaryExpr(Minus,BinaryExpr(Mult,NumberExpr(43),NumberExpr(23)),NumberExpr(44)))),Block(VarDef(y,IntType),VarDef(x,IntType),AssignVar(y,BinaryExpr(Plus,BinaryExpr(Mult,VariableExpr(x),UnaryExpr(UnaryMinus,NumberExpr(30))),BinaryExpr(Mult,NumberExpr(40),NumberExpr(2)))),AssignVar(x,UnaryExpr(UnaryMinus,VariableExpr(y)))),AssignVar(y,UnaryExpr(Not,BoolExpr(True))),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/charprint.out
+INFO:root:Diff between reference and your output for dev/charprint.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(97)),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/stringescapequote.out
+INFO:root:Diff between reference and your output for dev/stringescapequote.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_string,StringConstant("\\""))))))'
+INFO:root:Checking dev/charescapevals-6.out
+INFO:root:Diff between reference and your output for dev/charescapevals-6.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(12))))))'
+INFO:root:Checking dev/charvals-8.out
+INFO:root:Diff between reference and your output for dev/charvals-8.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(125))))))'
+INFO:root:Checking dev/charescapes-4.out
+INFO:root:Diff between reference and your output for dev/charescapes-4.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(c,IntType),AssignVar(c,NumberExpr(10))))))'
+INFO:root:Checking dev/charvals-9.out
+INFO:root:Diff between reference and your output for dev/charvals-9.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(34))))))'
+INFO:root:Checking dev/assign.out
+INFO:root:Diff between reference and your output for dev/assign.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,VoidType,None,MethodBlock(None,AssignVar(x,NumberExpr(1))))))'
+INFO:root:Checking dev/method1.out
+INFO:root:Diff between reference and your output for dev/method1.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(QuickSort,FieldDecl(x,IntType,Scalar),Method(main,VoidType,VarDef(a,IntType),MethodBlock(None,None))))'
+INFO:root:Checking dev/if-func2.out
+INFO:root:Diff between reference and your output for dev/if-func2.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,IntType,None,MethodBlock(None,ReturnStmt(NumberExpr(1)))),Method(main,VoidType,None,MethodBlock(None,IfStmt(MethodCall(f,None),Block(None,AssignVar(x,NumberExpr(1))),None)))))'
+INFO:root:Checking dev/charvals-11.out
+INFO:root:Diff between reference and your output for dev/charvals-11.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(122))))))'
+INFO:root:Checking dev/expr-testfile-5.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-5.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,BoolType),VarDef(y,BoolType),VarDef(z,BoolType),AssignVar(x,BinaryExpr(Geq,NumberExpr(2),NumberExpr(1))),AssignVar(y,BinaryExpr(Neq,NumberExpr(2),NumberExpr(1))),AssignVar(z,BinaryExpr(And,VariableExpr(x),VariableExpr(y))),MethodCall(print_int,VariableExpr(z))))))'
+INFO:root:Checking dev/decls-fail.ret
+INFO:root:dev/decls-fail.ret Correct!
+INFO:root:Checking dev/continue.out
+INFO:root:Diff between reference and your output for dev/continue.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(C,None,Method(f,VoidType,None,MethodBlock(None,WhileStmt(BoolExpr(True),Block(None,ContinueStmt))))))'
+INFO:root:Checking dev/stringescapes-2.out
+INFO:root:Diff between reference and your output for dev/stringescapes-2.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_string,StringConstant("\\v"))))))'
+INFO:root:Checking dev/method0-prev.ret
+INFO:root:dev/method0-prev.ret Correct!
+INFO:root:Checking dev/assoc.out
+INFO:root:Diff between reference and your output for dev/assoc.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(QuickSort,None,Method(main,VoidType,None,MethodBlock(None,AssignVar(a,BinaryExpr(Plus,BinaryExpr(Plus,NumberExpr(1),NumberExpr(2)),NumberExpr(3))),AssignVar(b,BinaryExpr(Mult,BinaryExpr(Mult,NumberExpr(1),NumberExpr(2)),NumberExpr(3))),AssignVar(c,BinaryExpr(Or,BinaryExpr(Or,BinaryExpr(Or,BoolExpr(False),BoolExpr(True)),BoolExpr(True)),BoolExpr(False))),AssignVar(d,BinaryExpr(Div,BinaryExpr(Div,NumberExpr(1),NumberExpr(2)),UnaryExpr(UnaryMinus,NumberExpr(3)))),AssignVar(e,BinaryExpr(Mult,BinaryExpr(Mult,BinaryExpr(Mult,NumberExpr(1),UnaryExpr(UnaryMinus,NumberExpr(2))),NumberExpr(3)),UnaryExpr(UnaryMinus,NumberExpr(4))))))))'
+INFO:root:Checking dev/charexpr-1.out
+INFO:root:Diff between reference and your output for dev/charexpr-1.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +0,0 @@
+-b'Program(None,Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,BinaryExpr(Minus,NumberExpr(103),NumberExpr(104)))))))'

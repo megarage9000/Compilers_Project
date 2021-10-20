@@ -26,6 +26,7 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 %define parse.error verbose
 
 %union{
+    std::vector<string> new_id_list;
     class decafAST *ast;
     class decafStmtList *list;
     class Identifier_List *id_list;
@@ -206,9 +207,9 @@ field_decl: T_VAR identifier decaf_type T_SEMICOLON {
         $$  = new Field_Decl(id, type, new Field_Size());
     }
     | T_VAR identifier_list decaf_type T_SEMICOLON {
-        Identifier_List * id = dynamic_cast<Identifier_List *>($2);
         Type * type = dynamic_cast<Type *>($3);
-        $$  = new Field_Decl_List(&id, type, new Field_Size());  
+        $2->to_field_decl(&type);
+        $$ = $2;
     }
     | T_VAR identifier T_LSB T_INTCONSTANT T_RSB decaf_type T_SEMICOLON {
         Identifier * id = dynamic_cast<Identifier *>($2);
@@ -217,10 +218,11 @@ field_decl: T_VAR identifier decaf_type T_SEMICOLON {
         $$  = new Field_Decl(id, type, new Field_Size(&const_expr));   
     }
     | T_VAR identifier_list T_LSB T_INTCONSTANT T_RSB decaf_type T_SEMICOLON {
-        Identifier_List * id = dynamic_cast<Identifier_List *>($2);
         Type * type = dynamic_cast<Type *>($6);
-        Constant_Expr * const_expr = new Constant_Expr(&($4), INTTYPE);
-        $$  = new Field_Decl_List(&id, type, new Field_Size(&const_expr));   
+        Constant_Expr * size = new Constant_Expr(&($4), INTTYPE);
+        Field_Size * field_sz = new Field_Size(&size);
+        $2->to_field_decl(&type, &field_sz);
+        $$ = $2;  
     }
     ;
 
@@ -259,10 +261,10 @@ typed_symbols_decl: typed_symbols T_SEMICOLON     {$$=$1;}
 
 typed_symbols: T_VAR identifier decaf_type               {$$ = new Var_Def($2, dynamic_cast<Type *>($3));}
     | T_VAR identifier_list decaf_type                   {
-                                                            Identifier_List * id_list = dynamic_cast<Identifier_List *>($2);
                                                             Type * type = dynamic_cast<Type *>($3);
-                                                            $$ = new Var_Def_List(&id_list, type);
-                                                        }
+                                                            $2->to_var_def(&type);
+                                                            $$ = $2;
+                                                         }
     ;
 
 identifier_list: identifier T_COMMA identifier          {$$ = new Identifier_List(); 
@@ -322,7 +324,8 @@ binary_operation:  expression T_PLUS expression {$$ = new Binary_Expr($1, $3, ne
     | expression T_EQ expression      {$$ = new Binary_Expr($1, $3, new Binary_Operator(EQ));}
     | expression T_NEQ expression     {$$ = new Binary_Expr($1, $3, new Binary_Operator(NEQ));}
     | expression T_AND expression     {$$ = new Binary_Expr($1, $3, new Binary_Operator(AND));}
-    | expression T_OR expression      {$$ = new Binary_Expr($1, $3, new Binary_Operator(NOT));}
+    | expression T_OR expression      {$$ = new Binary_Expr($1, $3, new Binary_Operator(OR));}
+    | expression T_LEQ expression     {$$ = new Binary_Expr($1, $3, new Binary_Operator(LEQ));}
     ;
 
 unary_operation:  T_MINUS expression %prec U_MINUS {$$ = new Unary_Expr($2, new Unary_Operator(UNARY_MINUS));}

@@ -71,7 +71,7 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 
 %type<ast> program decafpackage expression constant identifier extern_func extern_declaration
 %type<ast> binary_operation unary_operation assign statement method_call method_arg method_type decaf_type extern_type
-%type<ast> typed_symbols field_decl method_decl_sing_arg typed_symbols_decl method_decl
+%type<ast> typed_symbols field_decl method_decl_sing_arg typed_symbols_decl method_decl assign_global
 %type<ast> block  if_stmt rvalue for_loop while_loop for_loop_assigns method_decl_args keywords return
 %type<ast> statement_group typed_symbols_decl_group field_decl_group method_decl_group extern_arg_group
 %type<list> assign_list statement_list method_args method_decl_multi_args typed_symbols_decls extern_func_args method_decl_list extern_list field_decl_list
@@ -103,16 +103,19 @@ program: extern_declaration decafpackage
 decafpackage: T_PACKAGE identifier T_LCB field_decl_group method_decl_group T_RCB
     {   
         string id_name = $2->str();
-        $$ = new PackageAST(id_name, dynamic_cast<decafStmtList *>($4), dynamic_cast<decafStmtList *>($5)); 
+        $$ = new PackageAST(id_name, dynamic_cast<decafStmtList *>($4), dynamic_cast<decafStmtList *>($5));   
+        delete $2;     
     }
     | T_PACKAGE identifier T_LCB method_decl_group T_RCB
     {   
         string id_name = $2->str();
-        $$ = new PackageAST(id_name, new decafStmtList() , dynamic_cast<decafStmtList *>($4)); 
+        $$ = new PackageAST(id_name, new decafStmtList() , dynamic_cast<decafStmtList *>($4));  
+        delete $2;        
     }
     | T_PACKAGE identifier T_LCB T_RCB {   
         string id_name = $2->str();
-        $$ = new PackageAST(id_name, new decafStmtList(), new decafStmtList()); 
+        $$ = new PackageAST(id_name, new decafStmtList(), new decafStmtList());    
+        delete $2;     
     }
     ; 
 
@@ -222,15 +225,19 @@ field_decl: T_VAR identifier decaf_type T_SEMICOLON {
         $$ = vector_to_field_decls($2, type, field_sz);
         delete field_sz; delete type;
     }
+    | assign_global         {$$ = $1;}
     ;
 
+assign_global: T_VAR identifier decaf_type T_ASSIGN constant T_SEMICOLON {
+    $$ = new Assign_Global(dynamic_cast<Identifier *>($2), dynamic_cast<Type *>($3), dynamic_cast<Constant_Expr *>($5));
+}
+
 /* Method declaration */
-method_decl_group: method_decl_list                  {$$ = $1;}
-    | method_decl                                    {$$ = $1;}
+method_decl_group: method_decl_list                  {$$ = $1; }
+    | method_decl                                    {$$ = $1; }
 
-method_decl_list: method_decl method_decl_args             {$$ = initialize_recursive_list ($1, $2);}
-    | method_decl_list method_decl                         {$1->push_back($2), $$=$1;}
-
+method_decl_list: method_decl method_decl            {$$ = initialize_recursive_list ($1, $2);}
+    | method_decl_list method_decl                   {$1->push_back($2), $$=$1;}
 
 method_decl: T_FUNC identifier T_LPAREN method_decl_args T_RPAREN method_type block {
         $$ = new Method_Decl(dynamic_cast<Identifier *>($2), dynamic_cast<Type *>($6), $4, dynamic_cast<Block *>($7));
@@ -248,9 +255,9 @@ method_decl_multi_args:                                     {$$ = new decafStmtL
 
 method_decl_sing_arg: identifier decaf_type             {$$ = new Var_Def($1, dynamic_cast<Type *>($2)); }
 
-/* Typed Symbols */
-typed_symbols_decl_group: typed_symbols_decls           {$$ = $1; debugAST($$); std::cout << '\n';}
-    | typed_symbols_decl                                {$$ = $1; debugAST($$); std::cout << '\n';}
+/* Typed Symbols and Typed Declarations */
+typed_symbols_decl_group: typed_symbols_decls           {$$ = $1; }
+    | typed_symbols_decl                                {$$ = $1; }
 
 typed_symbols_decls: typed_symbols_decl typed_symbols_decl {$$ = initialize_recursive_list($1, $2);}
     | typed_symbols_decls typed_symbols_decl               {$1->push_back($2); $$ = $1; }
@@ -262,12 +269,9 @@ typed_symbols: T_VAR identifier decaf_type               {$$ = new Var_Def($2, d
                                                         }
     | T_VAR identifier_list decaf_type                   {
                                                             $$ = vector_to_var_defs($2, dynamic_cast<Type *>($3));
-                                                            delete $3; delete $2;
-                                                            
+                                                            delete $3; delete $2; 
                                                          }
     ;
-
-
 
 /* Methods and Method args*/
 method_call: identifier T_LPAREN T_RPAREN {$$ = new Method_Call(dynamic_cast<Identifier *>($1)); }
@@ -345,6 +349,7 @@ extern_type: T_STRINGTYPE     {$$ = new Var_Def(new Type(STRINGTYPE));}
 decaf_type: T_BOOLTYPE {$$ = new Type(BOOLTYPE);}
     | T_INTTYPE        {$$ = new Type(INTTYPE);}
 
+/* Identifiers */
 identifier_list: T_ID T_COMMA T_ID   {
     $$ = new string_vector();
     $$->push_back(*($1)); 
@@ -359,184 +364,6 @@ identifier_list: T_ID T_COMMA T_ID   {
 identifier: T_ID       {$$ = new Identifier(&($1));}
     ;
 %%
-// TODO remember to bring back!
-
-// /* Externs */
-// extern_list: /* extern_list can be empty */
-//     { decafStmtList *slist = new decafStmtList(); $$ = slist; }
-//     ;
-
-// decafpackage: T_PACKAGE T_ID T_LCB T_RCB
-//     { $$ = new PackageAST(*$2, new decafStmtList(), new decafStmtList()); delete $2; }
-//     ; 
-
-// /* While */
-
-
-// /* If-Else */
-// if_else: if_stmt T_ELSE block {
-//         If_Else * temp = dynamic_cast<If_Else *>($1);
-//         temp->setElse(dynamic_cast<Block *>($3));
-//         $$ = temp;
-//     }
-
-// if_stmt: T_IF T_LPAREN expression T_RPAREN block {
-//         $$ = new If_Else($3, dynamic_cast<Block *> ($5));
-//     }
-// /* Blocks */
-// method_block: block     {$$ = new Method_Block(&(dynamic_cast<Block *>($1)));}
-
-// block: T_LCB typed_symbol_list_decl statement_list T_RCB {$$ = new Block($2, $3);}
-//     | T_LCB typed_symbol_decl statement_list T_RCB {$$ = new Block($2, $3);}
-//     | T_LCB typed_symbol_list_decl statement T_RCB {$$ = new Block($2, $3);}
-//     | T_LCB typed_symbol_decl statement T_RCB      {$$ = new Block($2, $3);}
-//     | T_LCB typed_symbol_decl T_RCB                {$$ = new Block($2, new decafStmtList());}
-//     | T_LCB typed_symbol_list_decl T_RCB           {$$ = new Block($2, new decafStmtList());}
-//     | T_LCB statement T_RCB                        {$$ = new Block(new decafStmtList(), $2);}
-//     | T_LCB statement_list T_RCB                   {$$ = new Block(new decafStmtList(), $2);}
-//     | T_LCB T_RCB                                  {$$ = new Block(new decafStmtList(), new decafStmtList());}
-
-// /* Statement and Statements */
-// statement_list: statement statement     {$$ = initialize_recursive_list($1, $2); }
-//         | statement_list statement      {$1->push_back($2); $$ = $1; }
-
-// statement: assign T_SEMICOLON                {$$ = $1; }
-//         | method_call T_SEMICOLON            {$$ = $1; }
-//         | block                              {$$ = $1; }
-//         | if_stmt                            {$$ = $1; }
-//         | if_else                            {$$ = $1; }
-
-// /* Field declarations */
-// field_decl_list: field_decl field_decl {
-//         $$ = initialize_recursive_list($1, $2);
-        
-//     }
-//     | field_decl_list field_decl {
-//         $1->push_back($2); $$ = $1;
-//     }
-
-// field_decl: T_VAR typed_symbol_sing T_SEMICOLON{$$ = new Field_Decl($2, SCALAR); }
-//     | T_VAR typed_symbol_sing T_ASSIGN constant T_SEMICOLON    {$$ = new Assign_Global($2, getString($4)); }
-//     | T_VAR typed_symbol_sing T_LSB constant T_RSB T_SEMICOLON {$$ = new Field_Decl($2, ARRAY, $4->getValue()); }
-//     | T_VAR typed_symbols_multi T_SEMICOLON {$$ = createFieldDeclList(dynamic_cast<decafStmtList *>($2)); }
-//     | T_VAR typed_symbols_multi T_LSB constant T_RSB T_SEMICOLON {$$ = createFieldDeclListArr(dynamic_cast<decafStmtList *>($2), $4->getValue()); }
-
-// /* For variable declarations */
-// typed_symbol_list_decl: typed_symbol_decl typed_symbol_decl {
-//         $$ = initialize_recursive_list($1, $2);
-//     }
-//     |   typed_symbol_list_decl typed_symbol_decl  {
-//         $1->push_back($2); $$=$1;
-//     }
-//     ;
-
-// typed_symbol_decl: T_VAR typed_symbol_sing T_SEMICOLON {$$=$2;}
-//     | T_VAR typed_symbols_multi T_SEMICOLON {$$=$2;}
-//     ;
-
-// /* For function extern declarations */
-// typed_symbol_extern_list: typed_symbol_extern T_COMMA typed_symbol_extern {
-//     $$ = initialize_recursive_list($1,$3);
-// }
-//     | typed_symbol_extern_list T_COMMA typed_symbol_extern {
-//         $1->push_back($3); 
-//         $$ = $1;
-//     }
-//     ;
-
-// typed_symbol_extern: T_BOOLTYPE  {$$=new Typed_Symbol(BOOL);}
-//     | T_INTTYPE         {$$=new Typed_Symbol(INT);}
-//     | T_STRINGTYPE      {$$=new Typed_Symbol(STRING);}
-
-// /* For method declarations arguements */
-// typed_symbol_list: typed_symbol_sing T_COMMA typed_symbol_sing {
-//         $$ = initialize_recursive_list($1, $3);
-//     }
-//     |   typed_symbol_list T_COMMA typed_symbol_sing {
-//         $1->push_back($3); $$=$1;
-//     }
-
-// /* Comment for now, not sure where this is needed */
-// /*
-// typed_symbol: T_VAR typed_symbols_multi {$$ = $2;}
-//     |   T_VAR typed_symbol_sing {$$ = $2;}
-// */
-
-// /* General typed symbols, will be used in declarations, field declarations, method and extern function args */
-// typed_symbols_multi: untyped_symbols T_BOOLTYPE { $$ = createTypedSymbolList(&($1), BOOL); }
-//     | untyped_symbols T_STRINGTYPE { $$ = createTypedSymbolList(&($1), STRING); }
-//     | untyped_symbols T_INTTYPE { $$ = createTypedSymbolList(&($1), INT); }
-
-// typed_symbol_sing: T_ID T_BOOLTYPE {$$ = new Typed_Symbol(&($1), BOOL); }
-//     | T_ID T_STRINGTYPE {$$ = new Typed_Symbol(&($1), STRING); }
-//     | T_ID T_INTTYPE {$$ = new Typed_Symbol(&($1), INT); }
-
-// untyped_symbols: T_ID T_COMMA T_ID {
-//         $$ = new Untyped_Symbols();
-//         $$->push_front(new Untyped_Symbol(&($1))); 
-//         $$->push_back(new Untyped_Symbol(&($3))); 
-//     }
-//     | untyped_symbols T_COMMA T_ID          {$1->push_back(new Untyped_Symbol(&($3))); $$ = $1;}
-
-// /* Variable Assignments */
-// assign_list : assign T_COMMA assign {$$ = initialize_recursive_list($1, $3);}
-//     | assign_list T_COMMA assign {$1->push_back($3);}
-
-// assign: T_ID T_ASSIGN expression {$$ = new Assign_Var(&($1), $3); }
-//     | T_ID T_LSB expression T_RSB T_ASSIGN expression {$$ = new Assign_Arr_Loc(&($1), $3, $6); }
-//     ;
-
-// /* Methods and Method args*/
-// method_call: T_ID T_LPAREN T_RPAREN {$$ = new Method_Call(&($1)); }
-//         /* Single arg*/
-//         | T_ID T_LPAREN expression T_RPAREN     {$$ = new Method_Call(&($1), $3); }
-//         /* Mutliple args*/
-//         | T_ID T_LPAREN method_args T_RPAREN    {$$ = new Method_Call(&($1), $3);}
-
-// method_args: expression T_COMMA expression     {$$ = initialize_recursive_list($1, $3);}
-//     | method_args T_COMMA expression           {$1->push_back($3); $$ = $1; }
-//     ;
-
-// /* Expressions */
-// expression: constant                          {$$ = $1; }
-//     | binary_operation                        {$$ = $1; }
-//     | unary_operation                         {$$ = $1; }
-//     | rvalue                                  {$$ = $1; }
-//     | method_call                             {$$ = $1; }
-//     | T_LPAREN expression T_RPAREN            {$$ = $2; }
-//     ;
-
-// /* Operators */
-// binary_operation:  expression T_PLUS expression {$$ = new Binary_Expr($1, $3, PLUS);}
-//     | expression T_MINUS expression   {$$ = new Binary_Expr($1, $3, MINUS);}
-//     | expression T_MULT expression    {$$ = new Binary_Expr($1, $3, MULT);}
-//     | expression T_DIV expression     {$$ = new Binary_Expr($1, $3, DIV);}
-//     | expression T_MOD expression     {$$ = new Binary_Expr($1, $3, MOD);}
-//     | expression T_LT expression      {$$ = new Binary_Expr($1, $3, LT);}
-//     | expression T_GT expression      {$$ = new Binary_Expr($1, $3, GT);}
-//     | expression T_GEQ expression     {$$ = new Binary_Expr($1, $3, GEQ);}
-//     | expression T_EQ expression      {$$ = new Binary_Expr($1, $3, EQ);}
-//     | expression T_NEQ expression     {$$ = new Binary_Expr($1, $3, NEQ);}
-//     | expression T_AND expression     {$$ = new Binary_Expr($1, $3, AND);}
-//     | expression T_OR expression      {$$ = new Binary_Expr($1, $3, NOT);}
-//     ;
-
-// /* R Values */
-// rvalue: T_ID T_LSB expression T_RSB   {$$ = new Arr_Loc_Expr(&($1), $3); } 
-//     | T_ID                            {$$ = new Var_Expr(&($1)); }
-//     ;
-
-// unary_operation: T_MINUS expression %prec U_MINUS {$$ = new Unary_Expr($2, UNARY_MINUS);}
-//     | T_NOT expression %prec U_NOT {$$ = new Unary_Expr($2, NOT);}
-
-// /* Constants */
-// constant: T_STRINGCONSTANT  {$$ = new Constant_Expr(&($1), STRING);}
-//     | T_CHARCONSTANT {$$ = new Constant_Expr(&($1), CHAR);}
-//     | T_INTCONSTANT  {$$ = new Constant_Expr(&($1), INT);}
-//     | T_FALSE        {$$ = new Constant_Expr(&($1), BOOL);}
-//     | T_TRUE         {$$ = new Constant_Expr(&($1), BOOL);}
-//     ;
-
 
 int main() {
   // parse the input and create the abstract syntax tree

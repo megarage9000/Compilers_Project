@@ -124,9 +124,9 @@ while                      { return T_WHILE; }
   /*
     Comment Rules
   */
-\/\/                  { found_comment.append("/"); found_comment.append("/"); BEGIN COMMENT; }
-<COMMENT>.*           { found_comment.append(yytext);}
-<COMMENT>\n           { found_comment.append("\\n"); BEGIN INITIAL; return T_COMMENT;}
+\/\/                  { BEGIN COMMENT; }
+<COMMENT>.*           { }
+<COMMENT>\n           { BEGIN INITIAL; }
   /*
     Binary operations Rules
   */

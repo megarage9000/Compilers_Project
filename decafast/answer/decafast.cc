@@ -38,6 +38,7 @@ string getString(decafAST *d) {
 /// Debugging purposes
 void debugAST(decafAST * d) {
 	std::cout << getString(d) << '\n';
+	std::cout << '\n';
 }
 
 template <class T>
@@ -187,7 +188,7 @@ public:
 			case NEQ:
 				return "Neq";
 			case AND:
-				return "Eq";
+				return "And";
 			case OR:
 				return "Or";
 			default:
@@ -326,6 +327,7 @@ public:
 	}
 	Method_Call(Identifier * name): decafStmtList() {
 		push_back(name);
+		push_back(new decafStmtList());
 	}
 	string str() {
 		return "MethodCall(" + decafStmtList::str() + ")";
@@ -447,12 +449,11 @@ public:
 
 /* Blocks and Method Blocks */
 class Block : public decafStmtList {
-	bool if_method;
+	bool if_method = false;
 public:
 	Block(decafAST * declarations, decafAST * statements) : decafStmtList() {
 		push_back(declarations);
 		push_back(statements);
-		if_method = false;
 	}
 	void set_to_method(bool val) {
 		if_method = val;
@@ -472,6 +473,7 @@ public:
 	If_Else(decafAST * expr, Block * if_blk) : decafStmtList() {
 		push_back(expr);
 		push_back(if_blk);
+		push_back(new decafStmtList());
 	}
 	If_Else(decafAST * expr, Block * if_blk, Block * else_blk) : decafStmtList() {
 		push_back(expr);
@@ -479,7 +481,7 @@ public:
 		push_back(else_blk);
 	}
 	string str() {
-		return "IfSmt(" + decafStmtList::str() + ")";
+		return "IfStmt(" + decafStmtList::str() + ")";
 	}
 };
 

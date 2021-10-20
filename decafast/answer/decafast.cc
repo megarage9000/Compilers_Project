@@ -124,9 +124,6 @@ class Type: public decafAST {
 	val_type type;
 public:
 	Type(val_type tp) : type(tp){}
-	Type(const Type &tp) {
-		type = tp.type;
-	}
 	~Type() {}
 	string str() {
 		switch(type) {
@@ -367,24 +364,21 @@ decafStmtList * vector_to_var_defs(string_vector * str_vector, Type * type) {
 class Field_Size : public decafAST {
 	string size;
 public: 
-	Field_Size() {size = "";}
-	Field_Size(const Field_Size &field_size) {
-		size = field_size.size;
+	Field_Size() {size = "Scalar";}
+	Field_Size(string sz) {
+		size = sz;
 	}
 	Field_Size(Constant_Expr ** arr_size) {
 		size = (*arr_size)->get_num();
 		if(size == "None") {
-			size = "";
+			size = "Scalar";
 		}
 		size = "Array(" + size + ")";
 		delete *arr_size;
 	}
 	string str() {
-		if(size == "" ) {
-			return "Scalar";
-		}
 		return size;
-	}
+	} 
 };
 
 class Field_Decl : public decafStmtList{
@@ -408,13 +402,10 @@ decafStmtList * vector_to_field_decls(string_vector * str_vector, Type * type, F
 	decafStmtList * field_decls = new decafStmtList();
 	std::vector<string> ids = str_vector->get_vector();
 	for(string id: ids) {
-		Type * tp;
-		*tp = *type;
-		Field_Size * field_size;
-		*field_size = *sz;
 		field_decls->push_back(new Field_Decl(
 			new Identifier(id),
-			tp, field_size
+			new Type(type->get_type()),
+			new Field_Size(sz->str())
 		));
 	}
 	return field_decls;
@@ -424,11 +415,9 @@ decafStmtList * vector_to_field_decls(string_vector * str_vector, Type * type) {
 	decafStmtList * field_decls = new decafStmtList();
 	std::vector<string> ids = str_vector->get_vector();
 	for(string id: ids) {
-		Type * tp;
-		*tp = *type;
 		field_decls->push_back(new Field_Decl(
 			new Identifier(id),
-			tp
+			new Type(type->get_type())
 		));
 	}
 	return field_decls;

@@ -49,8 +49,6 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 %token T_COMMENT T_WHITESPACE
 
 // Precedence
-%left IF
-%left IF_ELSE
 %left T_OR
 %left T_AND
 %left T_EQ T_NEQ T_GT T_LT T_GEQ T_LEQ 
@@ -59,15 +57,6 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 %left T_LPAREN T_RPAREN
 %left U_NOT
 %left U_MINUS
-/*
-%type<ast> unary_operation binary_operation expression statement extern_list decafpackage
-%type<ast> assign rvalue method_call field_decl typed_symbols_multi typed_symbol typed_symbol_decl
-%type<ast>  block if_else if_stmt
-%type<list> method_args statement_list typed_symbol_list typed_symbol_list_decl field_decl_list typed_symbol_extern_list assign_list
-%type<typed_sym> typed_symbol_sing typed_symbol_extern
-%type<constant_type> constant
-%type<untyped_list> untyped_symbols
-*/
 
 %type<ast> program decafpackage expression constant identifier extern_func extern_declaration
 %type<ast> binary_operation unary_operation assign statement method_call method_arg method_type decaf_type extern_type
@@ -110,6 +99,12 @@ decafpackage: T_PACKAGE identifier T_LCB field_decl_group method_decl_group T_RC
     {   
         string id_name = $2->str();
         $$ = new PackageAST(id_name, new decafStmtList() , dynamic_cast<decafStmtList *>($4));  
+        delete $2;        
+    }
+    | T_PACKAGE identifier T_LCB field_decl_group T_RCB
+    {   
+        string id_name = $2->str();
+        $$ = new PackageAST(id_name, dynamic_cast<decafStmtList *>($4), new decafStmtList());  
         delete $2;        
     }
     | T_PACKAGE identifier T_LCB T_RCB {   
@@ -199,7 +194,7 @@ statement: assign T_SEMICOLON           {$$ = $1;}
 field_decl_group: field_decl_list          {$$ = $1;}
     | field_decl                           {$$ = $1;}
 
-field_decl_list: field_decl field_decl   {$$ = initialize_recursive_list($1, $2);}
+field_decl_list: field_decl field_decl    {$$ = initialize_recursive_list($1, $2);}
     | field_decl_list  field_decl         {$1->push_back($2); $$ = $1;}
 
 
@@ -210,7 +205,7 @@ field_decl: T_VAR identifier decaf_type T_SEMICOLON {
     }
     | T_VAR identifier_list decaf_type T_SEMICOLON {
         $$ = vector_to_field_decls($2, dynamic_cast<Type *>($3));
-        delete $2; delete $3;
+        delete $2; $3;
     }
     | T_VAR identifier T_LSB T_INTCONSTANT T_RSB decaf_type T_SEMICOLON {
         Identifier * id = dynamic_cast<Identifier *>($2);
@@ -325,6 +320,8 @@ binary_operation:  expression T_PLUS expression {$$ = new Binary_Expr($1, $3, ne
     | expression T_AND expression     {$$ = new Binary_Expr($1, $3, new Binary_Operator(AND));}
     | expression T_OR expression      {$$ = new Binary_Expr($1, $3, new Binary_Operator(OR));}
     | expression T_LEQ expression     {$$ = new Binary_Expr($1, $3, new Binary_Operator(LEQ));}
+    | expression T_LEFTSHIFT expression         {$$ = new Binary_Expr($1, $3, new Binary_Operator(LEFT_SHIFT));} 
+    | expression T_RIGHTSHIFT expression        {$$ = new Binary_Expr($1, $3, new Binary_Operator(RIGHT_SHIFT));} 
     ;
 
 unary_operation:  T_MINUS expression %prec U_MINUS {$$ = new Unary_Expr($2, new Unary_Operator(UNARY_MINUS));}

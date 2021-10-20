@@ -23,8 +23,7 @@ public:
 class string_vector {
 	std::vector<string> list_of_vectors;
 public:
-	string_vector(){list_of_vectors = std::vector<string>();}
-	~string_vector();
+	string_vector(){}
 	void push_back(string str) {list_of_vectors.push_back(str);}
 	std::vector<string> get_vector() {return list_of_vectors;}
 };
@@ -106,6 +105,7 @@ public:
 	Identifier(string ** id) : id_name(*(*id)) {
 		delete *id;
 	}
+	Identifier(string id) : id_name(id) {}
 	~Identifier(){}
 	string str() {
 		return id_name;
@@ -123,6 +123,9 @@ class Type: public decafAST {
 	val_type type;
 public:
 	Type(val_type tp) : type(tp){}
+	Type(const Type &tp) {
+		type = tp.type;
+	}
 	~Type() {}
 	string str() {
 		switch(type) {
@@ -344,12 +347,28 @@ public:
 	}
 };
 
+decafStmtList * vector_to_var_defs(string_vector * str_vector, Type * type) {
+	decafStmtList * var_defs = new decafStmtList();
+	std::vector<string> ids = str_vector->get_vector();
+	for(string id: ids) {
+		var_defs->push_back(
+			new Var_Def(
+				new Identifier(id), 
+				new Type(type->get_type())
+		));
+	}
+	return var_defs;
+}
+
 
 /// Field declarations
 class Field_Size : public decafAST {
 	string size;
 public: 
 	Field_Size() {size = "";}
+	Field_Size(const Field_Size &field_size) {
+		size = field_size.size;
+	}
 	Field_Size(Constant_Expr ** arr_size) {
 		size = (*arr_size)->get_num();
 		if(size == "None") {
@@ -357,9 +376,6 @@ public:
 		}
 		size = "Array(" + size + ")";
 		delete *arr_size;
-	}
-	Field_Size(Field_Size * sz) {
-		size = sz->str();
 	}
 	string str() {
 		if(size == "" ) {
@@ -376,64 +392,45 @@ public:
 		push_back(type);
 		push_back(sz);
 	}
+	Field_Decl(Identifier * id, Type * type) : decafStmtList() {
+		push_back(id);
+		push_back(type);
+		push_back(new Field_Size());
+	}
 	string str() {
 		return "FieldDecl(" + decafStmtList::str() + ")";
 	}
 };
 
-class Identifier_List : public decafAST {
-	list<decafAST *> identifiers;
-	list<Var_Def *> var_defs;
-	list<Field_Decl *> field_decls;
-public:
-	Identifier_List() {}
-	~Identifier_List() {
-		for (list<decafAST *>::iterator i = identifiers.begin(); i != identifiers.end(); i++) { 
-			delete *i;
-		}
+decafStmtList * vector_to_field_decls(string_vector * str_vector, Type * type, Field_Size * sz) {
+	decafStmtList * field_decls = new decafStmtList();
+	std::vector<string> ids = str_vector->get_vector();
+	for(string id: ids) {
+		Type * tp;
+		*tp = *type;
+		Field_Size * field_size;
+		*field_size = *sz;
+		field_decls->push_back(new Field_Decl(
+			new Identifier(id),
+			tp, field_size
+		));
 	}
-	void push_back(Identifier * id) {
-		identifiers.push_back(id);
-	}
-	void push_front(Identifier * id) {
-		identifiers.push_front(id);
-	}
-	void to_var_def(Type ** type) {
-		Type * tp = *type;
-		for (list<decafAST *>::iterator i = identifiers.begin(); i != identifiers.end(); i++) { 
-			Identifier * identifier = dynamic_cast<Identifier *>(*i);
-			Var_Def * var_def = new Var_Def(identifier, new Type(tp->get_type()));
-			var_defs.push_back(var_def);
-		}
-		delete *type;
-	}
-	void to_field_decl(Type ** type, Field_Size ** size) {
-		Type * tp = *type;
-		Field_Size * field_sz = *size;
-		for (list<decafAST *>::iterator i = identifiers.begin(); i != identifiers.end(); i++) { 
-			Identifier * identifier = dynamic_cast<Identifier *>(*i);
-			Field_Decl * field_decl = new Field_Decl(identifier, new Type(tp->get_type()), new Field_Size(field_sz));
-			*i = field_decl;
-		}
-		delete *type;
-		delete *size;
-	}
+	return field_decls;
+}
 
-	void to_field_decl(Type ** type) {
-		Type * tp = *type;
-		for (list<decafAST *>::iterator i = identifiers.begin(); i != identifiers.end(); i++) { 
-			Identifier * identifier = dynamic_cast<Identifier *>(*i);
-			Field_Decl * field_decl = new Field_Decl(identifier, new Type(tp->get_type()), new Field_Size());
-			*i = field_decl;
-		}
-		delete *type;
+decafStmtList * vector_to_field_decls(string_vector * str_vector, Type * type) {
+	decafStmtList * field_decls = new decafStmtList();
+	std::vector<string> ids = str_vector->get_vector();
+	for(string id: ids) {
+		Type * tp;
+		*tp = *type;
+		field_decls->push_back(new Field_Decl(
+			new Identifier(id),
+			tp
+		));
 	}
-	string str() {
-		return commaList<decafAST *>(identifiers);
-	}
-	list<Identifier *> get_list() {return list<Identifier *>();}
-};
-
+	return field_decls;
+}
 
 
 class Assign_Global : public decafStmtList {
@@ -455,6 +452,7 @@ public:
 	Block(decafAST * declarations, decafAST * statements) : decafStmtList() {
 		push_back(declarations);
 		push_back(statements);
+		if_method = false;
 	}
 	void set_to_method(bool val) {
 		if_method = val;
@@ -464,9 +462,6 @@ public:
 			return "MethodBlock(" + decafStmtList::str() + ")";
 		}
 		return "Block(" + decafStmtList::str() + ")";
-	}
-	string get_content() {
-		return decafStmtList::str();
 	}
 };
 

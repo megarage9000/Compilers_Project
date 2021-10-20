@@ -26,10 +26,9 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 %define parse.error verbose
 
 %union{
-    std::vector<string> new_id_list;
     class decafAST *ast;
     class decafStmtList *list;
-    class Identifier_List *id_list;
+    class string_vector *id_list;
     std::string *sval;
  }
 
@@ -171,10 +170,10 @@ if_stmt: T_IF T_LPAREN expression T_RPAREN block {
     }
     
 /* Blocks */
-block: T_LCB typed_symbols_decl_group statement_group T_RCB               {$$ = new Block($2, $3);} 
-    | T_LCB typed_symbols_decl_group T_RCB                                {$$ = new Block($2, new decafStmtList());}
-    | T_LCB statement_group T_RCB                                         {$$ = new Block(new decafStmtList(), $2);}
-    | T_LCB T_RCB                                                         {$$ = new Block(new decafStmtList(), new decafStmtList());}
+block: T_LCB typed_symbols_decl_group statement_group T_RCB               {$$ = new Block($2, $3); } 
+    | T_LCB typed_symbols_decl_group T_RCB                                {$$ = new Block($2, new decafStmtList()); }
+    | T_LCB statement_group T_RCB                                         {$$ = new Block(new decafStmtList(), $2); }
+    | T_LCB T_RCB                                                         {$$ = new Block(new decafStmtList(), new decafStmtList()); }
 
 /* Statements */
 statement_group: statement_list         {$$ = $1;}
@@ -207,9 +206,8 @@ field_decl: T_VAR identifier decaf_type T_SEMICOLON {
         $$  = new Field_Decl(id, type, new Field_Size());
     }
     | T_VAR identifier_list decaf_type T_SEMICOLON {
-        Type * type = dynamic_cast<Type *>($3);
-        $2->to_field_decl(&type);
-        $$ = $2;
+        $$ = vector_to_field_decls($2, dynamic_cast<Type *>($3));
+        delete $2; delete $3;
     }
     | T_VAR identifier T_LSB T_INTCONSTANT T_RSB decaf_type T_SEMICOLON {
         Identifier * id = dynamic_cast<Identifier *>($2);
@@ -221,8 +219,8 @@ field_decl: T_VAR identifier decaf_type T_SEMICOLON {
         Type * type = dynamic_cast<Type *>($6);
         Constant_Expr * size = new Constant_Expr(&($4), INTTYPE);
         Field_Size * field_sz = new Field_Size(&size);
-        $2->to_field_decl(&type, &field_sz);
-        $$ = $2;  
+        $$ = vector_to_field_decls($2, type, field_sz);
+        delete field_sz; delete type;
     }
     ;
 
@@ -248,31 +246,28 @@ method_decl_multi_args:                                     {$$ = new decafStmtL
     | method_decl_sing_arg T_COMMA method_decl_sing_arg     {$$ = initialize_recursive_list($1, $3);}
     | method_decl_multi_args T_COMMA method_decl_sing_arg        {$1->push_back($3); $$=$1;}
 
-method_decl_sing_arg: identifier decaf_type                      {$$ = new Var_Def($2, dynamic_cast<Type *>($1)); }
+method_decl_sing_arg: identifier decaf_type             {$$ = new Var_Def($1, dynamic_cast<Type *>($2)); }
 
 /* Typed Symbols */
-typed_symbols_decl_group: typed_symbols_decls           {$$ = $1;}
-    | typed_symbols_decl                                {$$ = $1;}
+typed_symbols_decl_group: typed_symbols_decls           {$$ = $1; debugAST($$); std::cout << '\n';}
+    | typed_symbols_decl                                {$$ = $1; debugAST($$); std::cout << '\n';}
 
 typed_symbols_decls: typed_symbols_decl typed_symbols_decl {$$ = initialize_recursive_list($1, $2);}
-    | typed_symbols_decls typed_symbols_decl         {$1->push_back($2); $$ = $1; }
+    | typed_symbols_decls typed_symbols_decl               {$1->push_back($2); $$ = $1; }
 
-typed_symbols_decl: typed_symbols T_SEMICOLON     {$$=$1;}
+typed_symbols_decl: typed_symbols T_SEMICOLON           {$$=$1;}
 
-typed_symbols: T_VAR identifier decaf_type               {$$ = new Var_Def($2, dynamic_cast<Type *>($3));}
+typed_symbols: T_VAR identifier decaf_type               {$$ = new Var_Def($2, dynamic_cast<Type *>($3));
+                                                            
+                                                        }
     | T_VAR identifier_list decaf_type                   {
-                                                            Type * type = dynamic_cast<Type *>($3);
-                                                            $2->to_var_def(&type);
-                                                            $$ = $2;
+                                                            $$ = vector_to_var_defs($2, dynamic_cast<Type *>($3));
+                                                            delete $3; delete $2;
+                                                            
                                                          }
     ;
 
-identifier_list: identifier T_COMMA identifier          {$$ = new Identifier_List(); 
-                                                            $$->push_back(dynamic_cast<Identifier*>($1)); 
-                                                            $$->push_back(dynamic_cast<Identifier*>($3)); 
-                                                        }
-    | identifier_list T_COMMA identifier                {$1->push_back(dynamic_cast<Identifier*>($3)); $$ = $1;}
-    ;
+
 
 /* Methods and Method args*/
 method_call: identifier T_LPAREN T_RPAREN {$$ = new Method_Call(dynamic_cast<Identifier *>($1)); }
@@ -349,6 +344,17 @@ extern_type: T_STRINGTYPE     {$$ = new Var_Def(new Type(STRINGTYPE));}
 
 decaf_type: T_BOOLTYPE {$$ = new Type(BOOLTYPE);}
     | T_INTTYPE        {$$ = new Type(INTTYPE);}
+
+identifier_list: T_ID T_COMMA T_ID   {
+    $$ = new string_vector();
+    $$->push_back(*($1)); 
+    $$->push_back(*($3)); 
+    delete $1; delete $3;
+}
+    | identifier_list T_COMMA T_ID   {
+    $1->push_back(*($3)); $$ = $1; delete $3;
+}
+    ;
 
 identifier: T_ID       {$$ = new Identifier(&($1));}
     ;

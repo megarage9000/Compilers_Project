@@ -48,10 +48,8 @@ static void update_position() {
 
 %}
 
-char_literal [^\\']
+char_literal [^']
 escaped_char \\(n|r|t|v|f|a|b|\\|'|\") 
-not_whitespace [^\t\r\v\f\n ]
-whitespace [\t\r\v\f\n ]
 hex_digit 0(x|X)[0-9a-zA-Z]+
 decimal_digit [0-9]+
 
@@ -151,7 +149,10 @@ while                      { return T_WHILE; }
   /*
     Character Literals Rules
   */
-"'"({char_literal}|{escaped_char})"'"    { yylval.sval = new string(yytext);return T_CHARCONSTANT; }
+"'"({char_literal}|{escaped_char})"'"   {
+                                          string val = to_string(static_cast<int>(yytext[1]));
+                                          yylval.sval = new string(val); return T_INTCONSTANT; 
+                                        }
 "'"({char_literal}|{escaped_char})({char_literal}|{escaped_char})+"'"?    { printError("ERROR: char constant length is greater than one"); return -1; }
 "'"({char_literal}|{escaped_char})       { printError("ERROR: unterminated char constant"); return -1;}
 "'""'"                                   { printError("ERROR: char constant has zero width"); return -1;}

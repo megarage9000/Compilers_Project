@@ -103,6 +103,29 @@ public:
 	}
 };
 
+class Identifier_List : public decafAST {
+	list<Identifier *> identifiers;
+public:
+	Identifier_List() {}
+	~Identifier_List() {
+		for(auto id : identifiers) {
+			delete id;
+		}
+	}
+	void push_back(Identifier * id) {
+		identifiers.push_back(id);
+	}
+	void push_front(Identifier * id) {
+		identifiers.push_front(id);
+	}
+	string str() {
+		return commaList<Identifier *>(identifiers);
+	}
+	list<Identifier *> get_list() {
+		return identifiers;
+	}
+};
+
 typedef enum {
 	INTTYPE,
 	BOOLTYPE,
@@ -320,9 +343,17 @@ public:
 // Variable declarations
 class Var_Def : public decafStmtList {
 public:
-	Var_Def(decafAST * identifiers, Type * type) : decafStmtList() {
-		push_back(identifiers);
+	Var_Def(decafAST * identifier, Type * type) : decafStmtList() {
+		push_back(identifier);
 		push_back(type);
+	}
+	Var_Def(Identifier_List ** identifiers, Type * type) : decafStmtList() {
+		list<Identifier *> ids = (*identifiers)->get_list();
+		for(list<Identifier *>::iterator i = ids.begin(); i != ids.end(); i++){
+			Var_Def * var_def = new Var_Def(*i, type);
+			push_back(var_def);
+		}
+		delete identifiers;
 	}
 	Var_Def(Type * type) : decafStmtList() {
 		push_back(type);
@@ -330,8 +361,19 @@ public:
 	string str() {
 		return "VarDef(" + decafStmtList::str() + ")";
 	}
-	// For Field delarations, since FieldDecl and VarDef are similar
-	string get_structure() {
+};
+
+class Var_Def_List: public decafStmtList {
+public:
+	Var_Def_List(Identifier_List ** identifiers, Type * type) : decafStmtList() {
+		list<Identifier *> ids = (*identifiers)->get_list();
+		for(list<Identifier *>::iterator i = ids.begin(); i != ids.end(); i++){
+			Var_Def * var_def = new Var_Def(*i, type);
+			push_back(var_def);
+		}
+		delete identifiers;
+	}
+	string str() {
 		return decafStmtList::str();
 	}
 };
@@ -356,17 +398,30 @@ public:
 	}
 };
 
-class Field_Decl : public decafAST{
-	Field_Size * size;
-	Var_Def * symbols;
+class Field_Decl : public decafStmtList{
 public:
-	Field_Decl(Var_Def * syms, Field_Size * sz) : symbols(syms), size(sz){}
-	~Field_Decl() {
-		if(size) {delete size;}
-		if(symbols) {delete symbols;}
+	Field_Decl(Identifier * id, Type * type, Field_Size * sz) : decafStmtList(){
+		push_back(id);
+		push_back(type);
+		push_back(sz);
 	}
 	string str() {
-		return "FieldDecl(" + symbols->get_structure() + "," + size->str() + ")";
+		return "FieldDecl(" + decafStmtList::str() + ")";
+	}
+};
+
+class Field_Decl_List : public decafStmtList {
+public:
+	Field_Decl_List(Identifier_List ** identifiers, Type * type, Field_Size * sz) : decafStmtList() {
+		list<Identifier *> ids = (*identifiers)->get_list();
+		for(list<Identifier *>::iterator i = ids.begin(); i != ids.end(); i++){
+			Field_Decl * field_def = new Field_Decl(*i, type, sz);
+			push_back(field_def);
+		}
+		delete identifiers;
+	}
+	string str() {
+		return decafStmtList::str();
 	}
 };
 
@@ -384,30 +439,23 @@ public:
 
 /* Blocks and Method Blocks */
 class Block : public decafStmtList {
+	bool if_method;
 public:
 	Block(decafAST * declarations, decafAST * statements) : decafStmtList() {
 		push_back(declarations);
 		push_back(statements);
 	}
+	void set_to_method(bool val) {
+		if_method = val;
+	}
 	string str() {
+		if(if_method){
+			return "MethodBlock(" + decafStmtList::str() + ")";
+		}
 		return "Block(" + decafStmtList::str() + ")";
 	}
 	string get_content() {
 		return decafStmtList::str();
-	}
-};
-
-class Method_Block : public decafAST {
-	Block * content;
-public:
-	Method_Block(Block * block) {
-		content = block;
-	}
-	~Method_Block() {
-		if(content) {delete content;}
-	}
-	string str() {
-		return "MethodBlock(" + content->get_content() + ")";
 	}
 };
 
@@ -455,10 +503,10 @@ public:
 };
 
 /// Keywords
-class Return_Stmt: public decafStmtList {
+class Return: public decafStmtList {
 public:
-	Return_Stmt() : decafStmtList(){}
-	Return_Stmt(decafAST * returnVal) : decafStmtList() {
+	Return() : decafStmtList(){}
+	Return(decafAST * returnVal) : decafStmtList() {
 		push_back(returnVal);
 	}
 	string str() {
@@ -500,8 +548,10 @@ public:
 
 class Method_Decl: public decafStmtList {
 	public:
-	Method_Decl(Identifier * id, Type * return_type, decafAST * param_list, Block * block)
+	Method_Decl(Identifier * id, Type * return_type, 
+	decafAST * param_list, Block * block)
 	: decafStmtList() {
+		block->set_to_method(true);
 		push_back(id);
 		push_back(return_type);
 		push_back(param_list);

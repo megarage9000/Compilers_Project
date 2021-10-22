@@ -117,7 +117,8 @@ typedef enum {
 	INTTYPE,
 	BOOLTYPE,
 	STRINGTYPE,
-	VOIDTYPE
+	VOIDTYPE,
+	NULLTYPE
 }	val_type;
 
 class Type: public decafAST {
@@ -135,6 +136,8 @@ public:
 				return "StringType";
 			case VOIDTYPE:
 				return "VoidType";
+			case NULLTYPE:
+				return "NullType";
 			default:
 				return "None";
 		}
@@ -220,6 +223,8 @@ public:
 	Constant_Expr(string ** val, val_type type) : val_rep(*(*val)), const_type(type){
 		delete *val;
 	}
+	// For Null types. Can be changed in the future
+	Constant_Expr() : val_rep(""), const_type(NULLTYPE) {}
 	~Constant_Expr() {}
 	string str() {
 		switch (const_type)
@@ -232,6 +237,8 @@ public:
 				if(val_rep == "false")
 					return "BoolExpr(False)";
 				return "BoolExpr(True)";
+			case NULLTYPE:
+				return "Null";
 			default:
 				return "None";
 		}

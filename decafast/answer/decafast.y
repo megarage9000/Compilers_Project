@@ -8,6 +8,9 @@
 int yylex(void);
 int yyerror(char *); 
 
+// For freeing up left over memory
+int yylex_destroy(void);
+
 // print AST?
 bool printAST = true;
 
@@ -367,6 +370,7 @@ identifier: T_ID       {$$ = new Identifier(&($1));}
 int main() {
   // parse the input and create the abstract syntax tree
   int retval = yyparse();
+  yylex_destroy();
   return(retval >= 1 ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 

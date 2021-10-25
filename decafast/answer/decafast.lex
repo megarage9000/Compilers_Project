@@ -11,7 +11,7 @@ using namespace std;
 string found_whitespace = "";
 string found_comment = "";
 string found_string = "";
-
+int char_val = -1 ;
 // Use YY_USER_ACTION to define function
 // that tracks line position and line column
 
@@ -44,14 +44,24 @@ static void update_position() {
   }
 }
 
+int escape_to_ascii(string escape_char) {
+  escape_char = escape_char.substr(1,2);
+  if(escape_char == "\\a") return 7;
+  if(escape_char == "\\b") return 8;
+  if(escape_char == "\\t") return 9;
+  if(escape_char == "\\n") return 10;
+  if(escape_char == "\\v") return 11;
+  if(escape_char == "\\f") return 12;
+  if(escape_char == "\\r") return 13;
+  return escape_char[1];
+}
+
 #define YY_USER_ACTION  update_position();
 
 %}
 
-char_literal [^\\']
-escaped_char \\(n|r|t|v|f|a|b|\\|'|\") 
-not_whitespace [^\t\r\v\f\n ]
-whitespace [\t\r\v\f\n ]
+char_literal [^']
+escaped_char \\(n|r|t|v|f|a|\\|b|\'|\")
 hex_digit 0(x|X)[0-9a-zA-Z]+
 decimal_digit [0-9]+
 
@@ -126,9 +136,9 @@ while                      { return T_WHILE; }
   /*
     Comment Rules
   */
-\/\/                  { found_comment.append("/"); found_comment.append("/"); BEGIN COMMENT; }
-<COMMENT>.*           { found_comment.append(yytext);}
-<COMMENT>\n           { found_comment.append("\\n"); BEGIN INITIAL; return T_COMMENT;}
+\/\/                  { BEGIN COMMENT; }
+<COMMENT>.*           { }
+<COMMENT>\n           { BEGIN INITIAL; }
   /*
     Binary operations Rules
   */
@@ -151,8 +161,17 @@ while                      { return T_WHILE; }
   /*
     Character Literals Rules
   */
-"'"({char_literal}|{escaped_char})"'"    { yylval.sval = new string(yytext);return T_CHARCONSTANT; }
-"'"({char_literal}|{escaped_char})({char_literal}|{escaped_char})+"'"?    { printError("ERROR: char constant length is greater than one"); return -1; }
+"'"({char_literal}|{escaped_char})"'"  {
+                                          string val = "";
+                                          if(yyleng == 4){
+                                            val = to_string(escape_to_ascii(yytext));
+                                          }
+                                          else{
+                                            val = to_string(static_cast<int>(yytext[1]));
+                                          }
+                                          yylval.sval = new string(val); return T_INTCONSTANT; 
+                                        }
+"'"({char_literal})({char_literal})+"'"   { std::cout << yytext << '\n'; printError("ERROR: char constant length is greater than one"); return -1; }
 "'"({char_literal}|{escaped_char})       { printError("ERROR: unterminated char constant"); return -1;}
 "'""'"                                   { printError("ERROR: char constant has zero width"); return -1;}
   /*
@@ -160,7 +179,10 @@ while                      { return T_WHILE; }
     - Use state to track escape sequences and newlines
   */
 \"                          { found_string.append(yytext); BEGIN STRING; }
-<STRING>\"                  { found_string.append(yytext); yylval.sval = new string(found_string); BEGIN INITIAL; return T_STRINGCONSTANT; }    
+<STRING>\"                  { found_string.append(yytext); 
+                              yylval.sval = new string(found_string); 
+                              found_string=""; 
+                              BEGIN INITIAL; return T_STRINGCONSTANT; }    
 <STRING><<EOF>>                     {printError("ERROR: string constant is missing closing delimiter"); return -1;}
 <STRING>\\/([^nrtvfab\\'\"]*)       {printError("ERROR: unexpected escape sequence in string constant"); BEGIN INITIAL; found_string =""; return -1;}       
 <STRING>\n                          {printError("ERROR: newline in string constant"); BEGIN INITIAL;  found_string =""; return -1;}    

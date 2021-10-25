@@ -1,23 +1,36 @@
-{
-    var x, y, z int;
-    if(x == 9)
+package Test {
+    var h int = 10;
+    func yes() int
     {
-        var h bool;
-        h = true;
-        if(y == "yes") {
-            var u bool;
-            u = "no";
+        var x, y, z int;
+        while(true) {
+            h = h + 10;
+        }
+        if(x == 9)
+        {
+            var h bool;
+            var j, l bool;
+            h = true;
+            i = 100;
+            if(y == 53) {
+                var u bool;
+                var second_decl int;
+                u = 76;
+            }
+            else {
+                var I_am_else int;
+                var second_decl int;
+                I_am_elsee = 10;
+                das = 90;
+            }
         }
         else {
-            var I_am_else int;
-            I_am_elsee = 10;
+            var I_am_second_else int;
+            I_am_second_else = 20;
         }
     }
-    else {
-        var I_am_second_else int;
-        I_am_second_else = 20;
+    
+    func no() int {
+        ul = 10;
     }
-}
-{
-    var x,y int;
 }

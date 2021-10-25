@@ -21,6 +21,7 @@ extern "C"
 	int yyparse(void);
 	int yylex(void);  
 	int yywrap(void);
+	int yylex_destroy(void);
 }
 
 #endif

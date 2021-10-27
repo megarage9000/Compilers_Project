@@ -1,12 +1,18 @@
 
 #include "decaf-stdlib.c"
 
+extern void print_string(char*);
+extern void print_int(int);
+extern int read_int();
+
 using namespace std;
 
 int main() {
-  int i = read_int();
-  print_string("this is a test:");
-  print_int(i);
-  print_string("\n");
+    print_string("Enter a number: ");
+    int num = read_int();
+    print_string("\n");
+    print_string("You entered: ");
+    print_int(num);
+    print_string("\n");
 }
 

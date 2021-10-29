@@ -139,11 +139,11 @@ llvm::Type *getLLVMType(decafType type) {
 	}
 }
 
-llvm::Constant *getLLVMTypeInitializer(decafType type) {
+llvm::Constant *initializeLLVMVal(decafType type, int initialVal) {
 	switch(type) {
 		case intTp:
-			return Builder.getInt32(0);
+			return Builder.getInt32(initializer_list);
 		case boolTp:
-			return Builder.getInt1(0);
+			return Builder.getInt1(initializer_list);
 	}
 }

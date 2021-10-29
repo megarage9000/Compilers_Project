@@ -6,7 +6,7 @@
 #include <sstream>
 
 #ifndef YYTOKENTYPE
-#include "default.tab.h"
+#include "decafexpr.tab.h"
 #endif
 
 using namespace std;

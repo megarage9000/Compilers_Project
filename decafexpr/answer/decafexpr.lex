@@ -1,6 +1,6 @@
 %{
 #include "default-defs.h"
-#include "decafast.tab.h"
+#include "decafexpr.tab.h"
 #include <cstring>
 #include <string>
 #include <sstream>

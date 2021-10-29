@@ -7,7 +7,7 @@ mylibs=-l$(yacclib) -l$(lexlib) $(llvmlibs)
 bindir=.
 rm=/bin/rm -f
 mv=/bin/mv -f
-llvmcpp=globalscalar globalarray
+llvmcpp=globalscalar globalarray decaf-stdlib-test
 llvmfiles=add helloworld factorial rec_add
 llvmtargets=sexpr-codegen
 

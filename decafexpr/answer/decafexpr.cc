@@ -17,15 +17,7 @@ class decafAST {
 public:
   virtual ~decafAST() {}
   virtual string str() { return string(""); }
-};
-
-// For identifier lists
-class string_vector {
-	std::vector<string> list_of_vectors;
-public:
-	string_vector(){}
-	void push_back(string str) {list_of_vectors.push_back(str);}
-	std::vector<string> get_vector() {return list_of_vectors;}
+  virtual llvm::Value *Codegen() = 0;
 };
 
 string getString(decafAST *d) {
@@ -34,11 +26,6 @@ string getString(decafAST *d) {
 	} else {
 		return string("None");
 	}
-}
-/// Debugging purposes
-void debugAST(decafAST * d) {
-	std::cout << getString(d) << '\n';
-	std::cout << '\n';
 }
 
 template <class T>
@@ -53,6 +40,15 @@ string commaList(list<T> vec) {
     return s;
 }
 
+template <class T>
+llvm::Value *listCodegen(list<T> vec) {
+	llvm::Value *val = NULL;
+	for (typename list<T>::iterator i = vec.begin(); i != vec.end(); i++) { 
+		llvm::Value *j = (*i)->Codegen();
+		if (j != NULL) { val = j; }
+	}	
+	return val;
+}
 
 /// decafStmtList - List of Decaf statements
 class decafStmtList : public decafAST {
@@ -68,6 +64,9 @@ public:
 	void push_front(decafAST *e) { stmts.push_front(e); }
 	void push_back(decafAST *e) { stmts.push_back(e); }
 	string str() { return commaList<class decafAST *>(stmts); }
+	llvm::Value *Codegen() { 
+		return listCodegen<decafAST *>(stmts); 
+	}
 };
 
 class PackageAST : public decafAST {
@@ -84,6 +83,18 @@ public:
 	string str() { 
 		return string("Package") + "(" + Name + "," + getString(FieldDeclList) + "," + getString(MethodDeclList) + ")";
 	}
+	llvm::Value *Codegen() { 
+		llvm::Value *val = NULL;
+		TheModule->setModuleIdentifier(llvm::StringRef(Name)); 
+		if (NULL != FieldDeclList) {
+			val = FieldDeclList->Codegen();
+		}
+		if (NULL != MethodDeclList) {
+			val = MethodDeclList->Codegen();
+		} 
+		// Q: should we enter the class name into the symbol table?
+		return val; 
+	}
 };
 
 /// ProgramAST - the decaf program
@@ -97,9 +108,50 @@ public:
 		if (PackageDef != NULL) { delete PackageDef; }
 	}
 	string str() { return string("Program") + "(" + getString(ExternList) + "," + getString(PackageDef) + ")"; }
+	llvm::Value *Codegen() { 
+		llvm::Value *val = NULL;
+		if (NULL != ExternList) {
+			val = ExternList->Codegen();
+		}
+		if (NULL != PackageDef) {
+			val = PackageDef->Codegen();
+		} else {
+			throw runtime_error("no package definition in decaf program");
+		}
+		return val; 
+	}
 };
 
+typedef enum { voidTp, intTp, boolTp, stringTp } decafType;
+
+llvm::Type *getLLVMType(decafType type) {
+	switch(type) {
+		case voidTp:
+			return Builder.getVoidTy();
+		case intTp:
+			return Builder.getInt32Ty();
+		case boolTp:
+			return Builder.getInt1Ty();
+		case stringTp:
+			return Builder.getInt8PtrTy();
+		default:
+			throw runtime_error("Unknown type!");
+	}
+}
+
+llvm::Constant *initializeLLVMVal(decafType type, int initialVal) {
+	switch(type) {
+		case intTp:
+			return Builder.getInt32(initialVal);
+		case boolTp:
+			return Builder.getInt1(initialVal);
+		default:
+			throw runtime_error("Invalid type to initialize!");
+	}
+}
+
 // Identifiers to deal with strings
+/*
 class Identifier : public decafAST {
 	string id_name;
 public:
@@ -443,7 +495,7 @@ public:
 	}
 };
 
-/* Blocks and Method Blocks */
+Blocks and Method Blocks 
 class Block : public decafStmtList {
 	bool if_method = false;
 public:
@@ -565,3 +617,4 @@ class Method_Decl: public decafStmtList {
 		return "Method(" + decafStmtList::str() + ")";
 	}
 };
+*/

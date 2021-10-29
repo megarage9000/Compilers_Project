@@ -14,9 +14,41 @@ int yylex_destroy(void);
 // print AST?
 bool printAST = true;
 
-#include "decafexpr.cc"
 
 using namespace std;
+
+// this global variable contains all the generated code
+static llvm::Module *TheModule;
+
+// this is the method used to construct the LLVM intermediate code (IR)
+static llvm::LLVMContext TheContext;
+static llvm::IRBuilder<> Builder(TheContext);
+// the calls to TheContext in the init above and in the
+// following code ensures that we are incrementally generating
+// instructions in the right order
+
+#include "decafexpr.cc"
+// dummy main function
+// WARNING: this is not how you should implement code generation
+// for the main function!
+// You should write the codegen for the main method as 
+// part of the codegen for method declarations (MethodDecl)
+static llvm::Function *TheFunction = 0;
+
+// we have to create a main function 
+llvm::Function *gen_main_def() {
+  // create the top-level definition for main
+  llvm::FunctionType *FT = llvm::FunctionType::get(llvm::IntegerType::get(TheContext, 32), false);
+  llvm::Function *TheFunction = llvm::Function::Create(FT, llvm::Function::ExternalLinkage, "main", TheModule);
+  if (TheFunction == 0) {
+    throw runtime_error("empty function block"); 
+  }
+  // Create a new basic block which contains a sequence of LLVM instructions
+  llvm::BasicBlock *BB = llvm::BasicBlock::Create(TheContext, "entry", TheFunction);
+  // All subsequent calls to IRBuilder will place instructions in this location
+  Builder.SetInsertPoint(BB);
+  return TheFunction;
+}
 
 // For AST lists, starts as the base case
 decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
@@ -334,9 +366,22 @@ identifier: T_ID       {}
 %%
 
 int main() {
+  // initialize LLVM
+  llvm::LLVMContext &Context = TheContext;
+  // Make the module, which holds all the code.
+  TheModule = new llvm::Module("Test", Context);
+  // set up symbol table
+  // set up dummy main function
+  TheFunction = gen_main_def();
   // parse the input and create the abstract syntax tree
   int retval = yyparse();
-  yylex_destroy();
+  // remove symbol table
+  // Finish off the main function. (see the WARNING above)
+  // return 0 from main, which is EXIT_SUCCESS
+  Builder.CreateRet(llvm::ConstantInt::get(TheContext, llvm::APInt(32, 0)));
+  // Validate the generated code, checking for consistency.
+  verifyFunction(*TheFunction);
+  // Print out all of the generated code to stderr
+  TheModule->print(llvm::errs(), nullptr);
   return(retval >= 1 ? EXIT_FAILURE : EXIT_SUCCESS);
 }
-

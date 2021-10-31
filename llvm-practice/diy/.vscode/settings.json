@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "*.lex": "lex",
+        "map": "cpp"
+    }
+}

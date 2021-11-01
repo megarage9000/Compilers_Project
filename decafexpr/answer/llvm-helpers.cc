@@ -52,18 +52,24 @@ static llvm::Module *TheModule;
 static llvm::LLVMContext TheContext;
 static llvm::IRBuilder<> Builder(TheContext);
 
-typedef enum { voidTp, intTp, boolTp, stringTp } decafType;
+typedef enum {
+	INTTYPE,
+	BOOLTYPE,
+	STRINGTYPE,
+	VOIDTYPE,
+	NULLTYPE
+}	val_type;
 
 // Getting types
-llvm::Type *getLLVMType(decafType type) {
+llvm::Type *getLLVMType(val_type type) {
 	switch(type) {
-		case voidTp:
+		case VOIDTYPE:
 			return Builder.getVoidTy();
-		case intTp:
+		case INTTYPE:
 			return Builder.getInt32Ty();
-		case boolTp:
+		case BOOLTYPE:
 			return Builder.getInt1Ty();
-		case stringTp:
+		case STRINGTYPE:
 			return Builder.getInt8PtrTy();
 		default:
 			throw runtime_error("Unknown type!");
@@ -71,11 +77,11 @@ llvm::Type *getLLVMType(decafType type) {
 }
 
 // -- Getting constants
-llvm::Constant *initializeLLVMVal(decafType type, int initialVal) {
+llvm::Constant *initializeLLVMVal(val_type type, int initialVal) {
 	switch(type) {
-		case intTp:
+		case INTTYPE:
 			return Builder.getInt32(initialVal);
-		case boolTp:
+		case BOOLTYPE:
 			return Builder.getInt1(initialVal);
 		default:
 			throw runtime_error("Invalid type to initialize!");
@@ -95,6 +101,7 @@ llvm::AllocaInst * defineVar(llvm::Type * tp, std::string id) {
 	llvm::AllocaInst * allocation = Builder.CreateAlloca(tp, 0, id.c_str());
 	insertToTable(id, allocation);
 	return allocation;
+
 }
 llvm::Value * useVar(std::string id) {
 	llvm::Value * val = getValueFromTables(id);
@@ -125,8 +132,8 @@ void onInsertBlock(llvm::BasicBlock * block) {
 }
 
 void onBlockEnd() {
-	blockStack.pop();
 	if(!blockStack.empty()) {
+		blockStack.pop();
 		Builder.SetInsertPoint(blockStack.top());
 	}
 }
@@ -186,7 +193,7 @@ llvm::Function * defineFunc(
 	);
 	insertToTable(funcName, func);
 	llvm::BasicBlock * funcBlock = createBasicBlock(func);
-	Builder.SetInsertPoint(funcBlock);
+	onInsertBlock(funcBlock);
 	setupFuncArgs(func, argNames);
 	return func;
 }

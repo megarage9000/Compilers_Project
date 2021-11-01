@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "*.lex": "lex",
-        "stdexcept": "cpp"
+        "stdexcept": "cpp",
+        "array": "cpp",
+        "string_view": "cpp"
     }
 }

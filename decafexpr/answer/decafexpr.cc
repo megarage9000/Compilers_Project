@@ -21,6 +21,15 @@ public:
   virtual llvm::Value *Codegen() = 0;
 };
 
+// For identifier lists
+class string_vector {
+	std::vector<string> list_of_vectors;
+public:
+	string_vector(){}
+	void push_back(string str) {list_of_vectors.push_back(str);}
+	std::vector<string> get_vector() {return list_of_vectors;}
+};
+
 string getString(decafAST *d) {
 	if (d != NULL) {
 		return d->str();
@@ -65,6 +74,9 @@ public:
 	void push_front(decafAST *e) { stmts.push_front(e); }
 	void push_back(decafAST *e) { stmts.push_back(e); }
 	string str() { return commaList<class decafAST *>(stmts); }
+	list<decafAST *>::iterator begin() {return stmts.begin();}
+	list<decafAST *>::iterator end() {return stmts.end();}
+	bool isEmpty() { return stmts.empty(); }
 	llvm::Value *Codegen() { 
 		return listCodegen<decafAST *>(stmts); 
 	}
@@ -123,7 +135,7 @@ public:
 	}
 };
 
-/*
+
 
 // Identifiers to deal with strings
 
@@ -138,15 +150,10 @@ public:
 	string str() {
 		return id_name;
 	}
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
 };
-
-typedef enum {
-	INTTYPE,
-	BOOLTYPE,
-	STRINGTYPE,
-	VOIDTYPE,
-	NULLTYPE
-}	val_type;
 
 class Type: public decafAST {
 	val_type type;
@@ -170,6 +177,10 @@ public:
 		}
 	}
 	val_type get_type() {return type;}
+
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
 };
 
 typedef enum {
@@ -222,6 +233,10 @@ public:
 				return "None";
 		}
 	}
+
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
 };
 
 class Unary_Operator : public decafAST {
@@ -238,6 +253,9 @@ public:
 			default:
 				return "None";
 		}
+	}
+	llvm::Value *Codegen() {
+		return nullptr;
 	}
 };
 
@@ -278,6 +296,9 @@ public:
 			return "None";
 		}
 	}
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
 };
 
 /// Expressions
@@ -291,6 +312,9 @@ public:
 	string str() {
 		return "BinaryExpr(" + decafStmtList::str() + ")";
 	}
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
 };
 
 class Unary_Expr: public decafStmtList {
@@ -301,6 +325,9 @@ public:
 	}
 	string str() {
 		return "UnaryExpr(" + decafStmtList::str() + ")";
+	}
+	llvm::Value *Codegen() {
+		return nullptr;
 	}
 };
 
@@ -313,6 +340,9 @@ public:
 	}
 	string str() {
 		return "AssignVar(" + decafStmtList::str() + ")";
+	}
+	llvm::Value *Codegen() {
+		return nullptr;
 	}	
 };
 
@@ -326,6 +356,9 @@ public:
 	string str() {
 		return "AssignArrayLoc(" + decafStmtList::str() + ")";
 	}
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
 };
 
 class Var_Expr: public decafAST{
@@ -335,7 +368,10 @@ public:
 	~Var_Expr() { if(identifier) {delete identifier;}}
 	string str() {
 		return "VariableExpr(" + getString(identifier) + ")";
-	}	
+	}
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
 };
 
 class Arr_Loc_Expr: public decafStmtList{;
@@ -346,6 +382,9 @@ public:
 	}
 	string str() {
 		return "ArrayLocExpr(" + decafStmtList::str() + ")";
+	}
+	llvm::Value *Codegen() {
+		return nullptr;
 	}
 };
 
@@ -363,20 +402,40 @@ public:
 	string str() {
 		return "MethodCall(" + decafStmtList::str() + ")";
 	}
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
 };
 
 // Variable declarations
 class Var_Def : public decafStmtList {
+	string id;
+	val_type tp;
 public:
-	Var_Def(decafAST * identifier, Type * type) : decafStmtList() {
+	Var_Def(Identifier * identifier, Type * type) : decafStmtList() {
+		id = identifier->str();
+		tp = type->get_type();
 		push_back(identifier);
 		push_back(type);
 	}
 	Var_Def(Type * type) : decafStmtList() {
+		id = "";
+		tp = type->get_type();
 		push_back(type);
 	}
 	string str() {
 		return "VarDef(" + decafStmtList::str() + ")";
+	}
+	// Local variable declarations only! Be careful and don't try to call this
+	// in a function def
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
+	string getId() {
+		return id;
+	}
+	val_type getType() {
+		return tp;
 	}
 };
 
@@ -413,6 +472,9 @@ public:
 	string str() {
 		return size;
 	} 
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
 };
 
 class Field_Decl : public decafStmtList{
@@ -429,6 +491,9 @@ public:
 	}
 	string str() {
 		return "FieldDecl(" + decafStmtList::str() + ")";
+	}
+	llvm::Value *Codegen() {
+		return nullptr;
 	}
 };
 
@@ -468,9 +533,12 @@ public:
 	string str() {
 		return "AssignGlobalVar(" + decafStmtList::str() + ")";
 	}
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
 };
 
-Blocks and Method Blocks 
+// Blocks and Method Blocks 
 class Block : public decafStmtList {
 	bool if_method = false;
 public:
@@ -486,6 +554,9 @@ public:
 			return "MethodBlock(" + decafStmtList::str() + ")";
 		}
 		return "Block(" + decafStmtList::str() + ")";
+	}
+	llvm::Value *Codegen() {
+		return nullptr;
 	}
 };
 
@@ -506,6 +577,9 @@ public:
 	string str() {
 		return "IfStmt(" + decafStmtList::str() + ")";
 	}
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
 };
 
 /// At this point, most loops are decafstmtlists
@@ -520,6 +594,9 @@ public:
 	string str() {
 		return "ForStmt(" + decafStmtList::str() + ")";
 	}
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
 };
 
 class While_Loop: public decafStmtList {
@@ -530,6 +607,9 @@ public:
 	}
 	string str() {
 		return "WhileStmt(" + decafStmtList::str() + ")";
+	}
+	llvm::Value *Codegen() {
+		return nullptr;
 	}
 };
 
@@ -543,6 +623,9 @@ public:
 	string str() {
 		return "ReturnStmt(" + decafStmtList::str() + ")";
 	}
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
 };
 
 class Continue: public decafAST {
@@ -552,6 +635,9 @@ public:
 	string str() {
 		return "ContinueStmt";
 	}
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
 };
 
 class Break: public decafAST {
@@ -560,6 +646,9 @@ public:
 	~Break() {}
 	string str() {
 		return "BreakStmt";
+	}
+	llvm::Value *Codegen() {
+		return nullptr;
 	}
 };
 
@@ -575,21 +664,49 @@ public:
 	string str() {
 		return "ExternFunction(" + decafStmtList::str() + ")";
 	}
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
 };
 
 class Method_Decl: public decafStmtList {
+	vector<llvm::Type*> argTypes;
+	vector<string> argNames;
+	llvm::Type * returnType;
+	string funcName;
 	public:
 	Method_Decl(Identifier * id, Type * return_type, 
-	decafAST * param_list, Block * block)
+	decafStmtList* param_list, Block * block)
 	: decafStmtList() {
 		block->set_to_method(true);
 		push_back(id);
 		push_back(return_type);
 		push_back(param_list);
 		push_back(block);
+
+		/*
+			Extract necessities for codegen()
+			- parameter pairs and types
+
+		*/
+		list<decafAST *>::iterator it;
+		for(it = param_list->begin(); it != param_list->end(); it++){
+			Var_Def * arg = dynamic_cast<Var_Def *>(*it);
+			argNames.push_back(arg->getId());
+			argTypes.push_back(
+				getLLVMType(arg->getType())
+			);
+		}
+		funcName = id->str();
+		returnType = getLLVMType(return_type->get_type());
+		
 	}
 	string str() {
 		return "Method(" + decafStmtList::str() + ")";
 	}
+	llvm::Value *Codegen() {
+		// Defines the function, creates a block and arguments
+		return defineFunc(returnType, argTypes, funcName, argNames);
+	}
 };
-*/
+

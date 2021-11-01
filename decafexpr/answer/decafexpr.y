@@ -100,8 +100,17 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 %type<id_list> identifier_list
 %%
 
-start: program
+start: method_decl_group {$1->Codegen();}
     ;
+
+start_block: T_LCB {
+    pushTable();
+}
+
+end_block: T_RCB{
+    popTable();
+    onBlockEnd();
+}
 
 program: extern_declaration decafpackage
     { 
@@ -123,25 +132,25 @@ program: extern_declaration decafpackage
     ;
 
 /* --- Packages --- */
-decafpackage: T_PACKAGE identifier T_LCB field_decl_group method_decl_group T_RCB
+decafpackage: T_PACKAGE identifier start_block field_decl_group method_decl_group end_block
     {   
         string id_name = $2->str();
         $$ = new PackageAST(id_name, dynamic_cast<decafStmtList *>($4), dynamic_cast<decafStmtList *>($5));   
         delete $2;     
     }
-    | T_PACKAGE identifier T_LCB method_decl_group T_RCB
+    | T_PACKAGE identifier start_block method_decl_group end_block
     {   
         string id_name = $2->str();
         $$ = new PackageAST(id_name, new decafStmtList() , dynamic_cast<decafStmtList *>($4));  
         delete $2;        
     }    
-    | T_PACKAGE identifier T_LCB field_decl_group T_RCB
+    | T_PACKAGE identifier start_block field_decl_group end_block
     {   
         string id_name = $2->str();
         $$ = new PackageAST(id_name, dynamic_cast<decafStmtList *>($4), new decafStmtList());  
         delete $2;        
     }
-    | T_PACKAGE identifier T_LCB T_RCB {   
+    | T_PACKAGE identifier start_block end_block {   
         string id_name = $2->str();
         $$ = new PackageAST(id_name, new decafStmtList(), new decafStmtList());    
         delete $2;     
@@ -196,10 +205,10 @@ if_stmt: T_IF T_LPAREN expression T_RPAREN block {
     }
     
 /* --- Blocks --- */
-block: T_LCB typed_symbols_decl_group statement_group T_RCB               {$$ = new Block($2, $3); } 
-    | T_LCB typed_symbols_decl_group T_RCB                                {$$ = new Block($2, new decafStmtList()); }
-    | T_LCB statement_group T_RCB                                         {$$ = new Block(new decafStmtList(), $2); }
-    | T_LCB T_RCB                                                         {$$ = new Block(new decafStmtList(), new decafStmtList()); }
+block: start_block typed_symbols_decl_group statement_group end_block               {$$ = new Block($2, $3); } 
+    | start_block typed_symbols_decl_group end_block                                {$$ = new Block($2, new decafStmtList()); }
+    | start_block statement_group end_block                                         {$$ = new Block(new decafStmtList(), $2); }
+    | start_block end_block                                                         {$$ = new Block(new decafStmtList(), new decafStmtList()); }
 
 /* --- Statements ---  */
 statement_group: statement_list         {$$ = $1;}
@@ -271,14 +280,19 @@ method_decl_list: method_decl method_decl            {$$ = initialize_recursive_
     | method_decl_list method_decl                   {$1->push_back($2), $$=$1;}
 
 method_decl: T_FUNC identifier T_LPAREN method_decl_args T_RPAREN method_type block {
-        $$ = new Method_Decl(dynamic_cast<Identifier *>($2), dynamic_cast<Type *>($6), $4, dynamic_cast<Block *>($7));
+        $$ = new Method_Decl(dynamic_cast<Identifier *>($2), dynamic_cast<Type *>($6), dynamic_cast<decafStmtList *>($4), dynamic_cast<Block *>($7));
     }
     | T_FUNC identifier T_LPAREN T_RPAREN method_type block {
         $$ = new Method_Decl(dynamic_cast<Identifier *>($2), dynamic_cast<Type *>($5), new decafStmtList(), dynamic_cast<Block *>($6));
     }
 
 method_decl_args: method_decl_multi_args {$$ = $1;}
-    | typed_symbol {$$ = $1;}
+    | typed_symbol {
+        // Convert to stmtList for ease of use
+        decafStmtList * list = new decafStmtList();
+        list->push_back($1);
+        $$ = list;
+    }
 
 method_decl_multi_args:                                     {$$ = new decafStmtList();}
     | typed_symbol T_COMMA typed_symbol                     {$$ = initialize_recursive_list($1, $3);}
@@ -302,7 +316,7 @@ typed_symbols: T_VAR typed_symbol                       {$$ = $2;}
                                                          }
     ;
 
-typed_symbol: identifier decaf_type                     {$$ = new Var_Def($1, dynamic_cast<Type *>($2)); }
+typed_symbol: identifier decaf_type                     {$$ = new Var_Def(dynamic_cast<Identifier *>($1), dynamic_cast<Type *>($2)); }
 
 /* --- Methods and Method args --- */
 method_call: identifier T_LPAREN T_RPAREN {$$ = new Method_Call(dynamic_cast<Identifier *>($1)); }
@@ -401,8 +415,7 @@ int main() {
   // Make the module, which holds all the code.
   TheModule = new llvm::Module("Test", Context);
   // set up symbol table
-  // set up dummy main function
-  TheFunction = gen_main_def();
+    pushTable();
   // parse the input and create the abstract syntax tree
   int retval = yyparse();
   // remove symbol table
@@ -410,8 +423,9 @@ int main() {
   // return 0 from main, which is EXIT_SUCCESS
   Builder.CreateRet(llvm::ConstantInt::get(TheContext, llvm::APInt(32, 0)));
   // Validate the generated code, checking for consistency.
-  verifyFunction(*TheFunction);
+  // verifyFunction(*TheFunction);
   // Print out all of the generated code to stderr
   TheModule->print(llvm::errs(), nullptr);
+  popTable();
   return(retval >= 1 ? EXIT_FAILURE : EXIT_SUCCESS);
 }

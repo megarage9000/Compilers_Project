@@ -123,10 +123,10 @@ public:
 	}
 };
 
-
+/*
 
 // Identifiers to deal with strings
-/*
+
 class Identifier : public decafAST {
 	string id_name;
 public:

@@ -1,6 +1,7 @@
 #include "default-defs.h"
 #include <map>
 #include <string>
+#include <stack>
 
 /// Symbol table 
 typedef std::map<std::string, llvm::Value*> symTable;
@@ -37,11 +38,11 @@ void insertToTable(std::string name, llvm::Value * val) {
 
 void pushTable() {
   symTable newtable;
-  symbl_table_list.push_front(newtable);
+  symbl_table_list.push_back(newtable);
 }
 
 void popTable() {
-  symbl_table_list.pop_front();
+  symbl_table_list.pop_back();
 }
 
 // this global variable contains all the generated code
@@ -69,7 +70,7 @@ llvm::Type *getLLVMType(decafType type) {
 	}
 }
 
-// Getting constants
+// -- Getting constants
 llvm::Constant *initializeLLVMVal(decafType type, int initialVal) {
 	switch(type) {
 		case intTp:
@@ -81,7 +82,15 @@ llvm::Constant *initializeLLVMVal(decafType type, int initialVal) {
 	}
 }
 
-// Local Variables
+// -- Promoting bools to int32s
+llvm::Value * promoteBoolToInt(llvm::Value ** val) {
+	if((*val)->getType() == Builder.getInt1Ty()) {
+		return Builder.CreateZExt(*val, Builder.getInt32Ty(), "zexttmp");
+	}
+	return nullptr;
+}
+
+// -- Local Variables
 llvm::AllocaInst * defineVar(llvm::Type * tp, std::string id) {
 	llvm::AllocaInst * allocation = Builder.CreateAlloca(tp, 0, id.c_str());
 	insertToTable(id, allocation);
@@ -106,35 +115,48 @@ void assignVal(llvm::AllocaInst* lval, llvm::Value * rval) {
 	}
 }
 
-// Functions
+// -- Blocks
 
-// Function definition only works with method declarations currently
-llvm::Function * defineFunc(
-	llvm::Type * returnTp, 
-	std::vector<llvm::Type *> argTypes, 
-	std::string funcName) {
-	llvm::Function * func = llvm::Function::Create(
-		llvm::FunctionType::get(returnTp, argTypes, false),
-		llvm::Function::ExternalLinkage,
-		funcName,
-		TheModule
-	);
-	insertToTable(funcName, func);
-	return func;
+std::stack<llvm::BasicBlock *> blockStack;
+
+void onInsertBlock(llvm::BasicBlock * block) {
+	blockStack.push(block);
+	Builder.SetInsertPoint(block);
 }
 
-llvm::BasicBlock * createBasicBlock(llvm::Function * func, std::string funcName) {
-	std::string blockID = funcName + "entry";
+void onBlockEnd() {
+	blockStack.pop();
+	if(!blockStack.empty()) {
+		Builder.SetInsertPoint(blockStack.top());
+	}
+}
+
+const std::string BLOCK_ENTRY_ID = "entry";
+llvm::BasicBlock * createBasicBlock(llvm::Function * func) {
 	llvm::BasicBlock * basicBlock = llvm::BasicBlock::Create(
 		TheContext,
-		blockID,
+		BLOCK_ENTRY_ID,
 		func
 	);
-	insertToTable(blockID, basicBlock);
+	insertToTable(BLOCK_ENTRY_ID, basicBlock);
 	return basicBlock;
 }
 
+// Non-function blocks
+llvm::BasicBlock * createBasicBlockDefault() {
+	llvm::BasicBlock * basicBlock = llvm::BasicBlock::Create(
+		TheContext,
+		BLOCK_ENTRY_ID,
+		nullptr
+	);
+	insertToTable(BLOCK_ENTRY_ID, basicBlock);
+	return basicBlock;
+}
+
+// -- Method declaration
+
 // From sexpr-codegen.y
+// - For functions, we are expecting booleans, integers and chars as types of the argument
 static llvm::AllocaInst *CreateEntryBlockAlloca(llvm::Function *TheFunction, const std::string &VarName) {
   llvm::IRBuilder<> TmpB(&TheFunction->getEntryBlock(), TheFunction->getEntryBlock().begin());
   return TmpB.CreateAlloca(llvm::IntegerType::get(TheContext, 32), 0, VarName.c_str());
@@ -151,3 +173,31 @@ void setupFuncArgs(llvm::Function * func, std::vector<std::string> argNames) {
 	}	
 }
 
+llvm::Function * defineFunc(
+	llvm::Type * returnTp, 
+	std::vector<llvm::Type *> argTypes, 
+	std::string funcName,
+	std::vector<std::string> argNames) {
+	llvm::Function * func = llvm::Function::Create(
+		llvm::FunctionType::get(returnTp, argTypes, false),
+		llvm::Function::ExternalLinkage,
+		funcName,
+		TheModule
+	);
+	insertToTable(funcName, func);
+	llvm::BasicBlock * funcBlock = createBasicBlock(func);
+	Builder.SetInsertPoint(funcBlock);
+	setupFuncArgs(func, argNames);
+	return func;
+}
+
+
+// -- Method calls
+llvm::Value * getFuncCall(llvm::Function * funcCall, std::vector<llvm::Value *> args) {
+	std::string twine = (funcCall->getReturnType()->isVoidTy()) ? "" : "calltmp";
+	return Builder.CreateCall(
+		funcCall,
+		args,
+		twine
+	);
+}	

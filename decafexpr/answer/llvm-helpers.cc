@@ -108,6 +108,7 @@ void assignVal(llvm::AllocaInst* lval, llvm::Value * rval) {
 
 // Functions
 
+// Function definition only works with method declarations currently
 llvm::Function * defineFunc(
 	llvm::Type * returnTp, 
 	std::vector<llvm::Type *> argTypes, 
@@ -133,5 +134,20 @@ llvm::BasicBlock * createBasicBlock(llvm::Function * func, std::string funcName)
 	return basicBlock;
 }
 
+// From sexpr-codegen.y
+static llvm::AllocaInst *CreateEntryBlockAlloca(llvm::Function *TheFunction, const std::string &VarName) {
+  llvm::IRBuilder<> TmpB(&TheFunction->getEntryBlock(), TheFunction->getEntryBlock().begin());
+  return TmpB.CreateAlloca(llvm::IntegerType::get(TheContext, 32), 0, VarName.c_str());
+}
 
+void setupFuncArgs(llvm::Function * func, std::vector<std::string> argNames) {
+	std::vector<string>::iterator argNameIter = argNames.begin();
+	for(auto &arg: func->args()) {
+		arg.setName((*argNameIter).c_str());
+		llvm::AllocaInst * allocation = CreateEntryBlockAlloca(func, arg.getName().str());
+		Builder.CreateStore(&arg, allocation);
+		insertToTable(arg.getName().str(), allocation);
+		argNameIter++;
+	}	
+}
 

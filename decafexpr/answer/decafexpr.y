@@ -17,17 +17,12 @@ bool printAST = true;
 
 using namespace std;
 
-// this global variable contains all the generated code
-static llvm::Module *TheModule;
-
-// this is the method used to construct the LLVM intermediate code (IR)
-static llvm::LLVMContext TheContext;
-static llvm::IRBuilder<> Builder(TheContext);
 // the calls to TheContext in the init above and in the
 // following code ensures that we are incrementally generating
 // instructions in the right order
 
 #include "decafexpr.cc"
+
 // dummy main function
 // WARNING: this is not how you should implement code generation
 // for the main function!

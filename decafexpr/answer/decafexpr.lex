@@ -162,14 +162,14 @@ while                      { return T_WHILE; }
     Character Literals Rules
   */
 "'"({char_literal}|{escaped_char})"'"  {
-                                          string val = "";
+                                          int val;
                                           if(yyleng == 4){
-                                            val = to_string(escape_to_ascii(yytext));
+                                            val = escape_to_ascii(yytext);
                                           }
                                           else{
-                                            val = to_string(static_cast<int>(yytext[1]));
+                                            val = static_cast<int>(yytext[1]);
                                           }
-                                          yylval.sval = new string(val); return T_INTCONSTANT; 
+                                          yylval.inval = val; return T_INTCONSTANT; 
                                         }
 "'"({char_literal})({char_literal})+"'"   { std::cout << yytext << '\n'; printError("ERROR: char constant length is greater than one"); return -1; }
 "'"({char_literal}|{escaped_char})       { printError("ERROR: unterminated char constant"); return -1;}
@@ -190,7 +190,7 @@ while                      { return T_WHILE; }
   /*
     Integer Rules
   */
-{decimal_digit}|{hex_digit}       {yylval.sval = new string(yytext); return T_INTCONSTANT;} 
+{decimal_digit}|{hex_digit}       {yylval.inval = std::stoi(yytext); return T_INTCONSTANT;} 
   /*
     EOF?
   */

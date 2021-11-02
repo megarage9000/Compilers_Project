@@ -250,42 +250,64 @@ public:
 	}
 };
 
-/// Constant Expressions 
-/// - For String, Int and Boolean values
-class Constant_Expr : public decafAST {
-	string val_rep;
-	val_type const_type;
+/// Refactor to IntConstant, BoolConstant
+class Int_Constant : public decafAST {
+	int value;
 public:
-	Constant_Expr(string ** val, val_type type) : val_rep(*(*val)), const_type(type){
+	Int_Constant(int val) : value(val) {}
+	~Int_Constant() {}
+	string str() {
+		return "NumberExpr(" + std::to_string(value) + ")";
+	} 
+	int get_val() {
+		return value;
+	}
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
+};
+
+class Bool_Constant : public decafAST {
+	bool value;
+public:
+	Bool_Constant(bool val) : value(val) {}
+	~Bool_Constant() {}
+	string str() {
+		if(value) {
+			return "BoolExpr(True)";
+		}
+		return "BoolExpr(False)";
+	}
+	bool get_val() {
+		return value;
+	}
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
+};
+
+/// Create StringConstant
+class String_Constant : public decafAST {
+	string strVal;
+public:
+	String_Constant(string ** val) : strVal(*(*val)) {
 		delete *val;
 	}
-	// For Null types. Can be changed in the future
-	Constant_Expr() : val_rep(""), const_type(NULLTYPE) {}
-	~Constant_Expr() {}
+	~String_Constant() {}
 	string str() {
-		switch (const_type)
-		{
-			case STRINGTYPE:
-				return "StringConstant(" + val_rep + ")";
-			case INTTYPE:
-				return "NumberExpr(" + val_rep + ")";
-			case BOOLTYPE:
-				if(val_rep == "false")
-					return "BoolExpr(False)";
-				return "BoolExpr(True)";
-			case NULLTYPE:
-				return "Null";
-			default:
-				return "None";
-		}
+		return "StringConstant(" + strVal + ")";
 	}
-	string get_num() {
-		if(const_type == INTTYPE || const_type == BOOLTYPE) {
-			return val_rep;
-		}
-		else {
-			return "None";
-		}
+	llvm::Value *Codegen() {
+		return nullptr;
+	}
+};
+
+class Null_Constant : public decafAST {
+public:
+	Null_Constant() {}
+	~Null_Constant() {}
+	string str() {
+		return "NullConstant";
 	}
 	llvm::Value *Codegen() {
 		return nullptr;
@@ -309,7 +331,7 @@ public:
 };
 
 class Unary_Expr: public decafStmtList {
-	int value = 
+	int value;
 public: 
 	Unary_Expr(decafAST * val, Unary_Operator * op) : decafStmtList() {
 		push_back(op);
@@ -453,13 +475,8 @@ public:
 	Field_Size(string sz) {
 		size = sz;
 	}
-	Field_Size(Constant_Expr ** arr_size) {
-		size = (*arr_size)->get_num();
-		if(size == "None") {
-			size = "Scalar";
-		}
-		size = "Array(" + size + ")";
-		delete *arr_size;
+	Field_Size(Int_Constant * arrsize) {
+		size = "Array(" + std::to_string(arrsize->get_val()) + ")";
 	}
 	string str() {
 		return size;
@@ -517,7 +534,12 @@ decafStmtList * vector_to_field_decls(string_vector * str_vector, Type * type) {
 
 class Assign_Global : public decafStmtList {
 public:
-	Assign_Global(Identifier * identifier, Type * type, Constant_Expr * const_expr) : decafStmtList() {
+	Assign_Global(Identifier * identifier, Type * type, Int_Constant * const_expr) : decafStmtList() {
+		push_back(identifier);
+		push_back(type);
+		push_back(const_expr);
+	}
+	Assign_Global(Identifier * identifier, Type * type, Bool_Constant * const_expr) : decafStmtList() {
 		push_back(identifier);
 		push_back(type);
 		push_back(const_expr);

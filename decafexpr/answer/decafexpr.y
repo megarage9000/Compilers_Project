@@ -62,6 +62,8 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
     // For a list of identifiers, cache them in to a vector string
     class string_vector *id_list;
     std::string *sval;
+    int inval;
+    bool bval;
  }
 
 %token T_PACKAGE
@@ -74,7 +76,9 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 // Keywords
 %token T_ELSE T_EXTERN T_BREAK T_CONTINUE T_BOOLTYPE T_FOR T_FUNC T_IF T_INTTYPE T_STRINGTYPE T_VAR T_VOID T_WHILE T_RETURN
 // Values
-%token<sval> T_CHARCONSTANT T_FALSE T_STRINGCONSTANT T_TRUE T_INTCONSTANT 
+%token<sval> T_STRINGCONSTANT 
+%token<inval> T_INTCONSTANT T_CHARCONSTANT 
+%token<bval>  T_TRUE T_FALSE
 // Types
 %token<sval> T_ID
 
@@ -100,7 +104,8 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 %type<id_list> identifier_list
 %%
 
-start: method_decl_group {$1->Codegen(); delete $1;}
+start: program {}
+|    method_decl_group {$1->Codegen(); delete $1;}
     ;
 
 start_block: T_LCB {
@@ -255,22 +260,29 @@ field_decl: T_VAR identifier decaf_type T_SEMICOLON {
     | T_VAR identifier T_LSB T_INTCONSTANT T_RSB decaf_type T_SEMICOLON {
         Identifier * id = dynamic_cast<Identifier *>($2);
         Type * type = dynamic_cast<Type *>($6);
-        Constant_Expr * const_expr = new Constant_Expr(&($4), INTTYPE);
-        $$  = new Field_Decl(id, type, new Field_Size(&const_expr));   
+        Int_Constant * size = new Int_Constant($4);
+        $$  = new Field_Decl(id, type, new Field_Size(size));   
+        delete size;
     }
     | T_VAR identifier_list T_LSB T_INTCONSTANT T_RSB decaf_type T_SEMICOLON {
         Type * type = dynamic_cast<Type *>($6);
-        Constant_Expr * size = new Constant_Expr(&($4), INTTYPE);
-        Field_Size * field_sz = new Field_Size(&size);
+        Int_Constant * size = new Int_Constant($4);
+        Field_Size * field_sz = new Field_Size(size);
         $$ = vector_to_field_decls($2, type, field_sz);
-        delete field_sz; delete type;
+        delete field_sz; delete type; delete size;
     }
     | assign_global         {$$ = $1;}
     ;
 
-assign_global: T_VAR identifier decaf_type T_ASSIGN constant T_SEMICOLON {
-    $$ = new Assign_Global(dynamic_cast<Identifier *>($2), dynamic_cast<Type *>($3), dynamic_cast<Constant_Expr *>($5));
-}
+assign_global: T_VAR identifier decaf_type T_ASSIGN T_INTCONSTANT T_SEMICOLON {
+        $$ = new Assign_Global(dynamic_cast<Identifier *>($2), dynamic_cast<Type *>($3), new Int_Constant($5));
+    }
+    | T_VAR identifier decaf_type T_ASSIGN T_TRUE T_SEMICOLON {
+        $$ = new Assign_Global(dynamic_cast<Identifier *>($2), dynamic_cast<Type *>($3), new Bool_Constant(true));
+    }
+    | T_VAR identifier decaf_type T_ASSIGN T_FALSE T_SEMICOLON {
+        $$ = new Assign_Global(dynamic_cast<Identifier *>($2), dynamic_cast<Type *>($3), new Bool_Constant(false));
+    }
 
 /* --- Method declaration --- */
 method_decl_group: method_decl_list                  {$$ = $1; }
@@ -330,7 +342,7 @@ method_args: method_arg T_COMMA method_arg     {$$ = initialize_recursive_list($
     | method_args T_COMMA method_arg          {$1->push_back($3); $$ = $1; }
     ;
 
-method_arg: T_STRINGCONSTANT  {$$ = new Constant_Expr(&($1), STRINGTYPE);}
+method_arg: T_STRINGCONSTANT  {$$ = new String_Constant(&($1));}
     | expression              {$$ = $1;}
 
 /* --- Assignments --- */ 
@@ -375,11 +387,11 @@ unary_operation:  T_MINUS expression %prec U_MINUS {$$ = new Unary_Expr($2, new 
     ;
 
 /* --- Constants ---  */
-constant: T_CHARCONSTANT {$$ = new Constant_Expr(&($1), INTTYPE);}
-    | T_INTCONSTANT  {$$ = new Constant_Expr(&($1), INTTYPE);}
-    | T_FALSE        {$$ = new Constant_Expr(&($1), BOOLTYPE);}
-    | T_TRUE         {$$ = new Constant_Expr(&($1), BOOLTYPE);}
-    | T_NULL         {$$ = new Constant_Expr();}
+constant: T_CHARCONSTANT {$$ = new Int_Constant($1);}
+    | T_INTCONSTANT  {$$ = new Int_Constant($1);}
+    | T_FALSE        {$$ = new Bool_Constant(false);}
+    | T_TRUE         {$$ = new Bool_Constant(true);}
+    | T_NULL         {$$ = new Null_Constant();}
     ;
 
 /* --- Value types --- */

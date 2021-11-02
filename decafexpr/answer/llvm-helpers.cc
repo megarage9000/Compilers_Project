@@ -88,6 +88,18 @@ llvm::Constant *initializeLLVMVal(val_type type, int initialVal) {
 	}
 }
 
+llvm::Constant *initializeLLVMVal(llvm::Type * type, int initialVal) {
+	if(type == Builder.getInt32Ty()) {
+		return Builder.getInt32(initialVal);
+	}
+	else if(type == Builder.getInt1Ty()) {
+		return Builder.getInt1(initialVal);
+	}
+	else {
+		throw runtime_error("invalid type!");
+	}
+}
+
 // -- Promoting bools to int32s
 llvm::Value * promoteBoolToInt(llvm::Value ** val) {
 	if((*val)->getType() == Builder.getInt1Ty()) {
@@ -123,7 +135,6 @@ void assignVal(llvm::AllocaInst* lval, llvm::Value * rval) {
 }
 
 // -- Blocks
-
 std::stack<llvm::BasicBlock *> blockStack;
 
 void onInsertBlock(llvm::BasicBlock * block) {
@@ -195,6 +206,10 @@ llvm::Function * defineFunc(
 	llvm::BasicBlock * funcBlock = createBasicBlock(func);
 	onInsertBlock(funcBlock);
 	setupFuncArgs(func, argNames);
+	// Default return statement
+	Builder.CreateRet(
+		initializeLLVMVal(returnTp, 0)
+	);
 	return func;
 }
 
@@ -208,3 +223,61 @@ llvm::Value * getFuncCall(llvm::Function * funcCall, std::vector<llvm::Value *> 
 		twine
 	);
 }	
+
+// Expressions
+typedef enum {
+	PLUS, MINUS, MULT, DIV, 
+	LEFT_SHIFT, RIGHT_SHIFT, 
+	MOD,
+	LT, GT, LEQ, GEQ, EQ, NEQ,
+	AND, OR, NOT,
+	UNARY_MINUS
+} type_op;
+
+llvm::Value * getBinaryExp(llvm::Value * lval, llvm::Value * rval, type_op operation_tp) {
+	switch(operation_tp) {
+		case PLUS:
+			return Builder.CreateAdd(lval, rval);
+		case MINUS:
+			return Builder.CreateSub(lval, rval);
+		case MULT:
+			return Builder.CreateMul(lval, rval);
+		case DIV:
+			return Builder.CreateSDiv(lval, rval);
+		case LEFT_SHIFT:
+			return Builder.CreateShl(lval, rval);
+		case RIGHT_SHIFT:
+			return Builder.CreateLShr(lval, rval);
+		case MOD:
+			return Builder.CreateSRem(lval, rval);
+		case LT:
+			return Builder.CreateICmpSLT(lval, rval);
+		case GT:
+			return Builder.CreateICmpSGT(lval, rval);
+		case LEQ:
+			return Builder.CreateICmpSLE(lval, rval);
+		case GEQ:
+			return Builder.CreateICmpSGE(lval, rval);
+		case EQ:
+			return Builder.CreateICmpEQ(lval, rval);
+		case NEQ:
+			return Builder.CreateICmpNE(lval, rval);
+		case AND:
+			return Builder.CreateAnd(lval, rval);
+		case OR:
+			return Builder.CreateOr(lval, rval);
+		default:
+			throw runtime_error("Invalid binary operation!");
+	}
+}
+
+llvm::Value * getUnaryExp(llvm::Value * value, type_op operation_tp) {
+	switch(operation_tp) {
+		case NOT:
+			return Builder.CreateNot(value);
+		case UNARY_MINUS:
+			return Builder.CreateNeg(value);
+		default:
+			throw runtime_error("Invalid unary operation");
+	}
+}

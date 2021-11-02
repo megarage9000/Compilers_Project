@@ -183,15 +183,6 @@ public:
 	}
 };
 
-typedef enum {
-	PLUS, MINUS, MULT, DIV, 
-	LEFT_SHIFT, RIGHT_SHIFT, 
-	MOD,
-	LT, GT, LEQ, GEQ, EQ, NEQ,
-	AND, OR, NOT,
-	UNARY_MINUS
-} type_op;
-
 class Binary_Operator : public decafAST {
 	type_op type;
 public:
@@ -289,7 +280,7 @@ public:
 		}
 	}
 	string get_num() {
-		if(const_type == INTTYPE) {
+		if(const_type == INTTYPE || const_type == BOOLTYPE) {
 			return val_rep;
 		}
 		else {
@@ -318,6 +309,7 @@ public:
 };
 
 class Unary_Expr: public decafStmtList {
+	int value = 
 public: 
 	Unary_Expr(decafAST * val, Unary_Operator * op) : decafStmtList() {
 		push_back(op);
@@ -674,6 +666,7 @@ class Method_Decl: public decafStmtList {
 	vector<string> argNames;
 	llvm::Type * returnType;
 	string funcName;
+	Block * funcBlock;
 	public:
 	Method_Decl(Identifier * id, Type * return_type, 
 	decafStmtList* param_list, Block * block)
@@ -683,12 +676,12 @@ class Method_Decl: public decafStmtList {
 		push_back(return_type);
 		push_back(param_list);
 		push_back(block);
-
 		/*
 			Extract necessities for codegen()
 			- parameter pairs and types
-
+			- function name and return type
 		*/
+		funcBlock = block;
 		list<decafAST *>::iterator it;
 		for(it = param_list->begin(); it != param_list->end(); it++){
 			Var_Def * arg = dynamic_cast<Var_Def *>(*it);
@@ -706,7 +699,10 @@ class Method_Decl: public decafStmtList {
 	}
 	llvm::Value *Codegen() {
 		// Defines the function, creates a block and arguments
-		return defineFunc(returnType, argTypes, funcName, argNames);
+		llvm::Value * funcVal = defineFunc(returnType, argTypes, funcName, argNames);
+		// Also define the block statements
+		funcBlock->Codegen();
+		return funcVal;
 	}
 };
 

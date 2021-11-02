@@ -100,7 +100,7 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 %type<id_list> identifier_list
 %%
 
-start: method_decl_group {$1->Codegen();}
+start: method_decl_group {$1->Codegen(); delete $1;}
     ;
 
 start_block: T_LCB {

@@ -224,7 +224,9 @@ public:
 				return "None";
 		}
 	}
-
+	type_op get_operator() {
+		return type;
+	}
 	llvm::Value *Codegen() {
 		return nullptr;
 	}
@@ -245,6 +247,9 @@ public:
 				return "None";
 		}
 	}
+	type_op get_operator() {
+		return type;
+	}
 	llvm::Value *Codegen() {
 		return nullptr;
 	}
@@ -263,7 +268,7 @@ public:
 		return value;
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		return initializeLLVMVal(INTTYPE,  value);
 	}
 };
 
@@ -282,7 +287,7 @@ public:
 		return value;
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		return initializeLLVMVal(BOOLTYPE,  value);
 	}
 };
 
@@ -316,8 +321,13 @@ public:
 
 /// Expressions
 class Binary_Expr : public decafStmtList {
+	type_op operation;
+	decafAST * lvalexpr, *rvalexpr;
 public:
 	Binary_Expr(decafAST * l_val, decafAST * r_val, Binary_Operator * op) : decafStmtList() {
+		lvalexpr = l_val;
+		rvalexpr = r_val;
+		operation = op->get_operator();
 		push_back(op);
 		push_back(l_val);
 		push_back(r_val);
@@ -326,14 +336,22 @@ public:
 		return "BinaryExpr(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		llvm::Value * lval = lvalexpr->Codegen();
+		llvm::Value * rval = lvalexpr->Codegen();
+		if(lval == rval && lval == nullptr) {
+			return nullptr;
+		}
+		return getBinaryExp(lval, rval, operation);
 	}
 };
 
 class Unary_Expr: public decafStmtList {
-	int value;
+	type_op operation;
+	decafAST * valexpr;
 public: 
 	Unary_Expr(decafAST * val, Unary_Operator * op) : decafStmtList() {
+		operation = op->get_operator();
+		valexpr = val;
 		push_back(op);
 		push_back(val);
 	}
@@ -341,14 +359,21 @@ public:
 		return "UnaryExpr(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		llvm::Value * val = valexpr->Codegen();
+		if(val == nullptr) {
+			return nullptr;
+		}
+		return getUnaryExp(val, operation);
 	}
 };
 
 /// Variable / Array Assignments and Expressions
 class Assign_Var: public decafStmtList {
+	decafAST * varId, * rvalexpr;
 public:
 	Assign_Var(Identifier * id, decafAST * expression) : decafStmtList() {
+		varId = id;
+		rvalexpr = expression;
 		push_back(id);
 		push_back(expression);
 	}
@@ -356,7 +381,13 @@ public:
 		return "AssignVar(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		llvm::AllocaInst * variable = (llvm::AllocaInst *)useVar(varId->str());
+		llvm::Value * value = rvalexpr->Codegen();
+		if(value == nullptr) {
+			return nullptr;
+		}
+		assignVal(variable, value);
+		return useVar(varId->str());
 	}	
 };
 

@@ -387,7 +387,7 @@ public:
 			return nullptr;
 		}
 		assignVal(variable, value);
-		return useVar(varId->str());
+		return nullptr;
 	}	
 };
 
@@ -415,7 +415,7 @@ public:
 		return "VariableExpr(" + getString(identifier) + ")";
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		return useVar(identifier->str());
 	}
 };
 
@@ -474,7 +474,7 @@ public:
 	// Local variable declarations only! Be careful and don't try to call this
 	// in a function def
 	llvm::Value *Codegen() {
-		return nullptr;
+		return defineVar(getLLVMType(tp), id);
 	}
 	string getId() {
 		return id;
@@ -601,7 +601,7 @@ public:
 		return "Block(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		return decafStmtList::Codegen();
 	}
 };
 

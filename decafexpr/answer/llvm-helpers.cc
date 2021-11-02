@@ -124,14 +124,10 @@ llvm::Value * useVar(std::string id) {
 }
 
 void assignVal(llvm::AllocaInst* lval, llvm::Value * rval) {
-	llvm::PointerType * rvalType = rval->getType()->getPointerTo();
-	llvm::PointerType * lvalType = lval->getType();
-	if(lvalType == rvalType) {
-		Builder.CreateStore(rval, lval);
-	}
-	else {
-		throw runtime_error("Invalid assign");
-	}
+
+	Builder.CreateStore(rval, lval);
+
+
 }
 
 // -- Blocks

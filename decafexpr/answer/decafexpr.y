@@ -105,17 +105,13 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 %%
 
 start: program {}
-|    method_decl_group { pushTable(); $1->Codegen(); delete $1;}
+|    method_decl_group {$1->Codegen(); delete $1;}
     ;
 
-start_block: T_LCB {
-    
-}
+start_block: T_LCB
 ;
-end_block: T_RCB{
-    popTable();
-    onBlockEnd();
-}
+end_block: T_RCB
+;
 
 program: extern_declaration decafpackage
     { 
@@ -433,7 +429,7 @@ int main() {
   // remove symbol table
   // Finish off the main function. (see the WARNING above)
   // return 0 from main, which is EXIT_SUCCESS
-  Builder.CreateRet(llvm::ConstantInt::get(TheContext, llvm::APInt(32, 0)));
+  // Builder.CreateRet(llvm::ConstantInt::get(TheContext, llvm::APInt(32, 0)));
   // Validate the generated code, checking for consistency.
   // verifyFunction(*TheFunction);
   // Print out all of the generated code to stderr

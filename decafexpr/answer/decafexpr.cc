@@ -474,7 +474,11 @@ public:
 	// Local variable declarations only! Be careful and don't try to call this
 	// in a function def
 	llvm::Value *Codegen() {
-		return defineVar(getLLVMType(tp), id);
+		// Check if the variable is already stored in the table, if not, define it
+		if(getValueFromTables(id.c_str()) == nullptr) {
+			return defineVar(getLLVMType(tp), id);
+		}
+		return nullptr;
 	}
 	string getId() {
 		return id;
@@ -601,7 +605,10 @@ public:
 		return "Block(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		return decafStmtList::Codegen();
+		pushTable();
+		decafStmtList::Codegen();
+		popTable();
+		return nullptr;
 	}
 };
 

@@ -43,13 +43,15 @@ void insertToTable(std::string name, llvm::Value * val) {
 }
 
 void pushTable() {
+  std::cout << "Table list size  before push = " << symbl_table_list.size() << '\n';
   symTable newtable;
-  symbl_table_list.push_back(newtable);
+  symbl_table_list.push_front(newtable);
 }
 
 void popTable() {
+	std::cout << "Table list size before pop = " << symbl_table_list.size() << '\n';
 	if(!symbl_table_list.empty()) {
-	  symbl_table_list.pop_back();
+	  symbl_table_list.pop_front();
 	}
 }
 
@@ -119,7 +121,7 @@ llvm::Value * promoteBoolToInt(llvm::Value ** val) {
 // -- Local Variables
 llvm::AllocaInst * defineVar(llvm::Type * tp, std::string id) {
 	llvm::AllocaInst * allocation = Builder.CreateAlloca(tp, 0, id.c_str());
-	insertToTable(id, allocation);
+	insertToTable(std::string(id), allocation);
 	return allocation;
 
 }
@@ -206,7 +208,6 @@ llvm::Function * defineFunc(
 	insertToTable(funcName, func);
 	llvm::BasicBlock * funcBlock = createBasicBlock(func);
 	onInsertBlock(funcBlock);
-	pushTable();
 	setupFuncArgs(func, argNames);
 	// Default return statement
 	Builder.CreateRet(

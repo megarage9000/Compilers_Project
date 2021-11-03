@@ -337,7 +337,7 @@ public:
 	}
 	llvm::Value *Codegen() {
 		llvm::Value * lval = lvalexpr->Codegen();
-		llvm::Value * rval = lvalexpr->Codegen();
+		llvm::Value * rval = rvalexpr->Codegen();
 		if(lval == rval && lval == nullptr) {
 			return nullptr;
 		}

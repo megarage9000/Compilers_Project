@@ -124,10 +124,7 @@ llvm::Value * useVar(std::string id) {
 }
 
 void assignVal(llvm::AllocaInst* lval, llvm::Value * rval) {
-
 	Builder.CreateStore(rval, lval);
-
-
 }
 
 // -- Blocks
@@ -201,6 +198,7 @@ llvm::Function * defineFunc(
 	insertToTable(funcName, func);
 	llvm::BasicBlock * funcBlock = createBasicBlock(func);
 	onInsertBlock(funcBlock);
+	pushTable();
 	setupFuncArgs(func, argNames);
 	// Default return statement
 	Builder.CreateRet(

@@ -105,13 +105,13 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 %%
 
 start: program {}
-|    method_decl_group {$1->Codegen(); delete $1;}
+|    method_decl_group { pushTable(); $1->Codegen(); delete $1;}
     ;
 
 start_block: T_LCB {
-    pushTable();
+    
 }
-
+;
 end_block: T_RCB{
     popTable();
     onBlockEnd();

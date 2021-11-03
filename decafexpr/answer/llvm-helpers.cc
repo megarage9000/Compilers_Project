@@ -11,6 +11,9 @@ static symTableList symbl_table_list;
 
 llvm::Value * getValueFromTable(std::string name, symTable tbl) {
   symTable::iterator it;
+  if(tbl.empty()) {
+	  return nullptr;
+  }
   for(it = tbl.begin(); it != tbl.end(); it++){
     if(it->first == name) {
       return it->second;
@@ -22,6 +25,9 @@ llvm::Value * getValueFromTable(std::string name, symTable tbl) {
 llvm::Value * getValueFromTables(std::string name) {
   symTableList::iterator it;
   llvm::Value * result = nullptr;
+  if(symbl_table_list.empty()) {
+	  return result;
+  }
   for(it = symbl_table_list.begin(); it != symbl_table_list.end(); it++) {
     result = getValueFromTable(name, *it);
     if(result != nullptr){
@@ -42,7 +48,9 @@ void pushTable() {
 }
 
 void popTable() {
-  symbl_table_list.pop_back();
+	if(!symbl_table_list.empty()) {
+	  symbl_table_list.pop_back();
+	}
 }
 
 // this global variable contains all the generated code

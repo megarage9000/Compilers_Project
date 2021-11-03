@@ -6,6 +6,7 @@ func gad(a int, b int) bool {
     c = 10;
     d = 11;
     c = d + c;
-    c = a + b * d;
+    a = c + d;
+    b = c * d;
 }
 

@@ -1,6 +1,10 @@
 func gcd(a int, b int) int {
     var c int;
     var d int;
+    c = d + 10;
+    d = a + b;
+    a = 11;
+    b = 12;
 }
 
 func gad(a int, b int) bool {

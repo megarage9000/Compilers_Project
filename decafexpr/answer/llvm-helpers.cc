@@ -134,7 +134,11 @@ llvm::Value * useVar(std::string id) {
 }
 
 void assignVal(llvm::AllocaInst* lval, llvm::Value * rval) {
-	Builder.CreateStore(rval, lval);
+	const llvm::Type * rvalType = rval->getType();
+	const llvm::Type * lvalType = lval->getType();
+	if(rvalType == lvalType) {
+		Builder.CreateStore(rval, lval);
+	}
 }
 
 // -- Blocks
@@ -205,11 +209,11 @@ llvm::Function * defineFunc(
 		TheModule
 	);
 	insertToTable(funcName, func);
-	// Default return statement
-	Builder.CreateRet(
-		initializeLLVMVal(returnTp, 0)
-	);
 	return func;
+}
+
+void addReturnValue(llvm::Function * func, llvm::Value * value) {
+
 }
 
 void setupFunc(llvm::Function * func, std::vector<std::string> argNames) {

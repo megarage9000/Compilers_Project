@@ -381,7 +381,7 @@ public:
 		return "AssignVar(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		llvm::AllocaInst * variable = (llvm::AllocaInst *)useVar(varId->str());
+		llvm::AllocaInst * variable = (llvm::AllocaInst *)getValueFromTables(varId->str());
 		llvm::Value * value = rvalexpr->Codegen();
 		if(value == nullptr) {
 			return nullptr;
@@ -758,9 +758,11 @@ class Method_Decl: public decafStmtList {
 	llvm::Value *Codegen() {
 		// Defines the function, creates a block and arguments
 		llvm::Function * funcVal = defineFunc(returnType, argTypes, funcName);
+		// New symbol table
 		pushTable();
+		// Prepare the arguments and block
 		setupFunc(funcVal, argNames);
-		// Also define the block statements
+		// Define the block statements
 		funcBlock->Codegen();
 		popTable();
 		return funcVal;

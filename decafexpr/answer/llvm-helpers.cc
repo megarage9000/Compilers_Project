@@ -197,8 +197,7 @@ void setupFuncArgs(llvm::Function * func, std::vector<std::string> argNames) {
 llvm::Function * defineFunc(
 	llvm::Type * returnTp, 
 	std::vector<llvm::Type *> argTypes, 
-	std::string funcName,
-	std::vector<std::string> argNames) {
+	std::string funcName) {
 	llvm::Function * func = llvm::Function::Create(
 		llvm::FunctionType::get(returnTp, argTypes, false),
 		llvm::Function::ExternalLinkage,
@@ -206,14 +205,17 @@ llvm::Function * defineFunc(
 		TheModule
 	);
 	insertToTable(funcName, func);
-	llvm::BasicBlock * funcBlock = createBasicBlock(func);
-	onInsertBlock(funcBlock);
-	setupFuncArgs(func, argNames);
 	// Default return statement
 	Builder.CreateRet(
 		initializeLLVMVal(returnTp, 0)
 	);
 	return func;
+}
+
+void setupFunc(llvm::Function * func, std::vector<std::string> argNames) {
+	llvm::BasicBlock * funcBlock = createBasicBlock(func);
+	Builder.SetInsertPoint(funcBlock);
+	setupFuncArgs(func, argNames);
 }
 
 

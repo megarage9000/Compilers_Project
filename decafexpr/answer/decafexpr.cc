@@ -605,9 +605,7 @@ public:
 		return "Block(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		pushTable();
 		decafStmtList::Codegen();
-		popTable();
 		return nullptr;
 	}
 };
@@ -759,9 +757,12 @@ class Method_Decl: public decafStmtList {
 	}
 	llvm::Value *Codegen() {
 		// Defines the function, creates a block and arguments
-		llvm::Value * funcVal = defineFunc(returnType, argTypes, funcName, argNames);
+		llvm::Function * funcVal = defineFunc(returnType, argTypes, funcName);
+		pushTable();
+		setupFunc(funcVal, argNames);
 		// Also define the block statements
 		funcBlock->Codegen();
+		popTable();
 		return funcVal;
 	}
 };

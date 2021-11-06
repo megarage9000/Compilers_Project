@@ -5,6 +5,7 @@ func gcd(a int, b int) int {
     d = a + b;
     a = 11;
     b = 12;
+    return(a + b + c + d);
 }
 
 func gad(a int, b int) bool {
@@ -12,5 +13,6 @@ func gad(a int, b int) bool {
     var d int;
     c = a + b;
     d = gcd(c, false);
+    return;
 }
 

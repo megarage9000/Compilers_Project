@@ -700,16 +700,23 @@ public:
 
 /// Keywords
 class Return: public decafStmtList {
+	decafAST * value;
 public:
-	Return() : decafStmtList(){}
+	Return() : decafStmtList(){
+		value = nullptr;
+	}
 	Return(decafAST * returnVal) : decafStmtList() {
+		value = returnVal;
 		push_back(returnVal);
 	}
 	string str() {
 		return "ReturnStmt(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		if(!value) {
+			return nullptr;
+		}
+		return Builder.CreateRet(value->Codegen());
 	}
 };
 
@@ -799,6 +806,10 @@ class Method_Decl: public decafStmtList {
 		setupFunc(funcVal, argNames);
 		// Define the block statements
 		funcBlock->Codegen();
+		if(!funcVal->willReturn()) {
+			std::cout << "Function will not return, creating default return type...\n";
+			Builder.CreateRet(initializeLLVMVal(returnType, 0));
+		}
 		popTable();
 		return funcVal;
 	}

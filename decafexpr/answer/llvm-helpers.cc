@@ -43,13 +43,11 @@ void insertToTable(std::string name, llvm::Value * val) {
 }
 
 void pushTable() {
-  std::cout << "Table list size  before push = " << symbl_table_list.size() << '\n';
   symTable newtable;
   symbl_table_list.push_front(newtable);
 }
 
 void popTable() {
-	std::cout << "Table list size before pop = " << symbl_table_list.size() << '\n';
 	if(!symbl_table_list.empty()) {
 	  symbl_table_list.pop_front();
 	}

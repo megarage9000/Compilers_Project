@@ -1,0 +1,801 @@
+INFO:root:path=dev
+INFO:root:Checking dev/emptymethod.out
+INFO:root:Diff between reference and your output for dev/emptymethod.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1013'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test,VoidType,VarDef(a,IntType),VarDef(b,IntType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)),MethodCall(print_int,VariableExpr(b)))),Method(main,IntType,None,MethodBlock(None,MethodCall(test,NumberExpr(10),NumberExpr(13))))))'
+INFO:root:Checking dev/intcall2.out
+INFO:root:Diff between reference and your output for dev/intcall2.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'12'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test,VoidType,VarDef(a,IntType),VarDef(b,IntType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)),MethodCall(print_int,VariableExpr(b)))),Method(main,IntType,None,MethodBlock(None,MethodCall(test,NumberExpr(1),NumberExpr(2))))))'
+INFO:root:Checking dev/boolconst-var.out
+INFO:root:Diff between reference and your output for dev/boolconst-var.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'10'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(b,BoolType),AssignVar(b,BoolExpr(True)),MethodCall(print_int,VariableExpr(b)),AssignVar(b,BoolExpr(False)),MethodCall(print_int,VariableExpr(b))))))'
+INFO:root:Checking dev/noexterns.out
+INFO:root:Diff between reference and your output for dev/noexterns.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'2'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(1)),MethodCall(print_int,BinaryExpr(Plus,VariableExpr(x),NumberExpr(1)))))))'
+INFO:root:Checking dev/intcallchain2.out
+INFO:root:Diff between reference and your output for dev/intcallchain2.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'11'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test2,VoidType,VarDef(a,IntType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)))),Method(test1,VoidType,VarDef(a,IntType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)),MethodCall(test2,VariableExpr(a)))),Method(main,IntType,None,MethodBlock(None,MethodCall(test1,NumberExpr(1))))))'
+INFO:root:Checking dev/bgeq.out
+INFO:root:Diff between reference and your output for dev/bgeq.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(b,BoolType),AssignVar(b,BinaryExpr(Geq,NumberExpr(13),NumberExpr(15))),AssignVar(b,BinaryExpr(Geq,NumberExpr(13),NumberExpr(13))),AssignVar(b,BinaryExpr(Geq,NumberExpr(15),NumberExpr(13))),MethodCall(print_int,VariableExpr(b))))))'
+INFO:root:Checking dev/call0.out
+INFO:root:Diff between reference and your output for dev/call0.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'0'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test,VoidType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(0)))),Method(main,IntType,None,MethodBlock(None,MethodCall(test,None)))))'
+INFO:root:Checking dev/expr-testfile-5.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-5.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,BoolType),VarDef(y,BoolType),VarDef(z,BoolType),AssignVar(x,BinaryExpr(Geq,NumberExpr(2),NumberExpr(1))),AssignVar(y,BinaryExpr(Neq,NumberExpr(2),NumberExpr(1))),AssignVar(z,BinaryExpr(And,VariableExpr(x),VariableExpr(y))),MethodCall(print_int,VariableExpr(z))))))'
+INFO:root:Checking dev/multvar.out
+INFO:root:Diff between reference and your output for dev/multvar.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'11'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),VarDef(y,IntType),AssignVar(x,NumberExpr(1)),AssignVar(y,NumberExpr(1)),MethodCall(print_int,VariableExpr(x)),MethodCall(print_int,VariableExpr(y))))))'
+INFO:root:Checking dev/expr-testfile-2.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-2.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'958'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),VarDef(y,BoolType),VarDef(z,BoolType),AssignVar(x,BinaryExpr(Plus,BinaryExpr(Plus,BinaryExpr(Plus,NumberExpr(2),BinaryExpr(Mult,NumberExpr(2),NumberExpr(3))),NumberExpr(5)),BinaryExpr(Minus,BinaryExpr(Mult,NumberExpr(43),NumberExpr(23)),NumberExpr(44)))),AssignVar(x,UnaryExpr(UnaryMinus,VariableExpr(x))),AssignVar(y,BoolExpr(True)),AssignVar(z,BoolExpr(False)),AssignVar(y,BinaryExpr(Or,BinaryExpr(And,BoolExpr(True),VariableExpr(y)),VariableExpr(z))),MethodCall(print_int,UnaryExpr(UnaryMinus,VariableExpr(x)))))))'
+INFO:root:Checking dev/method0.out
+INFO:root:Diff between reference and your output for dev/method0.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'11'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test,VoidType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(1)),MethodCall(print_int,NumberExpr(1)),MethodCall(print_int,VariableExpr(x)))),Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(1)),MethodCall(print_int,NumberExpr(1)),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/intcall1.out
+INFO:root:Diff between reference and your output for dev/intcall1.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test,VoidType,VarDef(a,IntType),MethodBlock(None,MethodCall(print_int,NumberExpr(1)))),Method(main,IntType,None,MethodBlock(None,MethodCall(test,NumberExpr(1))))))'
+INFO:root:Checking dev/charvar.out
+INFO:root:Diff between reference and your output for dev/charvar.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'5'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),VarDef(y,IntType),AssignVar(x,NumberExpr(102)),AssignVar(y,NumberExpr(97)),MethodCall(print_int,BinaryExpr(Minus,VariableExpr(x),VariableExpr(y)))))))'
+INFO:root:Checking dev/lshift.out
+INFO:root:Diff between reference and your output for dev/lshift.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1628104'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,BinaryExpr(Leftshift,NumberExpr(8),NumberExpr(1))),MethodCall(print_int,BinaryExpr(Leftshift,NumberExpr(14),NumberExpr(1))),MethodCall(print_int,BinaryExpr(Leftshift,NumberExpr(13),NumberExpr(3)))))))'
+INFO:root:Checking dev/intcallcallerexpr.out
+INFO:root:Diff between reference and your output for dev/intcallcallerexpr.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test,VoidType,VarDef(a,IntType),MethodBlock(None,MethodCall(print_int,NumberExpr(1)))),Method(main,IntType,None,MethodBlock(None,MethodCall(test,BinaryExpr(Plus,NumberExpr(1),NumberExpr(11)))))))'
+INFO:root:Checking dev/stringconst3.out
+INFO:root:Diff between reference and your output for dev/stringconst3.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'hello, world'
++b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_string,StringConstant("hello,")),MethodCall(print_string,StringConstant(" world")),MethodCall(print_string,StringConstant("\\n"))))))'
+INFO:root:Checking dev/or.out
+INFO:root:Diff between reference and your output for dev/or.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1110'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,BinaryExpr(Or,BoolExpr(True),BoolExpr(True))),MethodCall(print_int,BinaryExpr(Or,BoolExpr(True),BoolExpr(False))),MethodCall(print_int,BinaryExpr(Or,BoolExpr(False),BoolExpr(True))),MethodCall(print_int,BinaryExpr(Or,BoolExpr(False),BoolExpr(False)))))))'
+INFO:root:Checking dev/boolcallchain3expr.out
+INFO:root:Diff between reference and your output for dev/boolcallchain3expr.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'101'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test3,VoidType,VarDef(a,BoolType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)))),Method(test2,VoidType,VarDef(a,BoolType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)),MethodCall(test3,UnaryExpr(Not,VariableExpr(a))))),Method(test1,VoidType,VarDef(a,BoolType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)),MethodCall(test2,UnaryExpr(Not,VariableExpr(a))))),Method(main,IntType,None,MethodBlock(None,MethodCall(test1,BoolExpr(True))))))'
+INFO:root:Checking dev/prec.out
+INFO:root:Diff between reference and your output for dev/prec.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'371-3'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(prec,None,Method(main,IntType,None,MethodBlock(VarDef(a,IntType),VarDef(b,IntType),VarDef(d,IntType),VarDef(c,BoolType),AssignVar(a,BinaryExpr(Plus,BinaryExpr(Rightshift,NumberExpr(1),NumberExpr(2)),NumberExpr(3))),AssignVar(b,BinaryExpr(Plus,NumberExpr(1),BinaryExpr(Mult,NumberExpr(2),NumberExpr(3)))),AssignVar(c,BinaryExpr(Or,UnaryExpr(Not,BoolExpr(False)),BoolExpr(True))),AssignVar(d,BinaryExpr(Plus,BinaryExpr(Div,NumberExpr(1),NumberExpr(2)),UnaryExpr(UnaryMinus,NumberExpr(3)))),MethodCall(print_int,VariableExpr(a)),MethodCall(print_int,VariableExpr(b)),MethodCall(print_int,VariableExpr(c)),MethodCall(print_int,VariableExpr(d))))))'
+INFO:root:Checking dev/var2.out
+INFO:root:Diff between reference and your output for dev/var2.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'11'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),VarDef(y,IntType),AssignVar(x,NumberExpr(1)),AssignVar(y,NumberExpr(1)),MethodCall(print_int,VariableExpr(x)),MethodCall(print_int,VariableExpr(y))))))'
+INFO:root:Checking dev/expr-testfile-1.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-1.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'13'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,BinaryExpr(Plus,BinaryExpr(Plus,NumberExpr(2),BinaryExpr(Mult,NumberExpr(2),NumberExpr(3))),NumberExpr(5))),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/externreadint.out
+INFO:root:Diff between reference and your output for dev/externreadint.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'3'
++b'Program(ExternFunction(read_int,IntType,None),ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,MethodCall(read_int,None)),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/boolcallcalleeexpr.out
+INFO:root:Diff between reference and your output for dev/boolcallcalleeexpr.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test,VoidType,VarDef(a,BoolType),MethodBlock(None,MethodCall(print_int,BinaryExpr(Or,VariableExpr(a),BoolExpr(False))))),Method(main,IntType,None,MethodBlock(None,MethodCall(test,BoolExpr(True))))))'
+INFO:root:Checking dev/bleq.out
+INFO:root:Diff between reference and your output for dev/bleq.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'0'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(b,BoolType),AssignVar(b,BinaryExpr(Leq,NumberExpr(13),NumberExpr(15))),AssignVar(b,BinaryExpr(Leq,NumberExpr(13),NumberExpr(13))),AssignVar(b,BinaryExpr(Leq,NumberExpr(15),NumberExpr(13))),MethodCall(print_int,VariableExpr(b))))))'
+INFO:root:Checking dev/intneq.out
+INFO:root:Diff between reference and your output for dev/intneq.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'101'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,BinaryExpr(Neq,NumberExpr(13),NumberExpr(15))),MethodCall(print_int,BinaryExpr(Neq,NumberExpr(13),NumberExpr(13))),MethodCall(print_int,BinaryExpr(Neq,NumberExpr(15),NumberExpr(13)))))))'
+INFO:root:Checking dev/intconst-var.out
+INFO:root:Diff between reference and your output for dev/intconst-var.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'012345-12345'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(0)),MethodCall(print_int,VariableExpr(x)),AssignVar(x,NumberExpr(12345)),MethodCall(print_int,VariableExpr(x)),AssignVar(x,UnaryExpr(UnaryMinus,NumberExpr(12345))),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/onlystate.out
+INFO:root:Diff between reference and your output for dev/onlystate.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'0'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(0))))))'
+INFO:root:Checking dev/externprintstring.out
+INFO:root:Diff between reference and your output for dev/externprintstring.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'hello world'
++b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(1)),MethodCall(print_string,StringConstant("hello world\\n"))))))'
+INFO:root:Checking dev/intconst.out
+INFO:root:Diff between reference and your output for dev/intconst.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'012345-12345'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,NumberExpr(0)),MethodCall(print_int,NumberExpr(12345)),MethodCall(print_int,UnaryExpr(UnaryMinus,NumberExpr(12345)))))))'
+INFO:root:Checking dev/emptyblock.out
+INFO:root:Diff between reference and your output for dev/emptyblock.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'0'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(0))))))'
+INFO:root:Checking dev/default-passes-ok.out
+INFO:root:Diff between reference and your output for dev/default-passes-ok.out
+INFO:root:
+--- reference
++++ your-output
+@@ -0,0 +1 @@
++b'Program(None,Package(Test,None,Method(main,IntType,None,MethodBlock(None,None))))'
+INFO:root:Checking dev/boolconst.out
+INFO:root:Diff between reference and your output for dev/boolconst.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'103'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,BoolExpr(True)),MethodCall(print_int,BoolExpr(False)),AssignVar(x,NumberExpr(3)),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/and.out
+INFO:root:Diff between reference and your output for dev/and.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1000'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,BinaryExpr(And,BoolExpr(True),BoolExpr(True))),MethodCall(print_int,BinaryExpr(And,BoolExpr(True),BoolExpr(False))),MethodCall(print_int,BinaryExpr(And,BoolExpr(False),BoolExpr(True))),MethodCall(print_int,BinaryExpr(And,BoolExpr(False),BoolExpr(False)))))))'
+INFO:root:Checking dev/arith4.out
+INFO:root:Diff between reference and your output for dev/arith4.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'0'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(foo,None,Method(main,IntType,None,MethodBlock(VarDef(size,IntType),AssignVar(size,BinaryExpr(Minus,BinaryExpr(Plus,BinaryExpr(Rightshift,NumberExpr(1),NumberExpr(3)),BinaryExpr(Mod,BinaryExpr(Div,NumberExpr(1),UnaryExpr(UnaryMinus,NumberExpr(2))),NumberExpr(10))),BinaryExpr(Leftshift,BinaryExpr(Div,BinaryExpr(Mult,NumberExpr(5),NumberExpr(2)),NumberExpr(20)),NumberExpr(2)))),MethodCall(print_int,VariableExpr(size))))))'
+INFO:root:Checking dev/shadow.out
+INFO:root:Diff between reference and your output for dev/shadow.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'11002100310041005100'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),VarDef(y,IntType),AssignVar(x,NumberExpr(1)),AssignVar(y,NumberExpr(100)),MethodCall(print_int,VariableExpr(x)),MethodCall(print_int,VariableExpr(y)),Block(VarDef(x,IntType),AssignVar(x,NumberExpr(2)),MethodCall(print_int,VariableExpr(x)),MethodCall(print_int,VariableExpr(y)),Block(VarDef(x,IntType),AssignVar(x,NumberExpr(3)),MethodCall(print_int,VariableExpr(x)),MethodCall(print_int,VariableExpr(y)),Block(VarDef(x,IntType),AssignVar(x,NumberExpr(4)),MethodCall(print_int,VariableExpr(x)),MethodCall(print_int,VariableExpr(y)),Block(VarDef(x,IntType),AssignVar(x,NumberExpr(5)),MethodCall(print_int,VariableExpr(x)),MethodCall(print_int,VariableExpr(y))))))))))'
+INFO:root:Checking dev/neg.out
+INFO:root:Diff between reference and your output for dev/neg.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'-777'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,UnaryExpr(UnaryMinus,NumberExpr(7))),MethodCall(print_int,UnaryExpr(UnaryMinus,UnaryExpr(UnaryMinus,NumberExpr(7)))),MethodCall(print_int,UnaryExpr(UnaryMinus,UnaryExpr(UnaryMinus,NumberExpr(7))))))))'
+INFO:root:Checking dev/expr-testfile-8.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-8.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'958'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),VarDef(y,BoolType),AssignVar(x,BinaryExpr(Plus,BinaryExpr(Plus,BinaryExpr(Plus,NumberExpr(2),BinaryExpr(Mult,NumberExpr(2),NumberExpr(3))),NumberExpr(5)),BinaryExpr(Minus,BinaryExpr(Mult,NumberExpr(43),NumberExpr(23)),NumberExpr(44)))),Block(VarDef(y,IntType),VarDef(x,IntType),AssignVar(y,BinaryExpr(Plus,BinaryExpr(Mult,VariableExpr(x),UnaryExpr(UnaryMinus,NumberExpr(30))),BinaryExpr(Mult,NumberExpr(40),NumberExpr(2)))),AssignVar(x,UnaryExpr(UnaryMinus,VariableExpr(y)))),AssignVar(y,UnaryExpr(Not,BoolExpr(True))),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/lt.out
+INFO:root:Diff between reference and your output for dev/lt.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'100'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,BinaryExpr(Lt,NumberExpr(13),NumberExpr(15))),MethodCall(print_int,BinaryExpr(Lt,NumberExpr(13),NumberExpr(13))),MethodCall(print_int,BinaryExpr(Lt,NumberExpr(15),NumberExpr(13)))))))'
+INFO:root:Checking dev/boolcallchain2.out
+INFO:root:Diff between reference and your output for dev/boolcallchain2.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'11'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test2,VoidType,VarDef(a,BoolType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)))),Method(test1,VoidType,VarDef(a,BoolType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)),MethodCall(test2,VariableExpr(a)))),Method(main,IntType,None,MethodBlock(None,MethodCall(test1,BoolExpr(True))))))'
+INFO:root:Checking dev/default-passes.out
+INFO:root:Diff between reference and your output for dev/default-passes.out
+INFO:root:
+--- reference
++++ your-output
+@@ -0,0 +1 @@
++b'Program(None,Package(Foo,None,Method(main,IntType,None,MethodBlock(None,None))))'
+INFO:root:Checking dev/booleq.out
+INFO:root:Diff between reference and your output for dev/booleq.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'10013'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,BinaryExpr(Eq,BoolExpr(True),BoolExpr(True))),MethodCall(print_int,BinaryExpr(Eq,BoolExpr(True),BoolExpr(False))),MethodCall(print_int,BinaryExpr(Eq,BoolExpr(False),BoolExpr(True))),MethodCall(print_int,BinaryExpr(Eq,BoolExpr(False),BoolExpr(False))),AssignVar(x,NumberExpr(3)),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/charescapes.out
+INFO:root:Diff between reference and your output for dev/charescapes.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'911131071289239'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(c,IntType),AssignVar(c,NumberExpr(9)),MethodCall(print_int,VariableExpr(c)),AssignVar(c,NumberExpr(11)),MethodCall(print_int,VariableExpr(c)),AssignVar(c,NumberExpr(13)),MethodCall(print_int,VariableExpr(c)),AssignVar(c,NumberExpr(10)),MethodCall(print_int,VariableExpr(c)),AssignVar(c,NumberExpr(7)),MethodCall(print_int,VariableExpr(c)),AssignVar(c,NumberExpr(12)),MethodCall(print_int,VariableExpr(c)),AssignVar(c,NumberExpr(8)),MethodCall(print_int,VariableExpr(c)),AssignVar(c,NumberExpr(92)),MethodCall(print_int,VariableExpr(c)),AssignVar(c,NumberExpr(39)),MethodCall(print_int,VariableExpr(c))))))'
+INFO:root:Checking dev/boolcall1.out
+INFO:root:Diff between reference and your output for dev/boolcall1.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test,VoidType,VarDef(a,BoolType),MethodBlock(None,MethodCall(print_int,NumberExpr(1)))),Method(main,IntType,None,MethodBlock(None,MethodCall(test,BoolExpr(True))))))'
+INFO:root:Checking dev/expr-testfile-0.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-0.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'13'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,BinaryExpr(Plus,BinaryExpr(Plus,NumberExpr(2),BinaryExpr(Mult,NumberExpr(2),NumberExpr(3))),NumberExpr(5)))))))'
+INFO:root:Checking dev/returnemptyparens.out
+INFO:root:Diff between reference and your output for dev/returnemptyparens.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(C,None,Method(f,VoidType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(1)),ReturnStmt(None))),Method(main,IntType,None,MethodBlock(None,MethodCall(f,None)))))'
+INFO:root:Checking dev/mod.out
+INFO:root:Diff between reference and your output for dev/mod.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'0011'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,BinaryExpr(Mod,NumberExpr(10),NumberExpr(2))),MethodCall(print_int,BinaryExpr(Mod,NumberExpr(10),NumberExpr(5))),MethodCall(print_int,BinaryExpr(Mod,NumberExpr(10),NumberExpr(3))),MethodCall(print_int,BinaryExpr(Mod,NumberExpr(13),NumberExpr(3)))))))'
+INFO:root:Checking dev/stringescapes.out
+INFO:root:Diff between reference and your output for dev/stringescapes.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1,3 +1 @@
+-b'1\t2\x0b3'
+-b'4'
+-b'5\x076\x0c7\x088\\9"10'
++b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_string,StringConstant("1\\t2\\v3\\r4\\n5\\a6\\f7\\b8\\\\9\\"10"))))))'
+INFO:root:Checking dev/boolcallcallerexpr.out
+INFO:root:Diff between reference and your output for dev/boolcallcallerexpr.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test,VoidType,VarDef(a,BoolType),MethodBlock(None,MethodCall(print_int,NumberExpr(1)))),Method(main,IntType,None,MethodBlock(None,MethodCall(test,BinaryExpr(And,BoolExpr(True),BoolExpr(True)))))))'
+INFO:root:Checking dev/boolneq.out
+INFO:root:Diff between reference and your output for dev/boolneq.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'01103'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,BinaryExpr(Neq,BoolExpr(True),BoolExpr(True))),MethodCall(print_int,BinaryExpr(Neq,BoolExpr(True),BoolExpr(False))),MethodCall(print_int,BinaryExpr(Neq,BoolExpr(False),BoolExpr(True))),MethodCall(print_int,BinaryExpr(Neq,BoolExpr(False),BoolExpr(False))),AssignVar(x,NumberExpr(3)),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/arith1.out
+INFO:root:Diff between reference and your output for dev/arith1.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'0'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(foo,None,Method(main,IntType,None,MethodBlock(VarDef(flag,BoolType),VarDef(a,BoolType),VarDef(b,BoolType),VarDef(c,BoolType),VarDef(size,IntType),AssignVar(a,BoolExpr(True)),AssignVar(b,BoolExpr(False)),AssignVar(c,BoolExpr(True)),AssignVar(flag,BinaryExpr(Or,VariableExpr(a),BinaryExpr(And,VariableExpr(b),UnaryExpr(Not,VariableExpr(c))))),AssignVar(size,BinaryExpr(Minus,BinaryExpr(Plus,BinaryExpr(Rightshift,NumberExpr(1),NumberExpr(3)),BinaryExpr(Mod,BinaryExpr(Div,NumberExpr(1),UnaryExpr(UnaryMinus,NumberExpr(2))),NumberExpr(10))),BinaryExpr(Leftshift,BinaryExpr(Div,BinaryExpr(Mult,NumberExpr(5),NumberExpr(2)),NumberExpr(20)),NumberExpr(2)))),MethodCall(print_int,VariableExpr(size))))))'
+INFO:root:Checking dev/charexpr.out
+INFO:root:Diff between reference and your output for dev/charexpr.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'5'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,BinaryExpr(Minus,NumberExpr(102),NumberExpr(97))),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/bgr.out
+INFO:root:Diff between reference and your output for dev/bgr.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(b,BoolType),AssignVar(b,BinaryExpr(Gt,NumberExpr(13),NumberExpr(15))),AssignVar(b,BinaryExpr(Gt,NumberExpr(13),NumberExpr(13))),AssignVar(b,BinaryExpr(Gt,NumberExpr(15),NumberExpr(13))),MethodCall(print_int,VariableExpr(b))))))'
+INFO:root:Checking dev/forward.out
+INFO:root:Diff between reference and your output for dev/forward.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1013'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test,VoidType,VarDef(a,IntType),VarDef(b,IntType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)),MethodCall(print_int,VariableExpr(b)))),Method(main,IntType,None,MethodBlock(None,MethodCall(test,NumberExpr(10),NumberExpr(13))))))'
+INFO:root:Checking dev/charvals.out
+INFO:root:Diff between reference and your output for dev/charvals.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'97109122657790485557451253494'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(97)),MethodCall(print_int,NumberExpr(109)),MethodCall(print_int,NumberExpr(122)),MethodCall(print_int,NumberExpr(65)),MethodCall(print_int,NumberExpr(77)),MethodCall(print_int,NumberExpr(90)),MethodCall(print_int,NumberExpr(48)),MethodCall(print_int,NumberExpr(55)),MethodCall(print_int,NumberExpr(57)),MethodCall(print_int,NumberExpr(45)),MethodCall(print_int,NumberExpr(125)),MethodCall(print_int,NumberExpr(34)),MethodCall(print_int,NumberExpr(94))))))'
+INFO:root:Checking dev/var3.out
+INFO:root:Diff between reference and your output for dev/var3.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'000111'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),VarDef(y,IntType),VarDef(z,IntType),AssignVar(x,NumberExpr(0)),AssignVar(y,NumberExpr(0)),AssignVar(z,NumberExpr(0)),MethodCall(print_int,VariableExpr(x)),MethodCall(print_int,VariableExpr(y)),MethodCall(print_int,VariableExpr(z)),AssignVar(x,NumberExpr(1)),AssignVar(y,NumberExpr(1)),AssignVar(z,NumberExpr(1)),MethodCall(print_int,VariableExpr(x)),MethodCall(print_int,VariableExpr(y)),MethodCall(print_int,VariableExpr(z))))))'
+INFO:root:Checking dev/intcallchain3expr.out
+INFO:root:Diff between reference and your output for dev/intcallchain3expr.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'123'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test3,VoidType,VarDef(a,IntType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)))),Method(test2,VoidType,VarDef(a,IntType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)),MethodCall(test3,BinaryExpr(Plus,VariableExpr(a),NumberExpr(1))))),Method(test1,VoidType,VarDef(a,IntType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)),MethodCall(test2,BinaryExpr(Plus,VariableExpr(a),NumberExpr(1))))),Method(main,IntType,None,MethodBlock(None,MethodCall(test1,NumberExpr(1))))))'
+INFO:root:Checking dev/callexpr.out
+INFO:root:Diff between reference and your output for dev/callexpr.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'3'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),ExternFunction(read_int,IntType,None),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,MethodCall(read_int,None)),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/expr-testfile-4.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-4.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'-3'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,UnaryExpr(UnaryMinus,BinaryExpr(Plus,BinaryExpr(Plus,NumberExpr(2),BinaryExpr(Mult,NumberExpr(2),NumberExpr(3))),UnaryExpr(UnaryMinus,NumberExpr(5)))))))))'
+INFO:root:Checking dev/geq.out
+INFO:root:Diff between reference and your output for dev/geq.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'011'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,BinaryExpr(Geq,NumberExpr(13),NumberExpr(15))),MethodCall(print_int,BinaryExpr(Geq,NumberExpr(13),NumberExpr(13))),MethodCall(print_int,BinaryExpr(Geq,NumberExpr(15),NumberExpr(13)))))))'
+INFO:root:Checking dev/gr.out
+INFO:root:Diff between reference and your output for dev/gr.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'001'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,BinaryExpr(Gt,NumberExpr(13),NumberExpr(15))),MethodCall(print_int,BinaryExpr(Gt,NumberExpr(13),NumberExpr(13))),MethodCall(print_int,BinaryExpr(Gt,NumberExpr(15),NumberExpr(13)))))))'
+INFO:root:Checking dev/leq.out
+INFO:root:Diff between reference and your output for dev/leq.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'110'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,BinaryExpr(Leq,NumberExpr(13),NumberExpr(15))),MethodCall(print_int,BinaryExpr(Leq,NumberExpr(13),NumberExpr(13))),MethodCall(print_int,BinaryExpr(Leq,NumberExpr(15),NumberExpr(13)))))))'
+INFO:root:Checking dev/intcallchain3.out
+INFO:root:Diff between reference and your output for dev/intcallchain3.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'111'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test3,VoidType,VarDef(a,IntType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)))),Method(test2,VoidType,VarDef(a,IntType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)),MethodCall(test3,VariableExpr(a)))),Method(test1,VoidType,VarDef(a,IntType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)),MethodCall(test2,VariableExpr(a)))),Method(main,IntType,None,MethodBlock(None,MethodCall(test1,NumberExpr(1))))))'
+INFO:root:Checking dev/boolcall2.out
+INFO:root:Diff between reference and your output for dev/boolcall2.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'2'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test,VoidType,VarDef(a,BoolType),VarDef(b,BoolType),MethodBlock(None,MethodCall(print_int,NumberExpr(2)))),Method(main,IntType,None,MethodBlock(None,MethodCall(test,BoolExpr(True),BoolExpr(False))))))'
+INFO:root:Checking dev/mixedcallchainexprmultibranch.out
+INFO:root:Diff between reference and your output for dev/mixedcallchainexprmultibranch.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1120312020'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test3,VoidType,VarDef(a,BoolType),VarDef(x,IntType),MethodBlock(None,MethodCall(print_int,VariableExpr(x)),MethodCall(print_int,VariableExpr(a)))),Method(test2b,VoidType,VarDef(x,IntType),VarDef(a,BoolType),MethodBlock(None,MethodCall(print_int,VariableExpr(x)),MethodCall(print_int,VariableExpr(a)),MethodCall(test3,VariableExpr(a),VariableExpr(x)))),Method(test2a,VoidType,VarDef(x,IntType),VarDef(a,BoolType),MethodBlock(None,MethodCall(print_int,VariableExpr(x)),MethodCall(print_int,VariableExpr(a)),MethodCall(test3,UnaryExpr(Not,VariableExpr(a)),BinaryExpr(Plus,VariableExpr(x),NumberExpr(1))))),Method(test1,VoidType,VarDef(a,BoolType),VarDef(x,IntType),MethodBlock(None,MethodCall(print_int,VariableExpr(x)),MethodCall(print_int,VariableExpr(a)),MethodCall(test2a,BinaryExpr(Plus,VariableExpr(x),NumberExpr(1)),UnaryExpr(Not,VariableExpr(a))),MethodCall(test2b,BinaryExpr(Plus,VariableExpr(x),NumberExpr(1)),UnaryExpr(Not,VariableExpr(a))))),Method(main,IntType,None,MethodBlock(None,MethodCall(test1,BoolExpr(True),NumberExpr(1))))))'
+INFO:root:Checking dev/minus.out
+INFO:root:Diff between reference and your output for dev/minus.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'-212'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,BinaryExpr(Minus,NumberExpr(5),NumberExpr(7))),MethodCall(print_int,BinaryExpr(Minus,NumberExpr(5),UnaryExpr(UnaryMinus,NumberExpr(7))))))))'
+INFO:root:Checking dev/inthexconst.out
+INFO:root:Diff between reference and your output for dev/inthexconst.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'06575-6575'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,NumberExpr(0)),MethodCall(print_int,NumberExpr(0)),MethodCall(print_int,UnaryExpr(UnaryMinus,NumberExpr(0)))))))'
+INFO:root:Checking dev/charprint.out
+INFO:root:Diff between reference and your output for dev/charprint.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'97'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(97)),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/expr-testfile-7.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-7.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'28660'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),VarDef(y,BoolType),AssignVar(x,BinaryExpr(Plus,BinaryExpr(Plus,BinaryExpr(Plus,NumberExpr(2),BinaryExpr(Mult,NumberExpr(2),NumberExpr(3))),NumberExpr(5)),BinaryExpr(Minus,BinaryExpr(Mult,NumberExpr(43),NumberExpr(23)),NumberExpr(44)))),Block(VarDef(y,IntType),AssignVar(y,BinaryExpr(Plus,BinaryExpr(Mult,VariableExpr(x),UnaryExpr(UnaryMinus,NumberExpr(30))),BinaryExpr(Mult,NumberExpr(40),NumberExpr(2)))),AssignVar(x,UnaryExpr(UnaryMinus,VariableExpr(y)))),AssignVar(y,UnaryExpr(Not,BoolExpr(True))),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/boolcallchain3.out
+INFO:root:Diff between reference and your output for dev/boolcallchain3.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'111'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test3,VoidType,VarDef(a,BoolType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)))),Method(test2,VoidType,VarDef(a,BoolType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)),MethodCall(test3,VariableExpr(a)))),Method(test1,VoidType,VarDef(a,BoolType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)),MethodCall(test2,VariableExpr(a)))),Method(main,IntType,None,MethodBlock(None,MethodCall(test1,BoolExpr(True))))))'
+INFO:root:Checking dev/plus.out
+INFO:root:Diff between reference and your output for dev/plus.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'12-2'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,BinaryExpr(Plus,NumberExpr(5),NumberExpr(7))),MethodCall(print_int,BinaryExpr(Plus,NumberExpr(5),UnaryExpr(UnaryMinus,NumberExpr(7))))))))'
+INFO:root:Checking dev/rshift.out
+INFO:root:Diff between reference and your output for dev/rshift.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'741'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,BinaryExpr(Rightshift,NumberExpr(14),NumberExpr(1))),MethodCall(print_int,BinaryExpr(Rightshift,NumberExpr(8),NumberExpr(1))),MethodCall(print_int,BinaryExpr(Rightshift,NumberExpr(13),NumberExpr(3)))))))'
+INFO:root:Checking dev/intmethod.out
+INFO:root:Diff between reference and your output for dev/intmethod.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test,IntType,VarDef(a,IntType),MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(1)),MethodCall(print_int,VariableExpr(x)))),Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(1)),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/times.out
+INFO:root:Diff between reference and your output for dev/times.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'35-35'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,BinaryExpr(Mult,NumberExpr(5),NumberExpr(7))),MethodCall(print_int,BinaryExpr(Mult,NumberExpr(5),UnaryExpr(UnaryMinus,NumberExpr(7))))))))'
+INFO:root:Checking dev/bboolneq.out
+INFO:root:Diff between reference and your output for dev/bboolneq.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'0'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(b,BoolType),AssignVar(b,BinaryExpr(Neq,BoolExpr(True),BoolExpr(True))),AssignVar(b,BinaryExpr(Neq,BoolExpr(True),BoolExpr(False))),AssignVar(b,BinaryExpr(Neq,BoolExpr(False),BoolExpr(True))),AssignVar(b,BinaryExpr(Neq,BoolExpr(False),BoolExpr(False))),MethodCall(print_int,VariableExpr(b))))))'
+INFO:root:Checking dev/expr-testfile-6.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-6.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'01'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,UnaryExpr(Not,BoolExpr(True))),MethodCall(print_int,UnaryExpr(Not,BoolExpr(False)))))))'
+INFO:root:Checking dev/bintneq.out
+INFO:root:Diff between reference and your output for dev/bintneq.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(b,BoolType),AssignVar(b,BinaryExpr(Neq,NumberExpr(13),NumberExpr(15))),AssignVar(b,BinaryExpr(Neq,NumberExpr(13),NumberExpr(13))),AssignVar(b,BinaryExpr(Neq,NumberExpr(15),NumberExpr(13))),MethodCall(print_int,VariableExpr(b))))))'
+INFO:root:Checking dev/method2.out
+INFO:root:Diff between reference and your output for dev/method2.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1121'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test,VoidType,VarDef(a,IntType),VarDef(b,IntType),MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(1)),MethodCall(print_int,VariableExpr(a)),MethodCall(print_int,VariableExpr(b)),MethodCall(print_int,VariableExpr(x)))),Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(1)),MethodCall(print_int,VariableExpr(x)),MethodCall(test,VariableExpr(x),BinaryExpr(Plus,VariableExpr(x),NumberExpr(1)))))))'
+INFO:root:Checking dev/stringconst.out
+INFO:root:Diff between reference and your output for dev/stringconst.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'hello, world'
++b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_string,StringConstant("hello, world\\n"))))))'
+INFO:root:Checking dev/intvar.out
+INFO:root:Diff between reference and your output for dev/intvar.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'112'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(1)),MethodCall(print_int,NumberExpr(1)),MethodCall(print_int,VariableExpr(x)),MethodCall(print_int,NumberExpr(2))))))'
+INFO:root:Checking dev/inteq.out
+INFO:root:Diff between reference and your output for dev/inteq.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'010'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,BinaryExpr(Eq,NumberExpr(13),NumberExpr(15))),MethodCall(print_int,BinaryExpr(Eq,NumberExpr(13),NumberExpr(13))),MethodCall(print_int,BinaryExpr(Eq,NumberExpr(15),NumberExpr(13)))))))'
+INFO:root:Checking dev/expr-testfile-3.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-3.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(y,BoolType),AssignVar(y,BoolExpr(True)),MethodCall(print_int,VariableExpr(y))))))'
+INFO:root:Checking dev/mixedcallchainexpr.out
+INFO:root:Diff between reference and your output for dev/mixedcallchainexpr.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'112031'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test3,VoidType,VarDef(a,BoolType),VarDef(x,IntType),MethodBlock(None,MethodCall(print_int,VariableExpr(x)),MethodCall(print_int,VariableExpr(a)))),Method(test2,VoidType,VarDef(x,IntType),VarDef(a,BoolType),MethodBlock(None,MethodCall(print_int,VariableExpr(x)),MethodCall(print_int,VariableExpr(a)),MethodCall(test3,UnaryExpr(Not,VariableExpr(a)),BinaryExpr(Plus,VariableExpr(x),NumberExpr(1))))),Method(test1,VoidType,VarDef(a,BoolType),VarDef(x,IntType),MethodBlock(None,MethodCall(print_int,VariableExpr(x)),MethodCall(print_int,VariableExpr(a)),MethodCall(test2,BinaryExpr(Plus,VariableExpr(x),NumberExpr(1)),UnaryExpr(Not,VariableExpr(a))))),Method(main,IntType,None,MethodBlock(None,MethodCall(test1,BoolExpr(True),NumberExpr(1))))))'
+INFO:root:Checking dev/charexprprint.out
+INFO:root:Diff between reference and your output for dev/charexprprint.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'5'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(102)),MethodCall(print_int,BinaryExpr(Minus,VariableExpr(x),NumberExpr(97)))))))'
+INFO:root:Checking dev/binteq.out
+INFO:root:Diff between reference and your output for dev/binteq.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'0'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(b,BoolType),AssignVar(b,BinaryExpr(Eq,NumberExpr(13),NumberExpr(15))),AssignVar(b,BinaryExpr(Eq,NumberExpr(13),NumberExpr(13))),AssignVar(b,BinaryExpr(Eq,NumberExpr(15),NumberExpr(13))),MethodCall(print_int,VariableExpr(b))))))'
+INFO:root:Checking dev/callexprprint.out
+INFO:root:Diff between reference and your output for dev/callexprprint.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'300'
++b'Program(ExternFunction(read_int,IntType,None),ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,BinaryExpr(Mult,MethodCall(read_int,None),NumberExpr(100))),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/method1.out
+INFO:root:Diff between reference and your output for dev/method1.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'111111'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test,VoidType,VarDef(a,IntType),MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(1)),MethodCall(print_int,NumberExpr(1)),MethodCall(print_int,VariableExpr(x)))),Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(1)),MethodCall(print_int,NumberExpr(1)),MethodCall(test,NumberExpr(1)),MethodCall(print_int,VariableExpr(x)),MethodCall(test,VariableExpr(x))))))'
+INFO:root:Checking dev/externprintint.out
+INFO:root:Diff between reference and your output for dev/externprintint.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(1)),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/boolvar.out
+INFO:root:Diff between reference and your output for dev/boolvar.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,BoolType),AssignVar(x,BoolExpr(True)),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/blt.out
+INFO:root:Diff between reference and your output for dev/blt.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'0'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(b,BoolType),AssignVar(b,BinaryExpr(Lt,NumberExpr(13),NumberExpr(15))),AssignVar(b,BinaryExpr(Lt,NumberExpr(13),NumberExpr(13))),AssignVar(b,BinaryExpr(Lt,NumberExpr(15),NumberExpr(13))),MethodCall(print_int,VariableExpr(b))))))'
+INFO:root:Checking dev/intcallcalleeexpr.out
+INFO:root:Diff between reference and your output for dev/intcallcalleeexpr.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'11'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test,VoidType,VarDef(a,IntType),MethodBlock(None,MethodCall(print_int,BinaryExpr(Plus,VariableExpr(a),NumberExpr(10))))),Method(main,IntType,None,MethodBlock(None,MethodCall(test,NumberExpr(1))))))'
+INFO:root:Checking dev/not.out
+INFO:root:Diff between reference and your output for dev/not.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'011001'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,UnaryExpr(Not,BoolExpr(True))),MethodCall(print_int,UnaryExpr(Not,BoolExpr(False))),MethodCall(print_int,UnaryExpr(Not,UnaryExpr(Not,BoolExpr(True)))),MethodCall(print_int,UnaryExpr(Not,UnaryExpr(Not,BoolExpr(False)))),MethodCall(print_int,UnaryExpr(Not,UnaryExpr(Not,UnaryExpr(Not,BoolExpr(True))))),MethodCall(print_int,UnaryExpr(Not,UnaryExpr(Not,UnaryExpr(Not,BoolExpr(False)))))))))'
+INFO:root:Checking dev/returnmismatch-intofchar-ok.out
+INFO:root:Diff between reference and your output for dev/returnmismatch-intofchar-ok.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'120'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(test,IntType,None,MethodBlock(None,ReturnStmt(NumberExpr(120)))),Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,MethodCall(test,None)),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/stringconst2.out
+INFO:root:Diff between reference and your output for dev/stringconst2.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'hello, world'
++b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_string,StringConstant("hello,")),MethodCall(print_string,StringConstant(" world\\n"))))))'
+INFO:root:Checking dev/onlyvar.out
+INFO:root:Diff between reference and your output for dev/onlyvar.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'0'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,NumberExpr(0))))))'
+INFO:root:Checking dev/charescapevals.out
+INFO:root:Diff between reference and your output for dev/charescapevals.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'911131071289239'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_int,NumberExpr(9)),MethodCall(print_int,NumberExpr(11)),MethodCall(print_int,NumberExpr(13)),MethodCall(print_int,NumberExpr(10)),MethodCall(print_int,NumberExpr(7)),MethodCall(print_int,NumberExpr(12)),MethodCall(print_int,NumberExpr(8)),MethodCall(print_int,NumberExpr(92)),MethodCall(print_int,NumberExpr(39))))))'
+INFO:root:Checking dev/div.out
+INFO:root:Diff between reference and your output for dev/div.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'12-2'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),MethodCall(print_int,BinaryExpr(Div,NumberExpr(5),NumberExpr(5))),MethodCall(print_int,BinaryExpr(Div,NumberExpr(5),NumberExpr(2))),MethodCall(print_int,BinaryExpr(Div,NumberExpr(5),UnaryExpr(UnaryMinus,NumberExpr(2))))))))'
+INFO:root:Checking dev/backward.out
+INFO:root:Diff between reference and your output for dev/backward.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1013'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(test,NumberExpr(10),NumberExpr(13)))),Method(test,VoidType,VarDef(a,IntType),VarDef(b,IntType),MethodBlock(None,MethodCall(print_int,VariableExpr(a)),MethodCall(print_int,VariableExpr(b))))))'
+INFO:root:Checking dev/expr-testfile-9.out
+INFO:root:Diff between reference and your output for dev/expr-testfile-9.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1020'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(x,IntType),AssignVar(x,NumberExpr(10)),MethodCall(print_int,VariableExpr(x)),AssignVar(x,BinaryExpr(Plus,VariableExpr(x),NumberExpr(10))),MethodCall(print_int,VariableExpr(x))))))'
+INFO:root:Checking dev/bbooleq.out
+INFO:root:Diff between reference and your output for dev/bbooleq.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'1'
++b'Program(ExternFunction(print_int,VoidType,VarDef(IntType)),Package(Test,None,Method(main,IntType,None,MethodBlock(VarDef(b,BoolType),AssignVar(b,BinaryExpr(Eq,BoolExpr(True),BoolExpr(True))),AssignVar(b,BinaryExpr(Eq,BoolExpr(True),BoolExpr(False))),AssignVar(b,BinaryExpr(Eq,BoolExpr(False),BoolExpr(True))),AssignVar(b,BinaryExpr(Eq,BoolExpr(False),BoolExpr(False))),MethodCall(print_int,VariableExpr(b))))))'
+INFO:root:Checking dev/stringescapequote.out
+INFO:root:Diff between reference and your output for dev/stringescapequote.out
+INFO:root:
+--- reference
++++ your-output
+@@ -1 +1 @@
+-b'"'
++b'Program(ExternFunction(print_string,VoidType,VarDef(StringType)),Package(Test,None,Method(main,IntType,None,MethodBlock(None,MethodCall(print_string,StringConstant("\\""))))))'

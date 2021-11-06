@@ -435,12 +435,19 @@ public:
 
 // /// Methods
 class Method_Call: public decafStmtList {
+	decafStmtList * args;
+	std::vector<llvm::Value *> values;
+	std::string funcName;
 public:
-	Method_Call(Identifier * name, decafAST * method_args): decafStmtList()  {
+	Method_Call(Identifier * name, decafStmtList * method_args): decafStmtList()  {
+		args = method_args;
+		funcName = name->str();
 		push_back(name);
 		push_back(method_args);
 	}
 	Method_Call(Identifier * name): decafStmtList() {
+		args = nullptr;
+		funcName = name->str();
 		push_back(name);
 		push_back(new decafStmtList());
 	}
@@ -448,7 +455,35 @@ public:
 		return "MethodCall(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		// Get function pointer
+		llvm::Function * func = (llvm::Function *)getValueFromTables(funcName);
+		if(!func) {
+			return nullptr;
+		}
+		if(args != nullptr) {
+			// Retrieve values from arguments 
+			if(args->size() == (int)func->arg_size()) {
+				auto it = args->begin();
+				auto end = args->end();
+				auto funcArgIt = func->arg_begin();
+				for(;it != end; it++) {
+					llvm::Value * val = (*it)->Codegen();
+					// Checking arg types and val types to see if there needs
+					// to be an int1 -> int32 conversion
+					const llvm::Type * valType = val->getType();
+					const llvm::Type * argType = funcArgIt->getType();
+					if(argType == Builder.getInt32Ty() && valType == Builder.getInt1Ty()) { 
+						promoteBoolToInt(&val);
+						const llvm::Type * newType = val->getType();
+						if(newType == Builder.getInt1Ty()){
+						}
+					}
+					values.push_back(val);
+					funcArgIt++;
+				}
+			}
+		}
+		return getFuncCall(func, values);
 	}
 };
 

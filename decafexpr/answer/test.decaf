@@ -10,9 +10,7 @@ func gcd(a int, b int) int {
 func gad(a int, b int) bool {
     var c int;
     var d int;
-    c = d + 10;
-    d = a + b;
-    a = 11;
-    b = 12;
+    c = a + b;
+    d = gcd(c, false);
 }
 

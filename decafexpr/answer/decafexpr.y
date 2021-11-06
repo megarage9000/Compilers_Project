@@ -328,13 +328,16 @@ typed_symbol: identifier decaf_type                     {$$ = new Var_Def(dynami
 
 /* --- Methods and Method args --- */
 method_call: identifier T_LPAREN T_RPAREN {$$ = new Method_Call(dynamic_cast<Identifier *>($1)); }
-        /* Single arg*/
-        | identifier T_LPAREN method_arg T_RPAREN     {$$ = new Method_Call(dynamic_cast<Identifier *>($1), $3); }
-        /* Mutliple args*/
-        | identifier T_LPAREN method_args T_RPAREN    {$$ = new Method_Call(dynamic_cast<Identifier *>($1), $3);}
+        /* Mutliple / Single args*/
+        | identifier T_LPAREN method_args T_RPAREN    {$$ = new Method_Call(dynamic_cast<Identifier *>($1), 
+                                                            dynamic_cast<decafStmtList *>($3));}
         ;
 
-method_args: method_arg T_COMMA method_arg     {$$ = initialize_recursive_list($1, $3);}
+method_args: method_arg {
+                            decafStmtList * list = new decafStmtList();
+                            list->push_back($1);
+                            $$ = list;
+                        }
     | method_args T_COMMA method_arg          {$1->push_back($3); $$ = $1; }
     ;
 

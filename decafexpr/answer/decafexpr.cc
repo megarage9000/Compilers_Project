@@ -830,7 +830,7 @@ class Method_Decl: public decafStmtList {
 		setupFunc(funcVal, argNames);
 		// Define the block statements
 		funcBlock->Codegen();
-		if(!funcVal->willReturn()) {
+		if(!funcVal->willReturn() && funcVal->getReturnType() != Builder.getVoidTy()) {
 			Builder.CreateRet(initializeLLVMVal(returnType, 0));
 		}
 		popTable();

@@ -105,8 +105,7 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 %%
 
 start: program {}
-|    extern_declaration method_decl_group {$1->Codegen();$2->Codegen(); delete $1; delete $2;}
-    ;
+;
 
 start_block: T_LCB
 ;
@@ -119,6 +118,12 @@ program: extern_declaration decafpackage
         if (printAST) {
             cout << getString(prog) << endl;
         }
+        try {
+            prog->Codegen();
+        } catch(const std::exception& e) {
+            std::cout << "Error message: " << e.what() << '\n';
+            delete prog;
+        } 
         delete prog;
     }
     ;
@@ -128,6 +133,11 @@ program: extern_declaration decafpackage
         if (printAST) {
             cout << getString(prog) << endl;
         }
+        try {
+            prog->Codegen();
+        } catch(const std::exception& e) {
+            delete prog;
+        } 
         delete prog;
     }
     ;

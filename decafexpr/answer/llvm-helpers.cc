@@ -278,6 +278,29 @@ void setupFunc(llvm::Function * func, std::vector<std::string> argNames) {
 	setupFuncArgs(func, argNames);
 }
 
+// helper to check if the function block(s) are valid
+// Stackoverflow link: https://stackoverflow.com/questions/53632131/compiler-how-to-check-a-user-function-returns-properly
+void checkFxn(llvm::Function * func) {
+	for(llvm::BasicBlock &block : *func) {
+		llvm::Instruction * terminator = block.getTerminator();
+		if(terminator != nullptr) continue;
+		if(func->getReturnType()->isVoidTy()) {
+			Builder.SetInsertPoint(&block);
+			Builder.CreateRetVoid();
+		}
+		else if(isMethodType(func->getReturnType())) {
+			Builder.SetInsertPoint(&block);
+			llvm::Type * returnTp = func->getReturnType();
+			if(returnTp == Builder.getInt32Ty()) {
+				Builder.CreateRet(initializeLLVMVal(returnTp, 0));
+			}
+			else {
+				Builder.CreateRet(initializeLLVMVal(returnTp, 1));
+			}
+		}
+	}
+}
+
 
 // -- Method calls
 llvm::Value * getFuncCall(llvm::Function * funcCall, std::vector<llvm::Value *> args) {

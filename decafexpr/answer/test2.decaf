@@ -21,8 +21,12 @@ package Test {
         test2a(x+1, !a);
         test2b(x+1, !a);
     }
+
+    func get1() int {
+        return(1);
+    }
+
     func main() int {
         test1(true, 1);
-        return(1);
     }
 }

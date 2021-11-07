@@ -473,9 +473,10 @@ public:
 					const llvm::Type * valType = val->getType();
 					const llvm::Type * argType = funcArgIt->getType();
 					if(argType == Builder.getInt32Ty() && valType == Builder.getInt1Ty()) { 
-						promoteBoolToInt(&val);
+						val = promoteBoolToInt(&val);
 						const llvm::Type * newType = val->getType();
 						if(newType == Builder.getInt1Ty()){
+							std::cout << "type was not converted???\n";
 						}
 					}
 					values.push_back(val);
@@ -640,12 +641,7 @@ public:
 		return "Block(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		if(!if_method) {
-			pushTable();
-			decafStmtList::Codegen();
-			popTable();
-		}
-		else {
+		if(if_method) {
 			decafStmtList::Codegen();
 		}
 		return nullptr;
@@ -836,9 +832,13 @@ class Method_Decl: public decafStmtList {
 		// Define the block statements
 		funcBlock->Codegen();
 		// Will need to fix this problem
-		if(!funcVal->willReturn() && funcVal->getReturnType() != Builder.getVoidTy() && funcName != "main") {
+		// if(!funcVal->willReturn() && funcVal->getReturnType() != Builder.getVoidTy()) {
+		// 	std::cout << "Creating a return type...\n";
+		if(funcVal->getReturnType() != Builder.getVoidTy() && funcName != "main") {
+			std::cout << "Creating a return type for function " << funcName << '\n';
 			Builder.CreateRet(initializeLLVMVal(returnType, 0));
 		}
+		// }
 		popTable();
 		if(llvm::verifyFunction(*funcVal)) {
 		}

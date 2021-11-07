@@ -105,9 +105,6 @@ bool isMainReturnType(llvm::Type * type) {
 	return (type == getMainType());
 }
 
-
-
-
 // -- Getting constants
 llvm::Constant *initializeLLVMVal(val_type type, int initialVal) {
 	switch(type) {

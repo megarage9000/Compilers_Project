@@ -84,6 +84,20 @@ llvm::Type *getLLVMType(val_type type) {
 	}
 }
 
+// -- Checking specific types (decaf, method, externs)
+bool isDecafType(llvm::Type * type) {
+	return (type == Builder.getInt32Ty() || type == Builder.getInt1Ty());
+}
+
+bool isMethodType(llvm::Type * type) {
+	return (type == Builder.getVoidTy() || isDecafType(type));
+}
+
+bool isExternType(llvm::Type * type) {
+	return (type == Builder.getInt8PtrTy() || isDecafType(type));
+}
+
+
 // -- Getting constants
 llvm::Constant *initializeLLVMVal(val_type type, int initialVal) {
 	switch(type) {
@@ -131,6 +145,7 @@ llvm::Value * useVar(std::string id) {
 	return Builder.CreateLoad(val, id.c_str());
 }
 
+// -- Assignments
 void assignVal(llvm::AllocaInst* lval, llvm::Value * rval) {
 	const llvm::Type * rvalType = rval->getType();
 	const llvm::Type * lvalType = lval->getType();
@@ -200,6 +215,9 @@ llvm::Function * defineFunc(
 	llvm::Type * returnTp, 
 	std::vector<llvm::Type *> argTypes, 
 	std::string funcName) {
+	if(!isMethodType(returnTp)) {
+		throw runtime_error("Invalid return type for method");
+	}
 	llvm::Function * func = llvm::Function::Create(
 		llvm::FunctionType::get(returnTp, argTypes, false),
 		llvm::Function::ExternalLinkage,
@@ -208,10 +226,6 @@ llvm::Function * defineFunc(
 	);
 	insertToTable(funcName, func);
 	return func;
-}
-
-void addReturnValue(llvm::Function * func, llvm::Value * value) {
-
 }
 
 void setupFunc(llvm::Function * func, std::vector<std::string> argNames) {
@@ -242,6 +256,16 @@ typedef enum {
 } type_op;
 
 llvm::Value * getBinaryExp(llvm::Value * lval, llvm::Value * rval, type_op operation_tp) {
+
+	// TODO: handle correct types (int32s for arithmetic, int1s for booleans)
+	// - Currently we are gonna check if lval and rval are either int1s or int32s
+
+	llvm::Type * lvalType = lval->getType();
+	llvm::Type * rvalType = rval->getType();
+	if(!isDecafType(lvalType) || !isDecafType(rvalType)) {
+		throw runtime_error("Invalid types for operation");
+	}
+
 	switch(operation_tp) {
 		case PLUS:
 			return Builder.CreateAdd(lval, rval);

@@ -49,7 +49,7 @@ void pushTable() {
 
 void popTable() {
 	if(!symbl_table_list.empty()) {
-	  symbl_table_list.pop_front();
+		symbl_table_list.pop_front();
 	}
 }
 
@@ -202,16 +202,16 @@ llvm::BasicBlock * createBasicBlockDefault() {
 
 // From sexpr-codegen.y
 // - For functions, we are expecting booleans, integers and chars as types of the argument
-static llvm::AllocaInst *CreateEntryBlockAlloca(llvm::Function *TheFunction, const std::string &VarName) {
+static llvm::AllocaInst *CreateEntryBlockAlloca(llvm::Function *TheFunction, llvm::Type * type, const std::string &VarName) {
   llvm::IRBuilder<> TmpB(&TheFunction->getEntryBlock(), TheFunction->getEntryBlock().begin());
-  return TmpB.CreateAlloca(llvm::IntegerType::get(TheContext, 32), 0, VarName.c_str());
+  return TmpB.CreateAlloca(type, 0, VarName.c_str());
 }
 
 void setupFuncArgs(llvm::Function * func, std::vector<std::string> argNames) {
 	std::vector<string>::iterator argNameIter = argNames.begin();
 	for(auto &arg: func->args()) {
 		arg.setName((*argNameIter).c_str());
-		llvm::AllocaInst * allocation = Builder.CreateAlloca(arg.getType(), 0, arg.getName().str());
+		llvm::AllocaInst * allocation = CreateEntryBlockAlloca(func, arg.getType(), arg.getName().str());
 		Builder.CreateStore(&arg, allocation);
 		insertToTable(arg.getName().str(), allocation);
 		argNameIter++;

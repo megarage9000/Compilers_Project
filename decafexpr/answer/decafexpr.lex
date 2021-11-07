@@ -190,7 +190,15 @@ while                      { return T_WHILE; }
   /*
     Integer Rules
   */
-{decimal_digit}|{hex_digit}       {yylval.inval = std::stoi(yytext); return T_INTCONSTANT;} 
+{decimal_digit}      {yylval.inval = std::stoi(yytext); return T_INTCONSTANT;} 
+{hex_digit}                       {
+                                  std::stringstream ss;
+                                  int val;
+                                  ss << std::hex << yytext;
+                                  ss >> val;     
+                                  yylval.inval = val; 
+                                  return T_INTCONSTANT;
+                                  } 
   /*
     EOF?
   */

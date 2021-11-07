@@ -82,63 +82,9 @@ public:
 	}
 };
 
-class PackageAST : public decafAST {
-	string Name;
-	decafStmtList *FieldDeclList;
-	decafStmtList *MethodDeclList;
-public:
-	PackageAST(string name, decafStmtList *fieldlist, decafStmtList *methodlist) 
-		: Name(name), FieldDeclList(fieldlist), MethodDeclList(methodlist) {}
-	~PackageAST() { 
-		if (FieldDeclList != NULL) { delete FieldDeclList; }
-		if (MethodDeclList != NULL) { delete MethodDeclList; }
-	}
-	string str() { 
-		return string("Package") + "(" + Name + "," + getString(FieldDeclList) + "," + getString(MethodDeclList) + ")";
-	}
-	llvm::Value *Codegen() { 
-		llvm::Value *val = NULL;
-		TheModule->setModuleIdentifier(llvm::StringRef(Name)); 
-		if (NULL != FieldDeclList) {
-			val = FieldDeclList->Codegen();
-		}
-		if (NULL != MethodDeclList) {
-			val = MethodDeclList->Codegen();
-		} 
-		// Q: should we enter the class name into the symbol table?
-		return val; 
-	}
-};
-
-/// ProgramAST - the decaf program
-class ProgramAST : public decafAST {
-	decafStmtList *ExternList;
-	PackageAST *PackageDef;
-public:
-	ProgramAST(decafStmtList *externs, PackageAST *c) : ExternList(externs), PackageDef(c) {}
-	~ProgramAST() { 
-		if (ExternList != NULL) { delete ExternList; } 
-		if (PackageDef != NULL) { delete PackageDef; }
-	}
-	string str() { return string("Program") + "(" + getString(ExternList) + "," + getString(PackageDef) + ")"; }
-	llvm::Value *Codegen() { 
-		llvm::Value *val = NULL;
-		if (NULL != ExternList) {
-			val = ExternList->Codegen();
-		}
-		if (NULL != PackageDef) {
-			val = PackageDef->Codegen();
-		} else {
-			throw runtime_error("no package definition in decaf program");
-		}
-		return val; 
-	}
-};
-
 
 
 // Identifiers to deal with strings
-
 class Identifier : public decafAST {
 	string id_name;
 public:
@@ -475,9 +421,6 @@ public:
 					if(argType == Builder.getInt32Ty() && valType == Builder.getInt1Ty()) { 
 						val = promoteBoolToInt(&val);
 						const llvm::Type * newType = val->getType();
-						if(newType == Builder.getInt1Ty()){
-							std::cout << "type was not converted???\n";
-						}
 					}
 					values.push_back(val);
 					funcArgIt++;
@@ -644,6 +587,11 @@ public:
 		if(if_method) {
 			decafStmtList::Codegen();
 		}
+		else {
+			pushTable();
+			decafStmtList::Codegen();
+			popTable();
+		}
 		return nullptr;
 	}
 };
@@ -787,6 +735,7 @@ class Method_Decl: public decafStmtList {
 	llvm::Type * returnType;
 	string funcName;
 	Block * funcBlock;
+
 	public:
 	Method_Decl(Identifier * id, Type * return_type, 
 	decafStmtList* param_list, Block * block)
@@ -811,31 +760,31 @@ class Method_Decl: public decafStmtList {
 			);
 		}
 		funcName = id->str();
-		// if(funcName == "main") {
-		// 	returnType = getMainType();
-		// }
-		// else {
-		// 	returnType = getLLVMType(return_type->get_type());
-		// }
 		returnType = getLLVMType(return_type->get_type());
-		
-		
 	}
 	string str() {
 		return "Method(" + decafStmtList::str() + ")";
 	}
+
+	string getFuncName() {
+		return funcName;
+	}
 	llvm::Value *Codegen() {
 		// Defines the function, creates a block and arguments
 		llvm::Function * funcVal = defineMethod(returnType, argTypes, funcName);
+		return funcVal;
+	}
+
+	llvm::Value *CodegenFuncBlock() {
+		llvm::Function * funcVal = (llvm::Function *)getValueFromTables(funcName);
 		// New symbol table
 		pushTable();
 		// Prepare the arguments and block
 		setupFunc(funcVal, argNames);
 		// Define the block statements
 		funcBlock->Codegen();
-
+		// Check function if it has a valid return value, if not add a default value
 		checkFxn(funcVal);
-
 		popTable();
 		if(llvm::verifyFunction(*funcVal)) {
 			throw runtime_error("Function " + funcName + " is invalid\n");
@@ -843,4 +792,65 @@ class Method_Decl: public decafStmtList {
 		return funcVal;
 	}
 };
+
+class PackageAST : public decafAST {
+	string Name;
+	decafStmtList *FieldDeclList;
+	decafStmtList *MethodDeclList;
+public:
+	PackageAST(string name, decafStmtList *fieldlist, decafStmtList *methodlist) 
+		: Name(name), FieldDeclList(fieldlist), MethodDeclList(methodlist) {}
+	~PackageAST() { 
+		if (FieldDeclList != NULL) { delete FieldDeclList; }
+		if (MethodDeclList != NULL) { delete MethodDeclList; }
+	}
+	string str() { 
+		return string("Package") + "(" + Name + "," + getString(FieldDeclList) + "," + getString(MethodDeclList) + ")";
+	}
+	llvm::Value *Codegen() { 
+		llvm::Value *val = NULL;
+		TheModule->setModuleIdentifier(llvm::StringRef(Name)); 
+		if (NULL != FieldDeclList) {
+			val = FieldDeclList->Codegen();
+		}
+		if (NULL != MethodDeclList) {
+			val = MethodDeclList->Codegen();
+			// Also do the method block declarations
+			auto it = MethodDeclList->begin();
+			auto end = MethodDeclList->end();
+			for(;it != end; it++) {
+				Method_Decl * declaration = dynamic_cast<Method_Decl *>(*it);
+				declaration->CodegenFuncBlock();
+			}
+		} 
+		// Q: should we enter the class name into the symbol table?
+		return val; 
+	}
+};
+
+/// ProgramAST - the decaf program
+class ProgramAST : public decafAST {
+	decafStmtList *ExternList;
+	PackageAST *PackageDef;
+public:
+	ProgramAST(decafStmtList *externs, PackageAST *c) : ExternList(externs), PackageDef(c) {}
+	~ProgramAST() { 
+		if (ExternList != NULL) { delete ExternList; } 
+		if (PackageDef != NULL) { delete PackageDef; }
+	}
+	string str() { return string("Program") + "(" + getString(ExternList) + "," + getString(PackageDef) + ")"; }
+	llvm::Value *Codegen() { 
+		llvm::Value *val = NULL;
+		if (NULL != ExternList) {
+			val = ExternList->Codegen();
+		}
+		if (NULL != PackageDef) {
+			val = PackageDef->Codegen();
+		} else {
+			throw runtime_error("no package definition in decaf program");
+		}
+		return val; 
+	}
+};
+
 

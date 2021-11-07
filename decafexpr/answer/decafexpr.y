@@ -99,7 +99,7 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 %type<ast> binary_operation unary_operation assign statement method_call method_arg method_type decaf_type extern_type
 %type<ast> typed_symbols field_decl typed_symbols_decl method_decl assign_global
 %type<ast> block  if_stmt rvalue for_loop while_loop for_loop_assigns method_decl_args keywords return
-%type<ast> statement_group typed_symbols_decl_group field_decl_group method_decl_group
+%type<ast> statement_group typed_symbols_decl_group field_decl_group
 %type<list> assign_list statement_list method_args method_decl_multi_args typed_symbols_decls extern_func_args method_decl_list extern_list field_decl_list
 %type<id_list> identifier_list
 %%
@@ -135,6 +135,7 @@ program: extern_declaration decafpackage
         }
         try {
             prog->Codegen();
+
         } catch(const std::exception& e) {
             delete prog;
         } 
@@ -143,13 +144,13 @@ program: extern_declaration decafpackage
     ;
 
 /* --- Packages --- */
-decafpackage: T_PACKAGE identifier start_block field_decl_group method_decl_group end_block
+decafpackage: T_PACKAGE identifier start_block field_decl_group method_decl_list end_block
     {   
         string id_name = $2->str();
         $$ = new PackageAST(id_name, dynamic_cast<decafStmtList *>($4), dynamic_cast<decafStmtList *>($5));   
         delete $2;     
     }
-    | T_PACKAGE identifier start_block method_decl_group end_block
+    | T_PACKAGE identifier start_block method_decl_list end_block
     {   
         string id_name = $2->str();
         $$ = new PackageAST(id_name, new decafStmtList() , dynamic_cast<decafStmtList *>($4));  
@@ -292,10 +293,12 @@ assign_global: T_VAR identifier decaf_type T_ASSIGN T_INTCONSTANT T_SEMICOLON {
     }
 
 /* --- Method declaration --- */
-method_decl_group: method_decl_list                  {$$ = $1; }
-    | method_decl                                    {$$ = $1; }
 
-method_decl_list: method_decl method_decl            {$$ = initialize_recursive_list ($1, $2);}
+method_decl_list: method_decl                       {
+                                                        decafStmtList * list = new decafStmtList();
+                                                        list->push_back($1);
+                                                        $$ = list;
+                                                    }
     | method_decl_list method_decl                   {$1->push_back($2), $$=$1;}
 
 method_decl: T_FUNC identifier T_LPAREN method_decl_args T_RPAREN method_type block {

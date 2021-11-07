@@ -1,6 +1,8 @@
 extern func print_int(int) void;
 
 package Test {
+
+
     func test3(a bool, x int) void {
         print_int(x);
         print_int(a);
@@ -29,4 +31,5 @@ package Test {
     func main() int {
         test1(true, 1);
     }
+
 }

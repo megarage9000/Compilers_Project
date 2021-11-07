@@ -56,6 +56,17 @@ int escape_to_ascii(string escape_char) {
   return escape_char[1];
 }
 
+string get_actual_escape_char(string escape_char) {
+  if(escape_char == "\\a") return "\a";
+  if(escape_char == "\\b") return "\b";
+  if(escape_char == "\\t") return "\t";
+  if(escape_char == "\\n") return "\n";
+  if(escape_char == "\\v") return "\v";
+  if(escape_char == "\\f") return "\f";
+  if(escape_char == "\\r") return "\r";
+  return escape_char;
+}
+
 #define YY_USER_ACTION  update_position();
 
 %}
@@ -178,15 +189,20 @@ while                      { return T_WHILE; }
     String Rules
     - Use state to track escape sequences and newlines
   */
-\"                          { found_string.append(yytext); BEGIN STRING; }
-<STRING>\"                  { found_string.append(yytext); 
+\"                          { BEGIN STRING; }
+<STRING>\"                  { 
                               yylval.sval = new string(found_string); 
                               found_string=""; 
                               BEGIN INITIAL; return T_STRINGCONSTANT; }    
 <STRING><<EOF>>                     {printError("ERROR: string constant is missing closing delimiter"); return -1;}
 <STRING>\\/([^nrtvfab\\'\"]*)       {printError("ERROR: unexpected escape sequence in string constant"); BEGIN INITIAL; found_string =""; return -1;}       
 <STRING>\n                          {printError("ERROR: newline in string constant"); BEGIN INITIAL;  found_string =""; return -1;}    
-<STRING>{char_literal}|{escaped_char}       {found_string.append(yytext);}
+<STRING>{char_literal}                     {
+  found_string.append(yytext);
+  }
+<STRING>{escaped_char} {
+  found_string.append(std::string(yytext));
+  }
   /*
     Integer Rules
   */

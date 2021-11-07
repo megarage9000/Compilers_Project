@@ -129,7 +129,10 @@ llvm::Constant *initializeLLVMVal(llvm::Type * type, int initialVal) {
 	}
 }
 
-
+llvm::Value * getStringConst(std::string sval) {
+	llvm::GlobalVariable * globalString = Builder.CreateGlobalString(sval.c_str(), "globalstring");
+	return Builder.CreateConstGEP2_32(globalString->getValueType(), globalString, 0, 0, "cast");
+}
 
 // -- Promoting bools to int32s
 llvm::Value * promoteBoolToInt(llvm::Value ** val) {

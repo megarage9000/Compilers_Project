@@ -249,7 +249,7 @@ public:
 		return "StringConstant(" + strVal + ")";
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		return getStringConst(strVal);
 	}
 };
 

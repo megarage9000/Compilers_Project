@@ -99,13 +99,13 @@ decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
 %type<ast> binary_operation unary_operation assign statement method_call method_arg method_type decaf_type extern_type
 %type<ast> typed_symbols field_decl typed_symbols_decl method_decl assign_global
 %type<ast> block  if_stmt rvalue for_loop while_loop for_loop_assigns method_decl_args keywords return
-%type<ast> statement_group typed_symbols_decl_group field_decl_group method_decl_group extern_arg_group
+%type<ast> statement_group typed_symbols_decl_group field_decl_group method_decl_group
 %type<list> assign_list statement_list method_args method_decl_multi_args typed_symbols_decls extern_func_args method_decl_list extern_list field_decl_list
 %type<id_list> identifier_list
 %%
 
 start: program {}
-|    method_decl_group {$1->Codegen(); delete $1;}
+|    extern_declaration method_decl_group {$1->Codegen();$2->Codegen(); delete $1; delete $2;}
     ;
 
 start_block: T_LCB
@@ -167,17 +167,18 @@ extern_list: extern_func extern_func   {$$ = initialize_recursive_list($1, $2);}
     | extern_list extern_func   {$1->push_back($2); $$ = $1;}
     ;
 
-extern_func: T_EXTERN T_FUNC identifier T_LPAREN extern_arg_group T_RPAREN method_type T_SEMICOLON {
+extern_func: T_EXTERN T_FUNC identifier T_LPAREN extern_func_args T_RPAREN method_type T_SEMICOLON {
         $$ = new Extern_Func(dynamic_cast<Identifier *>($3), dynamic_cast<Type *>($7), $5);
     }
     | T_EXTERN T_FUNC identifier T_LPAREN T_RPAREN method_type T_SEMICOLON {
         $$ = new Extern_Func(dynamic_cast<Identifier *>($3), dynamic_cast<Type *>($6), new decafStmtList());
     }
 
-extern_arg_group: extern_type   {$$ = $1;}
-    | extern_func_args          {$$ = $1;}
-
-extern_func_args: extern_type T_COMMA extern_type   {$$ = initialize_recursive_list($1, $3);}
+extern_func_args: extern_type                       {
+                                                        decafStmtList * list = new decafStmtList();
+                                                        list->push_back($1);
+                                                        $$ = list;
+                                                    }
     | extern_func_args T_COMMA extern_type          {$1->push_back($3); $$ = $1;}
 
 /* --- While-Loop --- */

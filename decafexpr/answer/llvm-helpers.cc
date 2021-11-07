@@ -210,14 +210,11 @@ void setupFuncArgs(llvm::Function * func, std::vector<std::string> argNames) {
 		argNameIter++;
 	}	
 }
-
 llvm::Function * defineFunc(
 	llvm::Type * returnTp, 
 	std::vector<llvm::Type *> argTypes, 
-	std::string funcName) {
-	if(!isMethodType(returnTp)) {
-		throw runtime_error("Invalid return type for method");
-	}
+	std::string funcName) 
+{
 	llvm::Function * func = llvm::Function::Create(
 		llvm::FunctionType::get(returnTp, argTypes, false),
 		llvm::Function::ExternalLinkage,
@@ -227,6 +224,46 @@ llvm::Function * defineFunc(
 	insertToTable(funcName, func);
 	return func;
 }
+
+llvm::Function * defineMethod(
+	llvm::Type * returnTp, 
+	std::vector<llvm::Type *> argTypes, 
+	std::string funcName) 
+{
+	// Check if return type is valid
+	if(!isMethodType(returnTp)) {
+		throw runtime_error("Invalid return type for method");
+	}
+	// Validate arguments to make sure they are correct type
+	for(llvm::Type * argType : argTypes) {
+		if(!isDecafType(argType)){
+			throw runtime_error("Invalid arg type for method");
+		}
+	}
+	// One it passes the tests, define function
+	return defineFunc(returnTp, argTypes, funcName);
+}
+
+llvm::Function * defineExtern(
+	llvm::Type * returnTp, 
+	std::vector<llvm::Type *> argTypes, 
+	std::string funcName) 
+{
+	// Check if return type is valid
+	if(!isMethodType(returnTp)) {
+		throw runtime_error("Invalid return type for extern");
+	}
+	// Validate arguments to make sure they are correct type
+	for(llvm::Type * argType : argTypes) {
+		if(!isExternType(argType)){
+			throw runtime_error("Invalid arg type for extern");
+		}
+	}
+	// One it passes the tests, define function
+	return defineFunc(returnTp, argTypes, funcName);
+}
+
+
 
 void setupFunc(llvm::Function * func, std::vector<std::string> argNames) {
 	llvm::BasicBlock * funcBlock = createBasicBlock(func);
@@ -265,7 +302,6 @@ llvm::Value * getBinaryExp(llvm::Value * lval, llvm::Value * rval, type_op opera
 	if(!isDecafType(lvalType) || !isDecafType(rvalType)) {
 		throw runtime_error("Invalid types for operation");
 	}
-
 	switch(operation_tp) {
 		case PLUS:
 			return Builder.CreateAdd(lval, rval);

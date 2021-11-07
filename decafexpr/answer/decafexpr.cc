@@ -640,7 +640,14 @@ public:
 		return "Block(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		decafStmtList::Codegen();
+		if(!if_method) {
+			pushTable();
+			decafStmtList::Codegen();
+			popTable();
+		}
+		else {
+			decafStmtList::Codegen();
+		}
 		return nullptr;
 	}
 };
@@ -746,18 +753,35 @@ public:
 
 /// Extern and method declarations
 class Extern_Func: public decafStmtList {
+	vector<llvm::Type*> argTypes;
+	vector<string> argNames;
+	llvm::Type * returnType;
+	string funcName;
 public:
-	Extern_Func(Identifier * id, Type * return_type, decafAST * typeList)
+	Extern_Func(Identifier * id, Type * return_type, decafStmtList * typeList)
 	 : decafStmtList(){
 		push_back(id);
 		push_back(return_type);
 		push_back(typeList);
+		// Extract name and return type
+		funcName = id->str();
+		returnType = getLLVMType(return_type->get_type());
+		// Extract arg names and types
+		list<decafAST *>::iterator it;
+		for(it = typeList->begin(); it != typeList->end(); it++){
+			Var_Def * arg = dynamic_cast<Var_Def *>(*it);
+			argNames.push_back(arg->getId());
+			argTypes.push_back(
+				getLLVMType(arg->getType())
+			);
+		}
 	 }
 	string str() {
 		return "ExternFunction(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		// For now we assume we don't store / allocate extern parameters
+		return defineExtern(returnType, argTypes, funcName);
 	}
 };
 
@@ -799,7 +823,7 @@ class Method_Decl: public decafStmtList {
 	}
 	llvm::Value *Codegen() {
 		// Defines the function, creates a block and arguments
-		llvm::Function * funcVal = defineFunc(returnType, argTypes, funcName);
+		llvm::Function * funcVal = defineMethod(returnType, argTypes, funcName);
 		// New symbol table
 		pushTable();
 		// Prepare the arguments and block
@@ -807,10 +831,15 @@ class Method_Decl: public decafStmtList {
 		// Define the block statements
 		funcBlock->Codegen();
 		if(!funcVal->willReturn()) {
-			std::cout << "Function will not return, creating default return type...\n";
 			Builder.CreateRet(initializeLLVMVal(returnType, 0));
 		}
 		popTable();
+		if(llvm::verifyFunction(*funcVal)) {
+			std::cout << "Function " << funcName << " is good!\n";
+		}
+		else {
+			throw runtime_error("Function " + funcName + " is invalid\n");
+		}
 		return funcVal;
 	}
 };

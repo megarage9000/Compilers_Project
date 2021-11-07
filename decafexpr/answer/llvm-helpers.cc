@@ -129,6 +129,8 @@ llvm::Constant *initializeLLVMVal(llvm::Type * type, int initialVal) {
 	}
 }
 
+
+
 // -- Promoting bools to int32s
 llvm::Value * promoteBoolToInt(llvm::Value ** val) {
 	if((*val)->getType() == Builder.getInt1Ty()) {

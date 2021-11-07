@@ -450,14 +450,9 @@ public:
 	string str() {
 		return "VarDef(" + decafStmtList::str() + ")";
 	}
-	// Local variable declarations only! Be careful and don't try to call this
-	// in a function def
 	llvm::Value *Codegen() {
 		// Check if the variable is already stored in the table, if not, define it
-		if(getValueFromTables(id.c_str()) == nullptr) {
-			return defineVar(getLLVMType(tp), id);
-		}
-		return nullptr;
+		return defineVar(getLLVMType(tp), id);
 	}
 	string getId() {
 		return id;

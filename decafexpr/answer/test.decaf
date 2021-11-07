@@ -16,3 +16,8 @@ func gad(a int, b int) bool {
     return;
 }
 
+func dcd(a bool, c bool) bool {
+    var b bool;
+    b = c && a;
+    return(b);
+}

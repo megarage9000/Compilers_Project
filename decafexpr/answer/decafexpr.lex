@@ -85,13 +85,13 @@ break                      { return T_BREAK; }
 continue                   { return T_CONTINUE; }
 else                       { return T_ELSE; }
 extern                     { return T_EXTERN; }
-false                      { yylval.sval = new string(yytext); return T_FALSE; }
+false                      { return T_FALSE; }
 for                        { return T_FOR; }
 if                         { return T_IF; }
 null                       { return T_NULL; }
 return                     { return T_RETURN; }
 string                     { return T_STRINGTYPE; }
-true                       { yylval.sval = new string(yytext); return T_TRUE; }
+true                       { return T_TRUE; }
 var                        { return T_VAR; }
 void                       { return T_VOID; }
 while                      { return T_WHILE; }

@@ -147,8 +147,8 @@ llvm::Value * useVar(std::string id) {
 
 // -- Assignments
 void assignVal(llvm::AllocaInst* lval, llvm::Value * rval) {
-	const llvm::Type * rvalType = rval->getType();
-	const llvm::Type * lvalType = lval->getType();
+	const llvm::PointerType * rvalType = rval->getType()->getPointerTo();
+	const llvm::PointerType * lvalType = lval->getType();
 	if(rvalType == lvalType) {
 		Builder.CreateStore(rval, lval);
 	}
@@ -204,7 +204,7 @@ void setupFuncArgs(llvm::Function * func, std::vector<std::string> argNames) {
 	std::vector<string>::iterator argNameIter = argNames.begin();
 	for(auto &arg: func->args()) {
 		arg.setName((*argNameIter).c_str());
-		llvm::AllocaInst * allocation = CreateEntryBlockAlloca(func, arg.getName().str());
+		llvm::AllocaInst * allocation = Builder.CreateAlloca(arg.getType(), 0, arg.getName().str());
 		Builder.CreateStore(&arg, allocation);
 		insertToTable(arg.getName().str(), allocation);
 		argNameIter++;

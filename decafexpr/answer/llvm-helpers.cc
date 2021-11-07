@@ -97,6 +97,16 @@ bool isExternType(llvm::Type * type) {
 	return (type == Builder.getInt8PtrTy() || isDecafType(type));
 }
 
+llvm::Type * getMainType() {
+	return llvm::FunctionType::get(llvm::IntegerType::get(TheContext, 32), false);
+}
+
+bool isMainReturnType(llvm::Type * type) {
+	return (type == getMainType());
+}
+
+
+
 
 // -- Getting constants
 llvm::Constant *initializeLLVMVal(val_type type, int initialVal) {
@@ -231,7 +241,7 @@ llvm::Function * defineMethod(
 	std::string funcName) 
 {
 	// Check if return type is valid
-	if(!isMethodType(returnTp)) {
+	if(!isMethodType(returnTp) && !isMainReturnType(returnTp)) {
 		throw runtime_error("Invalid return type for method");
 	}
 	// Validate arguments to make sure they are correct type

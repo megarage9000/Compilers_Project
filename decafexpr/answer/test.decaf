@@ -1,29 +1,18 @@
-
 extern func print_int(int) void;
-extern func print_string(string) void;
-extern func convert_string_to_int(int, string) int;
 
-func gcd(a int, b int) int {
-    var c int;
-    var d int;
-    d = 9;
-    c = d + 10;
-    d = a + b;
-    a = 11;
-    b = 12;
-    return(a + b + c + d);
-}
-
-func gad(a int, b int) bool {
-    var c int;
-    var d int;
-    c = a + b;
-    d = gcd(c, false);
-    return;
-}
-
-func dcd(a bool, c bool) bool {
-    var b bool;
-    b = !c && !a;
-    return(b);
+package Test {
+    func test3(a bool) void {
+        print_int(a);
+    }
+    func test2(a bool) void {
+        print_int(a);
+        test3(a);
+    }
+    func test1(a bool) void {
+        print_int(a);
+        test2(a);
+    }
+    func main() int {
+        test1(true);
+    }
 }

@@ -815,7 +815,12 @@ class Method_Decl: public decafStmtList {
 			);
 		}
 		funcName = id->str();
-		returnType = getLLVMType(return_type->get_type());
+		if(funcName == "main") {
+			returnType = getMainType();
+		}
+		else {
+			returnType = getLLVMType(return_type->get_type());
+		}
 		
 	}
 	string str() {
@@ -830,12 +835,12 @@ class Method_Decl: public decafStmtList {
 		setupFunc(funcVal, argNames);
 		// Define the block statements
 		funcBlock->Codegen();
-		if(!funcVal->willReturn() && funcVal->getReturnType() != Builder.getVoidTy()) {
+		// Will need to fix this problem
+		if(!funcVal->willReturn() && funcVal->getReturnType() != Builder.getVoidTy() && funcName != "main") {
 			Builder.CreateRet(initializeLLVMVal(returnType, 0));
 		}
 		popTable();
 		if(llvm::verifyFunction(*funcVal)) {
-			std::cout << "Function " << funcName << " is good!\n";
 		}
 		else {
 			throw runtime_error("Function " + funcName + " is invalid\n");

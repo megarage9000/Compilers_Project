@@ -3,6 +3,7 @@
 #include "decafexpr.tab.h"
 #include <cstring>
 #include <string>
+#include <cctype>
 #include <sstream>
 #include <iostream>
 
@@ -57,14 +58,18 @@ int escape_to_ascii(string escape_char) {
 }
 
 string get_actual_escape_char(string escape_char) {
-  if(escape_char == "\\a") return "\a";
-  if(escape_char == "\\b") return "\b";
-  if(escape_char == "\\t") return "\t";
-  if(escape_char == "\\n") return "\n";
-  if(escape_char == "\\v") return "\v";
-  if(escape_char == "\\f") return "\f";
-  if(escape_char == "\\r") return "\r";
-  return escape_char;
+  unsigned char actualChar = escape_char[1];
+  if(escape_char == "\\a") actualChar = '\a';
+  else if(escape_char == "\\b") actualChar = '\b';
+  else if(escape_char == "\\t") actualChar = '\t';
+  else if(escape_char == "\\n") actualChar = '\n';
+  else if(escape_char == "\\v") actualChar = '\v';
+  else if(escape_char == "\\f") actualChar = '\f';
+  else if(escape_char == "\\r") actualChar = '\r';
+  else if(escape_char == "\\") actualChar = '\\';
+  else if(escape_char == "\'") actualChar = '\'';
+  else if(escape_char == "\"") actualChar = '\"';
+  return std::string(1, actualChar);
 }
 
 #define YY_USER_ACTION  update_position();
@@ -201,7 +206,8 @@ while                      { return T_WHILE; }
   found_string.append(yytext);
   }
 <STRING>{escaped_char} {
-  found_string.append(std::string(yytext));
+  // Check this out https://stackoverflow.com/questions/2417588/escaping-a-c-string
+  found_string.append(get_actual_escape_char(yytext));
   }
   /*
     Integer Rules

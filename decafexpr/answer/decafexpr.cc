@@ -452,6 +452,9 @@ public:
 	}
 	llvm::Value *Codegen() {
 		// Check if the variable is already stored in the table, if not, define it
+		if(getValueFromTable(id, *(symbl_table_list.begin())) != nullptr) {
+			return nullptr;
+		} 
 		return defineVar(getLLVMType(tp), id);
 	}
 	string getId() {

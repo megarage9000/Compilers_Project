@@ -3,6 +3,7 @@
         "*.lex": "lex",
         "stdexcept": "cpp",
         "array": "cpp",
-        "string_view": "cpp"
+        "string_view": "cpp",
+        "thread": "cpp"
     }
 }

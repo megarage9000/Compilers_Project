@@ -206,7 +206,6 @@ while                      { return T_WHILE; }
   found_string.append(yytext);
   }
 <STRING>{escaped_char} {
-  // Check this out https://stackoverflow.com/questions/2417588/escaping-a-c-string
   found_string.append(get_actual_escape_char(yytext));
   }
   /*

@@ -9,9 +9,6 @@ typedef std::list<symTable> symTableList;
 
 static symTableList symbl_table_list;
 
-llvm::Value * getValueFromTopTable(std::string name) {
-	return getValueFromTable(name, *(symbl_table_list.begin()));
-}
 
 llvm::Value * getValueFromTable(std::string name, symTable tbl) {
   symTable::iterator it;
@@ -39,6 +36,10 @@ llvm::Value * getValueFromTables(std::string name) {
     }
   }
   return result;
+}
+
+llvm::Value * getValueFromTopTable(std::string name) {
+	return getValueFromTable(name, *(symbl_table_list.begin()));
 }
 
 void insertToTable(std::string name, llvm::Value * val) {
@@ -202,6 +203,17 @@ llvm::BasicBlock * createBasicBlockDefault() {
 		TheContext,
 		BLOCK_ENTRY_ID,
 		nullptr
+	);
+	insertToTable(BLOCK_ENTRY_ID, basicBlock);
+	return basicBlock;
+}
+
+// For blocks with custom entries
+llvm::BasicBlock * createBasicBlockWithLabel(llvm::Function * func, std::string label) {
+	llvm::BasicBlock * basicBlock = llvm::BasicBlock::Create(
+		TheContext,
+		label,
+		func
 	);
 	insertToTable(BLOCK_ENTRY_ID, basicBlock);
 	return basicBlock;
@@ -386,4 +398,26 @@ llvm::Value * getUnaryExp(llvm::Value * value, type_op operation_tp) {
 		default:
 			throw runtime_error("Invalid unary operation");
 	}
+}
+
+// Create custom basic blocks for control flow
+const std::string IF_ENTRY = "if";
+const std::string TRUE_ENTRY = "true";
+const std::string ELSE_ENTRY = "else";
+const std::string END_ENTRY = "end";
+
+llvm::BasicBlock * createIfBlock(llvm::Function * func) {
+	return createBasicBlockWithLabel(func, IF_ENTRY);
+}
+
+llvm::BasicBlock * createTrueBlock(llvm::Function * func) {
+	return createBasicBlockWithLabel(func, TRUE_ENTRY);
+}
+
+llvm::BasicBlock *  createEndBlock(llvm::Function * func) {
+	return createBasicBlockWithLabel(func, END_ENTRY);
+}
+
+llvm::BasicBlock * createElseBlock(llvm::Function * func) {
+	return createBasicBlockWithLabel(func, ELSE_ENTRY);
 }

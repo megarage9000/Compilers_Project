@@ -597,22 +597,71 @@ public:
 
 /// If else, For, While
 class If_Else: public decafStmtList {
+	Block * if_block, * else_block;
+	decafAST * val;
 public: 
 	If_Else(decafAST * expr, Block * if_blk) : decafStmtList() {
 		push_back(expr);
 		push_back(if_blk);
 		push_back(new decafStmtList());
+		if_block = if_blk;
+		else_block = nullptr;
+		val = expr;
 	}
 	If_Else(decafAST * expr, Block * if_blk, Block * else_blk) : decafStmtList() {
 		push_back(expr);
 		push_back(if_blk);
 		push_back(else_blk);
+		if_block = if_blk;
+		else_block = else_blk;
+		val = expr;
 	}
 	string str() {
 		return "IfStmt(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		// Get the conditional value of expr
+		llvm::Value * value = val->Codegen();
+		if(value == nullptr) {
+			throw runtime_error("Cannot evaluate value\n");
+		}
+		// Get parent function
+		llvm::Function * func = Builder.GetInsertBlock()->getParent();
+		if(func == nullptr) {
+			throw runtime_error("Cannot fetch parent function, is the if statement outside of a function?\n");
+		}
+
+		// Create Blocks
+		llvm::BasicBlock * ifStatementBB = createIfBlock(func);
+		Builder.CreateBr(ifStatementBB);
+		llvm::BasicBlock * trueBB = createTrueBlock(func);
+		llvm::BasicBlock * endBB = createEndBlock(func);
+
+		// Generate True block statment
+		Builder.SetInsertPoint(trueBB);
+		if_block->Codegen();
+		Builder.CreateBr(endBB);
+
+		// Create conditional branch
+		if(else_block != nullptr) {
+			// Generate Else block statement
+			llvm::BasicBlock * elseBB = createElseBlock(func);
+			Builder.SetInsertPoint(elseBB);
+			else_block->Codegen();
+			Builder.CreateBr(endBB);
+
+			// Creates a conditional branch between else and true
+			Builder.SetInsertPoint(ifStatementBB);
+			Builder.CreateCondBr(value, trueBB, elseBB);
+		}
+		else {
+			// Creates a conditional branch between true and end
+			Builder.SetInsertPoint(ifStatementBB);
+			Builder.CreateCondBr(value, trueBB, endBB);
+		}
+		Builder.SetInsertPoint(endBB);
+
+		return endBB;
 	}
 };
 

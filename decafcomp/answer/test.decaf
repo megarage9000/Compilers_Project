@@ -1,0 +1,32 @@
+extern func print_int(int) void;
+package test {
+
+    func main() int {
+        if_test();
+    }
+
+    func if_test() void {
+        var cond bool;
+        var a, b, c, d int;
+        cond = true;
+        if(cond) {
+            a = 5;
+            b = 2;
+            c = 3;
+            if(a + b > 3) {
+                b = b + 2;
+            }
+            else {
+                a = a + 2;
+            }
+        }
+        else{
+            a = 3;
+            b = 2;
+            c = 4;
+        }
+
+        d = (c * a) + b;
+        print_int(d);
+    }
+}

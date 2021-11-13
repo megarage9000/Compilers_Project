@@ -1,0 +1,8 @@
+package C {
+	var x int;
+
+    func main() void {
+        void;
+        print_string();
+	}
+}

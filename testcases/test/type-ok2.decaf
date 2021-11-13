@@ -1,0 +1,19 @@
+extern func print_string(string) void;
+package C {
+	var int x ;
+	var int y ;
+	var int z ;
+
+    func cr() void { print_string("\n"); }
+
+    func main() void {
+        var int x;
+        x = 10;
+        cr();
+        cr();
+        cr();
+        cr();
+        cr();
+        cr();
+	}
+}

@@ -42,6 +42,10 @@ llvm::Value * getValueFromTopTable(std::string name) {
 	return getValueFromTable(name, *(symbl_table_list.begin()));
 }
 
+llvm::Value * getValueFromSecondTopTable(std::string name) {
+	return getValueFromTable(name, *(++symbl_table_list.begin()));
+}
+
 void insertToTable(std::string name, llvm::Value * val) {
   std::pair<std::string, llvm::Value *> tuple (name ,val);
   symbl_table_list.begin()->insert(tuple);
@@ -344,50 +348,48 @@ typedef enum {
 } type_op;
 
 llvm::Value * getBinaryExp(llvm::Value * lval, llvm::Value * rval, type_op operation_tp) {
-
 	// TODO: handle correct types (int32s for arithmetic, int1s for booleans)
 	// - Currently we are gonna check if lval and rval are either int1s or int32s
-
 	llvm::Type * lvalType = lval->getType();
 	llvm::Type * rvalType = rval->getType();
-	if(!isDecafType(lvalType) || !isDecafType(rvalType)) {
-		throw runtime_error("Invalid types for operation");
+
+	if(lvalType == Builder.getInt32Ty() && rvalType == Builder.getInt32Ty()) {
+		switch(operation_tp) {
+			case PLUS:
+				return Builder.CreateAdd(lval, rval);
+			case MINUS:
+				return Builder.CreateSub(lval, rval);
+			case MULT:
+				return Builder.CreateMul(lval, rval);
+			case DIV:
+				return Builder.CreateSDiv(lval, rval);
+			case LEFT_SHIFT:
+				return Builder.CreateShl(lval, rval);
+			case RIGHT_SHIFT:
+				return Builder.CreateLShr(lval, rval);
+			case MOD:
+				return Builder.CreateSRem(lval, rval);
+			case LT:
+				return Builder.CreateICmpSLT(lval, rval);
+			case GT:
+				return Builder.CreateICmpSGT(lval, rval);
+			case LEQ:
+				return Builder.CreateICmpSLE(lval, rval);
+			case GEQ:
+				return Builder.CreateICmpSGE(lval, rval);
+			case EQ:
+				return Builder.CreateICmpEQ(lval, rval);
+			case NEQ:
+				return Builder.CreateICmpNE(lval, rval);
+			default:
+				throw runtime_error("Invalid binary operation for integers!");
+		}
 	}
-	switch(operation_tp) {
-		case PLUS:
-			return Builder.CreateAdd(lval, rval);
-		case MINUS:
-			return Builder.CreateSub(lval, rval);
-		case MULT:
-			return Builder.CreateMul(lval, rval);
-		case DIV:
-			return Builder.CreateSDiv(lval, rval);
-		case LEFT_SHIFT:
-			return Builder.CreateShl(lval, rval);
-		case RIGHT_SHIFT:
-			return Builder.CreateLShr(lval, rval);
-		case MOD:
-			return Builder.CreateSRem(lval, rval);
-		case LT:
-			return Builder.CreateICmpSLT(lval, rval);
-		case GT:
-			return Builder.CreateICmpSGT(lval, rval);
-		case LEQ:
-			return Builder.CreateICmpSLE(lval, rval);
-		case GEQ:
-			return Builder.CreateICmpSGE(lval, rval);
-		case EQ:
-			return Builder.CreateICmpEQ(lval, rval);
-		case NEQ:
-			return Builder.CreateICmpNE(lval, rval);
-		case AND:
-			return Builder.CreateAnd(lval, rval);
-		case OR:
-			return Builder.CreateOr(lval, rval);
-		default:
-			throw runtime_error("Invalid binary operation!");
+	else{
+		return nullptr;
 	}
 }
+
 
 llvm::Value * getUnaryExp(llvm::Value * value, type_op operation_tp) {
 	switch(operation_tp) {
@@ -420,4 +422,26 @@ llvm::BasicBlock *  createEndBlock(llvm::Function * func) {
 
 llvm::BasicBlock * createElseBlock(llvm::Function * func) {
 	return createBasicBlockWithLabel(func, ELSE_ENTRY);
+}
+
+// Create custom basic blocks for short-circuit
+const std::string SC_START = "scstart";
+const std::string PHI_ENTRY = "scend";
+const std::string OR_ENTRY = "scbegin_or";
+const std::string AND_ENTRY = "scend_and";
+
+llvm::BasicBlock * createShortStartBlock(llvm::Function * func) {
+	return createBasicBlockWithLabel(func, SC_START);
+}
+
+llvm::BasicBlock * createPhiBlock(llvm::Function * func) {
+	return createBasicBlockWithLabel(func, PHI_ENTRY);
+}
+
+llvm::BasicBlock * createOrBlock(llvm::Function * func) {
+	return createBasicBlockWithLabel(func, OR_ENTRY);
+}
+
+llvm::BasicBlock * createAndBlock(llvm::Function * func) {
+	return createBasicBlockWithLabel(func, AND_ENTRY);
 }

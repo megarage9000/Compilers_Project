@@ -282,12 +282,64 @@ public:
 		return "BinaryExpr(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		llvm::Value * lval = lvalexpr->Codegen();
-		llvm::Value * rval = rvalexpr->Codegen();
-		if(lval == rval && lval == nullptr) {
-			return nullptr;
+		if(operation == AND || operation == OR) {
+			llvm::Function * func = Builder.GetInsertBlock()->getParent();
+			if(func == nullptr) {
+				throw runtime_error("Cannot fetch parent function, is the if statement outside of a function?\n");
+			}
+			llvm::Value * lval = lvalexpr->Codegen();
+
+			// Generate lval / start of short circuit
+			llvm::BasicBlock * shortCircBB = createShortStartBlock(func);
+			Builder.CreateBr(shortCircBB);
+			// Builder.SetInsertPoint(shortCircBB);
+
+			// Generate block that will set the phiVal
+			llvm::BasicBlock * phiBB = createPhiBlock(func);
+			
+			// Generate block that does the binary bool operation
+			llvm::BasicBlock * opBB;
+			llvm::Value * opVal;
+			if(operation == OR) {
+				opBB = createOrBlock(func);
+				Builder.SetInsertPoint(opBB);
+				opVal = rvalexpr->Codegen();
+				Builder.CreateOr(lval, opVal);
+			 	Builder.CreateBr(phiBB);
+
+				// Go back to currBB and do the conditional branching
+				Builder.SetInsertPoint(shortCircBB);
+				// OR: If lval true, assume true. Else evaluate lval or rval
+				Builder.CreateCondBr(lval, phiBB, opBB);
+			}
+			else {
+				opBB = createAndBlock(func);
+				Builder.SetInsertPoint(opBB);
+				opVal = rvalexpr->Codegen();
+				Builder.CreateAnd(lval, opVal);
+			 	Builder.CreateBr(phiBB);
+
+				// Go back to currBB and do the conditional branching
+				Builder.SetInsertPoint(shortCircBB);
+				// AND: If lval true, evaluate lval and rval. Else assume false
+				Builder.CreateCondBr(lval, opBB, phiBB);
+			}
+			// Now finish up the phi block
+			Builder.SetInsertPoint(phiBB);
+			llvm::PHINode * val = Builder.CreatePHI(Builder.getInt1Ty(), 2, "phival");
+			val->addIncoming(lval, shortCircBB);
+			val->addIncoming(opVal, opBB);
+
+			return val;
 		}
-		return getBinaryExp(lval, rval, operation);
+		else {
+			llvm::Value * lval = lvalexpr->Codegen();
+			llvm::Value * rval = rvalexpr->Codegen();
+			if(lval == rval && lval == nullptr) {
+				return nullptr;
+			}
+			return getBinaryExp(lval, rval, operation);
+		}
 	}
 };
 
@@ -453,8 +505,9 @@ public:
 	llvm::Value *Codegen() {
 		// Check if the variable is already stored in the table, if not, define it
 		if(getValueFromTopTable(id) != nullptr) {
-			return nullptr;
+			throw runtime_error("variable " + id + " is already defined\n");
 		} 
+
 		return defineVar(getLLVMType(tp), id);
 	}
 	string getId() {
@@ -833,8 +886,11 @@ class Method_Decl: public decafStmtList {
 		// Check function if it has a valid return value, if not add a default value
 		checkFxn(funcVal);
 		popTable();
-		if(llvm::verifyFunction(*funcVal)) {
-			throw runtime_error("Function " + funcName + " is invalid\n");
+		llvm::raw_ostream &output = llvm::outs();
+		
+		if(llvm::verifyFunction(*funcVal, &output)) {
+			//throw runtime_error("Function " + funcName + " is invalid\n");
+			std::cout << "Function " << funcName << " is not valid\n";
 		}
 		return funcVal;
 	}

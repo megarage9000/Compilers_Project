@@ -2,8 +2,13 @@ extern func print_int(int) void;
 package test {
 
     func main() int {
-        var x int;
-        x = 8 + 10 - 11 * 12;
-        print_int(x);
+        var a, b, c, d bool;
+        a = true;
+        b = false;
+        c = true;
+        d = a && c || b;
+        if(d) {
+            print_int(1);
+        }
     }
 }

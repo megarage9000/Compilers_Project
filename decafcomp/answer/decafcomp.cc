@@ -287,50 +287,46 @@ public:
 			if(func == nullptr) {
 				throw runtime_error("Cannot fetch parent function, is the if statement outside of a function?\n");
 			}
-			llvm::Value * lval = lvalexpr->Codegen();
-
-			// Generate lval / start of short circuit
-			llvm::BasicBlock * shortCircBB = createShortStartBlock(func);
-			Builder.CreateBr(shortCircBB);
-			// Builder.SetInsertPoint(shortCircBB);
-
-			// Generate block that will set the phiVal
-			llvm::BasicBlock * phiBB = createPhiBlock(func);
 			
-			// Generate block that does the binary bool operation
-			llvm::BasicBlock * opBB;
-			llvm::Value * opVal;
-			if(operation == OR) {
-				opBB = createOrBlock(func);
-				Builder.SetInsertPoint(opBB);
-				opVal = rvalexpr->Codegen();
-				Builder.CreateOr(lval, opVal);
-			 	Builder.CreateBr(phiBB);
+			llvm::BasicBlock * curBB = Builder.GetInsertBlock();
+			llvm::BasicBlock * phiBB = createPhiBlock(func);
+			llvm::Value * lval = lvalexpr->Codegen();
+			if(operation == AND) {
+				llvm::BasicBlock * andBB = createAndBlock(func);
+				Builder.CreateCondBr(lval, andBB, phiBB);
 
-				// Go back to currBB and do the conditional branching
-				Builder.SetInsertPoint(shortCircBB);
-				// OR: If lval true, assume true. Else evaluate lval or rval
-				Builder.CreateCondBr(lval, phiBB, opBB);
+				// Setup AND basic block
+				Builder.SetInsertPoint(andBB);
+				llvm::Value * rval = rvalexpr->Codegen();
+				llvm::Value * andVal = Builder.CreateAnd(lval, rval);
+				Builder.CreateBr(phiBB);
+
+				//Setup PHI basic block
+				Builder.SetInsertPoint(phiBB);
+				llvm::PHINode * boolVal = Builder.CreatePHI(Builder.getInt1Ty(), 2, "phival");
+				boolVal->addIncoming(lval, curBB);
+				boolVal->addIncoming(andVal, andBB);
+				return boolVal;
 			}
 			else {
-				opBB = createAndBlock(func);
-				Builder.SetInsertPoint(opBB);
-				opVal = rvalexpr->Codegen();
-				Builder.CreateAnd(lval, opVal);
-			 	Builder.CreateBr(phiBB);
+				llvm::BasicBlock * orBB = createOrBlock(func);
+				Builder.CreateCondBr(lval, phiBB, orBB);
 
-				// Go back to currBB and do the conditional branching
-				Builder.SetInsertPoint(shortCircBB);
-				// AND: If lval true, evaluate lval and rval. Else assume false
-				Builder.CreateCondBr(lval, opBB, phiBB);
+				// Setup OR basic block
+				Builder.SetInsertPoint(orBB);
+				llvm::Value * rval = rvalexpr->Codegen();
+				llvm::Value * orVal = Builder.CreateOr(lval, rval);
+				Builder.CreateBr(phiBB);
+
+				//Setup PHI basic block
+				Builder.SetInsertPoint(phiBB);
+				llvm::PHINode * boolVal = Builder.CreatePHI(Builder.getInt1Ty(), 2, "phival");
+				boolVal->addIncoming(lval, curBB);
+				boolVal->addIncoming(orVal, orBB);
+				return boolVal;
 			}
-			// Now finish up the phi block
-			Builder.SetInsertPoint(phiBB);
-			llvm::PHINode * val = Builder.CreatePHI(Builder.getInt1Ty(), 2, "phival");
-			val->addIncoming(lval, shortCircBB);
-			val->addIncoming(opVal, opBB);
 
-			return val;
+
 		}
 		else {
 			llvm::Value * lval = lvalexpr->Codegen();

@@ -12,7 +12,7 @@ int yyerror(char *);
 int yylex_destroy(void);
 
 // print AST?
-bool printAST = true;
+bool printAST = false;
 
 
 using namespace std;

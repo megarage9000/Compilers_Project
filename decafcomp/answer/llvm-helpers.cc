@@ -425,12 +425,12 @@ llvm::BasicBlock * createElseBlock(llvm::Function * func) {
 }
 
 // Create custom basic blocks for short-circuit
-const std::string SC_START = "scstart";
-const std::string PHI_ENTRY = "scend";
-const std::string OR_ENTRY = "scbegin_or";
-const std::string AND_ENTRY = "scend_and";
+const std::string SC_START = "scblk";
+const std::string PHI_ENTRY = "phiblk";
+const std::string OR_ENTRY = "orblk";
+const std::string AND_ENTRY = "andblk";
 
-llvm::BasicBlock * createShortStartBlock(llvm::Function * func) {
+llvm::BasicBlock * createShortCircBlock(llvm::Function * func) {
 	return createBasicBlockWithLabel(func, SC_START);
 }
 

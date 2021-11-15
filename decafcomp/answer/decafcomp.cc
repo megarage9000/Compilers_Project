@@ -288,45 +288,53 @@ public:
 				throw runtime_error("Cannot fetch parent function, is the if statement outside of a function?\n");
 			}
 			
-			llvm::BasicBlock * curBB = Builder.GetInsertBlock();
-			llvm::BasicBlock * phiBB = createPhiBlock(func);
 			llvm::Value * lval = lvalexpr->Codegen();
-			if(operation == AND) {
-				llvm::BasicBlock * andBB = createAndBlock(func);
-				Builder.CreateCondBr(lval, andBB, phiBB);
-
-				// Setup AND basic block
-				Builder.SetInsertPoint(andBB);
+			llvm::BasicBlock * phiBB = createPhiBlock(func);
+			llvm::BasicBlock * curBB = Builder.GetInsertBlock();
+			llvm::BasicBlock * scBB = createShortCircBlock(func);
+			
+			// Set default block
+			Builder.SetInsertPoint(scBB);
+			llvm::AllocaInst * defVal = defineVar(Builder.getInt1Ty(), "defVal");
+			assignVal(defVal, lval);
+			llvm::Value * scVal = Builder.CreateLoad(defVal, "scVal");
+			Builder.CreateBr(phiBB);
+			
+			// Set bool block
+			llvm::BasicBlock * opBB;
+			llvm::Value * opVal;		
+			llvm::BasicBlock * resultingBB;	
+			if(operation == OR) {
+				opBB = createOrBlock(func);
+				Builder.SetInsertPoint(opBB);
 				llvm::Value * rval = rvalexpr->Codegen();
-				llvm::Value * andVal = Builder.CreateAnd(lval, rval);
-				Builder.CreateBr(phiBB);
+				opVal = Builder.CreateOr(lval, rval);
 
-				//Setup PHI basic block
-				Builder.SetInsertPoint(phiBB);
-				llvm::PHINode * boolVal = Builder.CreatePHI(Builder.getInt1Ty(), 2, "phival");
-				boolVal->addIncoming(lval, curBB);
-				boolVal->addIncoming(andVal, andBB);
-				return boolVal;
+				// Fetch the resulting block from the operation to match phinode
+				resultingBB = Builder.GetInsertBlock();
+				Builder.CreateBr(phiBB);
+				Builder.SetInsertPoint(curBB);
+				Builder.CreateCondBr(lval, scBB, opBB);
 			}
 			else {
-				llvm::BasicBlock * orBB = createOrBlock(func);
-				Builder.CreateCondBr(lval, phiBB, orBB);
-
-				// Setup OR basic block
-				Builder.SetInsertPoint(orBB);
+				opBB = createAndBlock(func);
+				Builder.SetInsertPoint(opBB);
 				llvm::Value * rval = rvalexpr->Codegen();
-				llvm::Value * orVal = Builder.CreateOr(lval, rval);
-				Builder.CreateBr(phiBB);
+				opVal = Builder.CreateAnd(lval, rval);
 
-				//Setup PHI basic block
-				Builder.SetInsertPoint(phiBB);
-				llvm::PHINode * boolVal = Builder.CreatePHI(Builder.getInt1Ty(), 2, "phival");
-				boolVal->addIncoming(lval, curBB);
-				boolVal->addIncoming(orVal, orBB);
-				return boolVal;
+				// Fetch the resulting block from the operation to match phinode
+				resultingBB = Builder.GetInsertBlock();
+				Builder.CreateBr(phiBB);
+				Builder.SetInsertPoint(curBB);
+				Builder.CreateCondBr(lval, opBB, scBB);
 			}
 
-
+			// Set up phi block
+			Builder.SetInsertPoint(phiBB);
+			llvm::PHINode * val = Builder.CreatePHI(Builder.getInt1Ty(), 2, "phival");
+			val->addIncoming(scVal, scBB);
+			val->addIncoming(opVal, resultingBB);
+			return val;
 		}
 		else {
 			llvm::Value * lval = lvalexpr->Codegen();

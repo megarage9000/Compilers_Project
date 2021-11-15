@@ -6,7 +6,7 @@ package test {
         a = true;
         b = false;
         c = true;
-        d = a && c || b;
+        d = a || c && b;
         if(d) {
             print_int(1);
         }

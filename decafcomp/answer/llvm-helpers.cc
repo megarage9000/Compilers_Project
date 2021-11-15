@@ -16,6 +16,7 @@ llvm::Value * getValueFromTable(std::string name, symTable tbl) {
 	  return nullptr;
   }
   for(it = tbl.begin(); it != tbl.end(); it++){
+	  std::cout << "id = " << it->first << '\n';
     if(it->first == name) {
       return it->second;
     }
@@ -219,7 +220,7 @@ llvm::BasicBlock * createBasicBlockWithLabel(llvm::Function * func, std::string 
 		label,
 		func
 	);
-	insertToTable(BLOCK_ENTRY_ID, basicBlock);
+	insertToTable(label, basicBlock);
 	return basicBlock;
 }
 
@@ -411,6 +412,7 @@ const std::string TRUE_ENTRY = "true";
 const std::string ELSE_ENTRY = "else";
 const std::string NEXT_ENTRY = "next";
 const std::string END_ENTRY = "end";
+const std::string END_LOOP_ENTRY = "end_loop";
 
 llvm::BasicBlock * createIfBlock(llvm::Function * func) {
 	return createBasicBlockWithLabel(func, IF_ENTRY);
@@ -444,12 +446,17 @@ llvm::BasicBlock *  createEndBlock(llvm::Function * func) {
 	return createBasicBlockWithLabel(func, END_ENTRY);
 }
 
-llvm::BasicBlock * getLoopEntryBlock() {
-	llvm::BasicBlock * entryBlock = (llvm::BasicBlock *)getValueFromSecondTopTable(FOR_ENTRY);
-	if(entryBlock == nullptr) {
-		return (llvm::BasicBlock*)getValueFromSecondTopTable(WHILE_ENTRY);
-	}
-	return entryBlock;
+llvm::BasicBlock *  createEndLoopBlock(llvm::Function * func) {
+	return createBasicBlockWithLabel(func, END_LOOP_ENTRY);
+}
+
+
+llvm::BasicBlock * getNextEntryBlock() {
+	return (llvm::BasicBlock *)getValueFromTables(NEXT_ENTRY);
+}
+
+llvm::BasicBlock * getEndLoopBlock() {
+	return (llvm::BasicBlock *)getValueFromTables(END_LOOP_ENTRY);
 }
 
 // Create custom basic blocks for short-circuit

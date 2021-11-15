@@ -749,7 +749,8 @@ public:
 		// Create blocks for labels
 		llvm::BasicBlock * forEntry = createForEntryBlock(func);
 		llvm::BasicBlock * loopBlock = createLoopBlock(func);
-		llvm::BasicBlock * endBlock = createEndBlock(func);
+		llvm::BasicBlock * nextBlock = createNextBlock(func);
+		llvm::BasicBlock * endBlock = createEndLoopBlock(func);
 		init->Codegen();
 		Builder.CreateBr(forEntry);
 
@@ -764,6 +765,9 @@ public:
 		// Set up loop block
 		Builder.SetInsertPoint(loopBlock);
 		loop->Codegen();
+		Builder.CreateBr(nextBlock);
+		// Set up increment block
+		Builder.SetInsertPoint(nextBlock);
 		increm->Codegen();
 		Builder.CreateBr(forEntry);
 
@@ -817,7 +821,11 @@ public:
 		return "ContinueStmt";
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		llvm::BasicBlock * label = getNextEntryBlock();
+		if(label == nullptr) {
+			throw runtime_error("Could not find a loop entry label, are you inside a while / for loop?\n");
+		}
+		return Builder.CreateBr(label);
 	}
 };
 
@@ -829,7 +837,11 @@ public:
 		return "BreakStmt";
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		llvm::BasicBlock * label = getEndLoopBlock();
+		if(label == nullptr) {
+			throw runtime_error("Could not find a end entry label, are you inside a while / for loop?\n");
+		}
+		return Builder.CreateBr(label);
 	}
 };
 

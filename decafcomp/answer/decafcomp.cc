@@ -724,8 +724,14 @@ public:
 
 /// At this point, most loops are decafstmtlists
 class For_Loop: public decafStmtList {
+	decafAST * init, * exp, *increm;
+	Block * loop;
 public:
 	For_Loop(decafAST * assign, decafAST * expression, decafAST * after_assign, Block * block) : decafStmtList(){
+		init = assign;
+		exp = expression;
+		increm = after_assign;
+		loop = block;
 		push_back(assign);
 		push_back(expression);
 		push_back(after_assign);
@@ -735,7 +741,35 @@ public:
 		return "ForStmt(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		llvm::Function * func = Builder.GetInsertBlock()->getParent();	
+		if(func == nullptr) {
+			throw runtime_error("Cannot fetch parent function, is the if statement outside of a function?\n");
+		}
+
+		// Create blocks for labels
+		llvm::BasicBlock * forEntry = createForEntryBlock(func);
+		llvm::BasicBlock * loopBlock = createLoopBlock(func);
+		llvm::BasicBlock * endBlock = createEndBlock(func);
+		init->Codegen();
+		Builder.CreateBr(forEntry);
+
+		// Set up cond branch on for expression
+		Builder.SetInsertPoint(forEntry);
+		llvm::Value * expVal = exp->Codegen();
+		if(expVal->getType() != Builder.getInt1Ty()) {
+			throw runtime_error("Invalid terminating condition for the for-loop\n");
+		}
+		Builder.CreateCondBr(expVal, loopBlock, endBlock);
+
+		// Set up loop block
+		Builder.SetInsertPoint(loopBlock);
+		loop->Codegen();
+		increm->Codegen();
+		Builder.CreateBr(forEntry);
+
+		// Set everything back to end block
+		Builder.SetInsertPoint(endBlock);
+		return endBlock;
 	}
 };
 

@@ -404,24 +404,52 @@ llvm::Value * getUnaryExp(llvm::Value * value, type_op operation_tp) {
 
 // Create custom basic blocks for control flow
 const std::string IF_ENTRY = "if";
+const std::string FOR_ENTRY = "for";
+const std::string WHILE_ENTRY = "while";
+const std::string LOOP_ENTRY = "loop";
 const std::string TRUE_ENTRY = "true";
 const std::string ELSE_ENTRY = "else";
+const std::string NEXT_ENTRY = "next";
 const std::string END_ENTRY = "end";
 
 llvm::BasicBlock * createIfBlock(llvm::Function * func) {
 	return createBasicBlockWithLabel(func, IF_ENTRY);
 }
 
+llvm::BasicBlock * createForEntryBlock(llvm::Function * func) {
+	return createBasicBlockWithLabel(func, FOR_ENTRY);
+}
+
+llvm::BasicBlock * createWhileEntryBlock(llvm::Function * func) {
+	return createBasicBlockWithLabel(func, WHILE_ENTRY);
+}
+
+llvm::BasicBlock * createLoopBlock(llvm::Function * func) {
+	return createBasicBlockWithLabel(func, LOOP_ENTRY);
+}
+
 llvm::BasicBlock * createTrueBlock(llvm::Function * func) {
 	return createBasicBlockWithLabel(func, TRUE_ENTRY);
+}
+
+llvm::BasicBlock * createElseBlock(llvm::Function * func) {
+	return createBasicBlockWithLabel(func, ELSE_ENTRY);
+}
+
+llvm::BasicBlock * createNextBlock(llvm::Function * func) {
+	return createBasicBlockWithLabel(func, NEXT_ENTRY);
 }
 
 llvm::BasicBlock *  createEndBlock(llvm::Function * func) {
 	return createBasicBlockWithLabel(func, END_ENTRY);
 }
 
-llvm::BasicBlock * createElseBlock(llvm::Function * func) {
-	return createBasicBlockWithLabel(func, ELSE_ENTRY);
+llvm::BasicBlock * getLoopEntryBlock() {
+	llvm::BasicBlock * entryBlock = (llvm::BasicBlock *)getValueFromSecondTopTable(FOR_ENTRY);
+	if(entryBlock == nullptr) {
+		return (llvm::BasicBlock*)getValueFromSecondTopTable(WHILE_ENTRY);
+	}
+	return entryBlock;
 }
 
 // Create custom basic blocks for short-circuit

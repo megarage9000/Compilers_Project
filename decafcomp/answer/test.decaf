@@ -1,14 +1,10 @@
 extern func print_int(int) void;
-package test {
 
+package C {
     func main() int {
-        var a, b, c, d bool;
-        a = true;
-        b = false;
-        c = true;
-        d = a || c && b;
-        if(d) {
-            print_int(1);
+        var i int;
+        for (i = 0; i < 10; i = i + 1) {
+          print_int(i);
         }
     }
 }

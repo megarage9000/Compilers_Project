@@ -151,10 +151,26 @@ llvm::Value * promoteBoolToInt(llvm::Value ** val) {
 	return nullptr;
 }
 
+// -- Assignments
+void assignVal(llvm::AllocaInst* lval, llvm::Value * rval) {
+	const llvm::PointerType * rvalType = rval->getType()->getPointerTo();
+	const llvm::PointerType * lvalType = lval->getType();
+	if(rvalType == lvalType) {
+		Builder.CreateStore(rval, lval);
+	}
+}
+
 // -- Local Variables
 llvm::AllocaInst * defineVar(llvm::Type * tp, std::string id) {
 	llvm::AllocaInst * allocation = Builder.CreateAlloca(tp, 0, id.c_str());
 	insertToTable(std::string(id), allocation);
+	// Zero initialization
+	if(tp == Builder.getInt1Ty()) {
+		assignVal(allocation, initializeLLVMVal(tp, 1));
+	}
+	else {
+		assignVal(allocation, initializeLLVMVal(tp, 0));
+	}
 	return allocation;
 
 }
@@ -166,14 +182,53 @@ llvm::Value * useVar(std::string id) {
 	return Builder.CreateLoad(val, id.c_str());
 }
 
-// -- Assignments
-void assignVal(llvm::AllocaInst* lval, llvm::Value * rval) {
-	const llvm::PointerType * rvalType = rval->getType()->getPointerTo();
-	const llvm::PointerType * lvalType = lval->getType();
-	if(rvalType == lvalType) {
-		Builder.CreateStore(rval, lval);
+// -- Global Variables
+llvm::GlobalVariable * declareGlobal(std::string id, llvm::Type * tp) {
+	if(isDecafType(tp)) {
+		llvm::Constant * zeroInit;
+		if(tp == Builder.getInt1Ty()) {
+			zeroInit = initializeLLVMVal(tp, 1);
+		}
+		else {
+			zeroInit = initializeLLVMVal(tp, 0);
+		}
+		llvm::GlobalVariable * globalVar = new llvm::GlobalVariable(
+			*TheModule,
+			tp,
+			false,
+			llvm::GlobalVariable::InternalLinkage,
+			zeroInit,
+			id
+		);
+		insertToTable(id, globalVar);
+		return globalVar;
+	}
+	else{
+		return nullptr;
 	}
 }
+
+llvm::GlobalVariable * declareGlobalArr(std::string id, llvm::Type * tp, int size) {
+	if(isDecafType(tp)) {
+		llvm::ArrayType * array = llvm::ArrayType::get(tp, size);
+		llvm::Constant * zeroInit = llvm::Constant::getNullValue(array);
+		llvm::GlobalVariable * globalVar = new llvm::GlobalVariable(
+			*TheModule,
+			array,
+			false,
+			llvm::GlobalVariable::ExternalLinkage,
+			zeroInit,
+			id
+		);
+		insertToTable(id, globalVar);
+		return globalVar;
+	}
+	else{
+		return nullptr;
+	}
+}
+
+
 
 // -- Blocks
 std::stack<llvm::BasicBlock *> blockStack;

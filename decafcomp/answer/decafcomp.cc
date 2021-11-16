@@ -539,30 +539,54 @@ decafStmtList * vector_to_var_defs(string_vector * str_vector, Type * type) {
 /// Field declarations
 class Field_Size : public decafAST {
 	string size;
+	// Temporary fix
+	int val;
 public: 
-	Field_Size() {size = "Scalar";}
-	Field_Size(string sz) {
-		size = sz;
+	Field_Size() {
+		size = "Scalar";
+		val = -1;
+	}
+	Field_Size(int value) {
+		if(value == -1) {
+			size = "Scalar";
+		}
+		else {
+			size = "Array(" + std::to_string(val) + ")";
+		}
+		val = value;
 	}
 	Field_Size(Int_Constant * arrsize) {
 		size = "Array(" + std::to_string(arrsize->get_val()) + ")";
+		val = arrsize->get_val();
 	}
 	string str() {
 		return size;
 	} 
+	int get_val() {
+		return val;
+	}
 	llvm::Value *Codegen() {
 		return nullptr;
 	}
 };
 
 class Field_Decl : public decafStmtList{
+	int size;
+	string name;
+	llvm::Type * tp;
 public:
 	Field_Decl(Identifier * id, Type * type, Field_Size * sz) : decafStmtList(){
+		size = sz->get_val();
+		name = id->str();
+		tp = getLLVMType(type->get_type());
 		push_back(id);
 		push_back(type);
 		push_back(sz);
 	}
 	Field_Decl(Identifier * id, Type * type) : decafStmtList() {
+		size = -1;
+		name = id->str();
+		tp = getLLVMType(type->get_type());
 		push_back(id);
 		push_back(type);
 		push_back(new Field_Size());
@@ -571,7 +595,12 @@ public:
 		return "FieldDecl(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		if(size == -1){
+			return declareGlobal(name, tp);
+		}
+		else {
+			return declareGlobalArr(name, tp, size);
+		}
 	}
 };
 
@@ -582,7 +611,7 @@ decafStmtList * vector_to_field_decls(string_vector * str_vector, Type * type, F
 		field_decls->push_back(new Field_Decl(
 			new Identifier(id),
 			new Type(type->get_type()),
-			new Field_Size(sz->str())
+			new Field_Size(sz->get_val())
 		));
 	}
 	return field_decls;
@@ -773,6 +802,7 @@ public:
 		Builder.SetInsertPoint(loopBlock);
 		loop->Codegen();
 		Builder.CreateBr(nextBlock);
+
 		// Set up increment block
 		Builder.SetInsertPoint(nextBlock);
 		increm->Codegen();

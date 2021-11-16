@@ -1,6 +1,13 @@
 extern func print_int(int) void;
 
+
+
 package C {
+    var a int;
+    var b [100] bool;
+    var c bool;
+    var d [100] int;
+
     func main() int {
         var i int;
         var j int;

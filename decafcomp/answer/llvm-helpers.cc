@@ -16,8 +16,7 @@ llvm::Value * getValueFromTable(std::string name, symTable tbl) {
 	  return nullptr;
   }
   for(it = tbl.begin(); it != tbl.end(); it++){
-	  std::cout << "id = " << it->first << '\n';
-    if(it->first == name) {
+	if(it->first == name) {
       return it->second;
     }
   }

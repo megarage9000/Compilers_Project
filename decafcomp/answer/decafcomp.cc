@@ -677,11 +677,7 @@ public:
 		return "IfStmt(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		// Get the conditional value of expr
-		llvm::Value * value = val->Codegen();
-		if(value == nullptr) {
-			throw runtime_error("Cannot evaluate value\n");
-		}
+		
 		// Get parent function
 		llvm::Function * func = Builder.GetInsertBlock()->getParent();
 		if(func == nullptr) {
@@ -694,10 +690,19 @@ public:
 		llvm::BasicBlock * trueBB = createTrueBlock(func);
 		llvm::BasicBlock * endBB = createEndBlock(func);
 
+		Builder.SetInsertPoint(ifStatementBB);
+		// Get the conditional value of expr
+		llvm::Value * value = val->Codegen();
+		if(value == nullptr) {
+			throw runtime_error("Cannot evaluate value\n");
+		}
+
 		// Generate True block statment
 		Builder.SetInsertPoint(trueBB);
 		if_block->Codegen();
-		Builder.CreateBr(endBB);
+		if(trueBB->getTerminator() == nullptr) {
+			Builder.CreateBr(endBB);
+		}
 
 		// Create conditional branch
 		if(else_block != nullptr) {
@@ -705,7 +710,9 @@ public:
 			llvm::BasicBlock * elseBB = createElseBlock(func);
 			Builder.SetInsertPoint(elseBB);
 			else_block->Codegen();
-			Builder.CreateBr(endBB);
+			if(elseBB->getTerminator() == nullptr) {
+				Builder.CreateBr(endBB);
+			}
 
 			// Creates a conditional branch between else and true
 			Builder.SetInsertPoint(ifStatementBB);
@@ -778,8 +785,12 @@ public:
 };
 
 class While_Loop: public decafStmtList {
+	decafAST * exprAST;
+	Block * loop;
 public:
 	While_Loop(decafAST * expression, Block * block) : decafStmtList(){
+		exprAST = expression;
+		loop = block;
 		push_back(expression);
 		push_back(block);
 	}
@@ -787,7 +798,31 @@ public:
 		return "WhileStmt(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		llvm::Function * func = Builder.GetInsertBlock()->getParent();	
+		if(func == nullptr) {
+			throw runtime_error("Cannot fetch parent function, is the if statement outside of a function?\n");
+		}
+
+		llvm::BasicBlock * whileEntry = createWhileEntryBlock(func);
+		llvm::BasicBlock * loopBlock = createLoopBlock(func);
+		llvm::BasicBlock * endBlock = createEndLoopBlock(func);
+		Builder.CreateBr(whileEntry);
+
+		Builder.SetInsertPoint(whileEntry);
+		llvm::Value * expVal = exprAST->Codegen();
+		if(expVal->getType() != Builder.getInt1Ty()) {
+			throw runtime_error("Invalid terminating condition for the for-loop\n");
+		}
+		Builder.CreateCondBr(expVal, loopBlock, endBlock);
+
+		// Set up loop block
+		Builder.SetInsertPoint(loopBlock);
+		loop->Codegen();
+		Builder.CreateBr(whileEntry);
+
+		Builder.SetInsertPoint(endBlock);
+		return endBlock;
+
 	}
 };
 
@@ -933,14 +968,15 @@ class Method_Decl: public decafStmtList {
 		setupFunc(funcVal, argNames);
 		// Define the block statements
 		funcBlock->Codegen();
-		// Check function if it has a valid return value, if not add a default value
 		checkFxn(funcVal);
+		// Check function if it has a valid return value, if not add a default value
 		popTable();
 		llvm::raw_ostream &output = llvm::outs();
 		
 		if(llvm::verifyFunction(*funcVal, &output)) {
 			//throw runtime_error("Function " + funcName + " is invalid\n");
 			std::cout << "Function " << funcName << " is not valid\n";
+			
 		}
 		return funcVal;
 	}

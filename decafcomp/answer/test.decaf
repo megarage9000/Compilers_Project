@@ -16,6 +16,9 @@ package C {
         var k int;
         a = 10;
         c = false;
+        a = d[1] + d[2];
+        b[1] = true;
+        b[2] = false;
         for (i = 0, j = 0, k = 0; i < 10 && j < 10 && j < 10; i = i +1, j = j+1, k=k+1) {
             if(i == 5) {
                 continue;

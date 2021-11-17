@@ -394,8 +394,13 @@ public:
 };
 
 class Assign_Arr_Loc: public decafStmtList {
+	string name;
+	decafAST * idx, * val;
 public:
 	Assign_Arr_Loc(Identifier * id, decafAST * index, decafAST * expression) : decafStmtList() {
+		name = id->str();
+		idx = index;
+		val = expression;
 		push_back(id);
 		push_back(index);
 		push_back(expression);
@@ -404,6 +409,15 @@ public:
 		return "AssignArrayLoc(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
+		llvm::Value * arrayLocation = useArrLoc(name, idx->Codegen());
+		llvm::Value * rval = val->Codegen();
+		if(arrayLocation->getType()->getPointerElementType() == rval->getType()) {
+			return Builder.CreateStore(rval, arrayLocation);
+		}
+		else{
+			throw runtime_error("invalid type\n");
+		}
+	
 		return nullptr;
 	}
 };
@@ -421,9 +435,13 @@ public:
 	}
 };
 
-class Arr_Loc_Expr: public decafStmtList{;
+class Arr_Loc_Expr: public decafStmtList{
+	string name;
+	decafAST * exp;
 public:
 	Arr_Loc_Expr(Identifier * id, decafAST * expression) : decafStmtList(){
+		name = id->str();
+		exp = expression;
 		push_back(id);
 		push_back(expression);
 	}
@@ -431,7 +449,7 @@ public:
 		return "ArrayLocExpr(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		return Builder.CreateLoad(useArrLoc(name, exp->Codegen()), name + "tmp");
 	}
 };
 
@@ -846,6 +864,7 @@ public:
 
 		llvm::BasicBlock * whileEntry = createWhileEntryBlock(func);
 		llvm::BasicBlock * loopBlock = createLoopBlock(func);
+		llvm::BasicBlock * nextBlock = createNextBlock(func);
 		llvm::BasicBlock * endBlock = createEndLoopBlock(func);
 		Builder.CreateBr(whileEntry);
 

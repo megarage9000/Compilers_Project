@@ -160,6 +160,7 @@ void assignVal(llvm::AllocaInst* lval, llvm::Value * rval) {
 	}
 }
 
+
 // -- Local Variables
 llvm::AllocaInst * defineVar(llvm::Type * tp, std::string id) {
 	llvm::AllocaInst * allocation = Builder.CreateAlloca(tp, 0, id.c_str());
@@ -180,6 +181,18 @@ llvm::Value * useVar(std::string id) {
 		throw runtime_error("variable " + id + " not found in any table.");
 	}
 	return Builder.CreateLoad(val, id.c_str());
+}
+
+llvm::Value * useArrLoc(std::string id, llvm::Value * index) {
+	llvm::GlobalVariable * val = (llvm::GlobalVariable *)getValueFromTables(id);
+	if(val == nullptr) {
+		throw runtime_error("variable " + id + " not found in any table.");
+	}
+
+	llvm::ArrayType * arrayTp = (llvm::ArrayType *)val->getValueType();
+	llvm::Value * arrayLoc = Builder.CreateStructGEP(arrayTp, val, 0, "arrayloc");
+	llvm::Value * arrayIndex = Builder.CreateGEP(arrayTp->getElementType(), arrayLoc, index, "arrayIndex");
+	return arrayIndex;
 }
 
 // -- Global Variables

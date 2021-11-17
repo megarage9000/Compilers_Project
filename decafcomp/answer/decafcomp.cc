@@ -1053,11 +1053,11 @@ class Method_Decl: public decafStmtList {
 		popTable();
 		llvm::raw_ostream &output = llvm::outs();
 		
-		if(llvm::verifyFunction(*funcVal, &output)) {
-			//throw runtime_error("Function " + funcName + " is invalid\n");
-			std::cout << "Function " << funcName << " is not valid\n";
+		// if(llvm::verifyFunction(*funcVal, &output)) {
+		// 	//throw runtime_error("Function " + funcName + " is invalid\n");
+		// 	std::cout << "Function " << funcName << " is not valid\n";
 			
-		}
+		// }
 		return funcVal;
 	}
 };

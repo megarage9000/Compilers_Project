@@ -15,9 +15,7 @@ llvm::Value * getValueFromTable(std::string name, symTable tbl) {
   if(tbl.empty()) {
 	  return nullptr;
   }
-  //std::cout << "-------------------------------------\n";
   for(it = tbl.begin(); it != tbl.end(); it++){
-	  //std::cout << "symbl table list entry = " << it->first << '\n';
 	if(it->first == name) {
       return it->second;
     }
@@ -54,26 +52,22 @@ void insertToTable(std::string name, llvm::Value * val) {
 	symTable topTable = (*symbl_table_list.begin());
 	auto it = topTable.find(name);
 	if(it != topTable.end()) {
-	std::cout << "symbol " << name << " has been defined! replacing it?\n";
 		it->second = val;
 	}
 	else{
-		std::cout << "symbol " << name << " has not been defined, adding it\n";
 		std::pair<std::string, llvm::Value *> tuple (name ,val);
 		symbl_table_list.begin()->insert(tuple);
 	}
 }
 
 void pushTable() {
-  symTable newtable;
- ///std::cout << "symbol table list size before push: " << symbl_table_list.size() << '\n';	
+  symTable newtable;;	
   symbl_table_list.push_front(newtable);
 
 }
 
 void popTable() {
-	if(!symbl_table_list.empty()) {
-		//std::cout << "symbol table list size before pop: " << symbl_table_list.size() << '\n';	
+	if(!symbl_table_list.empty()) {	
 		symbl_table_list.pop_front();
 	}
 }

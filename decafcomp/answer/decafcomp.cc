@@ -740,6 +740,7 @@ public:
 	}
 	llvm::Value *Codegen() {
 		
+
 		// Get parent function
 		llvm::Function * func = Builder.GetInsertBlock()->getParent();
 		if(func == nullptr) {
@@ -816,6 +817,9 @@ public:
 		return "ForStmt(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
+
+		pushTable();
+
 		llvm::Function * func = Builder.GetInsertBlock()->getParent();	
 		if(func == nullptr) {
 			throw runtime_error("Cannot fetch parent function, is the if statement outside of a function?\n");
@@ -849,6 +853,7 @@ public:
 
 		// Set everything back to end block
 		Builder.SetInsertPoint(endBlock);
+		popTable();
 		return endBlock;
 	}
 };
@@ -867,6 +872,7 @@ public:
 		return "WhileStmt(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
+		pushTable();
 		llvm::Function * func = Builder.GetInsertBlock()->getParent();	
 		if(func == nullptr) {
 			throw runtime_error("Cannot fetch parent function, is the if statement outside of a function?\n");
@@ -894,6 +900,7 @@ public:
 		Builder.CreateBr(whileEntry);
 
 		Builder.SetInsertPoint(endBlock);
+		popTable();
 		return endBlock;
 
 	}

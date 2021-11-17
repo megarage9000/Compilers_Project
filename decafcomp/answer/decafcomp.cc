@@ -288,10 +288,14 @@ public:
 				throw runtime_error("Cannot fetch parent function, is the if statement outside of a function?\n");
 			}
 			
-			llvm::Value * lval = lvalexpr->Codegen();
 			llvm::BasicBlock * phiBB = createPhiBlock(func);
-			llvm::BasicBlock * curBB = Builder.GetInsertBlock();
+			llvm::BasicBlock * scStartBB = createShortCircStart(func);
 			llvm::BasicBlock * scBB = createShortCircBlock(func);
+
+			Builder.CreateBr(scStartBB);
+			
+			Builder.SetInsertPoint(scStartBB);
+			llvm::Value * lval = lvalexpr->Codegen();
 			
 			// Set default block
 			Builder.SetInsertPoint(scBB);
@@ -313,7 +317,7 @@ public:
 				// Fetch the resulting block from the operation to match phinode
 				resultingBB = Builder.GetInsertBlock();
 				Builder.CreateBr(phiBB);
-				Builder.SetInsertPoint(curBB);
+				Builder.SetInsertPoint(scStartBB);
 				Builder.CreateCondBr(lval, scBB, opBB);
 			}
 			else {
@@ -325,7 +329,7 @@ public:
 				// Fetch the resulting block from the operation to match phinode
 				resultingBB = Builder.GetInsertBlock();
 				Builder.CreateBr(phiBB);
-				Builder.SetInsertPoint(curBB);
+				Builder.SetInsertPoint(scStartBB);
 				Builder.CreateCondBr(lval, opBB, scBB);
 			}
 
@@ -749,12 +753,7 @@ public:
 		llvm::BasicBlock * endBB = createEndBlock(func);
 
 		Builder.SetInsertPoint(ifStatementBB);
-		// Get the conditional value of expr
-		llvm::Value * value = val->Codegen();
-		if(value == nullptr) {
-			throw runtime_error("Cannot evaluate value\n");
-		}
-
+		
 		// Generate True block statment
 		Builder.SetInsertPoint(trueBB);
 		if_block->Codegen();
@@ -774,11 +773,22 @@ public:
 
 			// Creates a conditional branch between else and true
 			Builder.SetInsertPoint(ifStatementBB);
+			// Get the conditional value of expr
+			llvm::Value * value = val->Codegen();
+			if(value == nullptr) {
+				throw runtime_error("Cannot evaluate value\n");
+			}
+
 			Builder.CreateCondBr(value, trueBB, elseBB);
 		}
 		else {
 			// Creates a conditional branch between true and end
 			Builder.SetInsertPoint(ifStatementBB);
+			// Get the conditional value of expr
+			llvm::Value * value = val->Codegen();
+			if(value == nullptr) {
+				throw runtime_error("Cannot evaluate value\n");
+			}
 			Builder.CreateCondBr(value, trueBB, endBB);
 		}
 		Builder.SetInsertPoint(endBB);
@@ -812,7 +822,7 @@ public:
 		}
 
 		// Create blocks for labels
-		llvm::BasicBlock * forEntry = createForEntryBlock(func);
+		llvm::BasicBlock * forEntry = createLoopEntryBlock(func);
 		llvm::BasicBlock * loopBlock = createLoopBlock(func);
 		llvm::BasicBlock * nextBlock = createNextBlock(func);
 		llvm::BasicBlock * endBlock = createEndLoopBlock(func);
@@ -825,17 +835,18 @@ public:
 		if(expVal->getType() != Builder.getInt1Ty()) {
 			throw runtime_error("Invalid terminating condition for the for-loop\n");
 		}
-		Builder.CreateCondBr(expVal, loopBlock, endBlock);
+		Builder.CreateCondBr(expVal, nextBlock, endBlock);
+		
+		// Set up increment block
+		Builder.SetInsertPoint(nextBlock);
+		increm->Codegen();
+		Builder.CreateBr(loopBlock);
 
 		// Set up loop block
 		Builder.SetInsertPoint(loopBlock);
 		loop->Codegen();
-		Builder.CreateBr(nextBlock);
-
-		// Set up increment block
-		Builder.SetInsertPoint(nextBlock);
-		increm->Codegen();
 		Builder.CreateBr(forEntry);
+
 
 		// Set everything back to end block
 		Builder.SetInsertPoint(endBlock);
@@ -862,9 +873,8 @@ public:
 			throw runtime_error("Cannot fetch parent function, is the if statement outside of a function?\n");
 		}
 
-		llvm::BasicBlock * whileEntry = createWhileEntryBlock(func);
+		llvm::BasicBlock * whileEntry = createLoopEntryBlock(func);
 		llvm::BasicBlock * loopBlock = createLoopBlock(func);
-		llvm::BasicBlock * nextBlock = createNextBlock(func);
 		llvm::BasicBlock * endBlock = createEndLoopBlock(func);
 		Builder.CreateBr(whileEntry);
 

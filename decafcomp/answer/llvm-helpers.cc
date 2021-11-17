@@ -482,7 +482,8 @@ llvm::Value * getUnaryExp(llvm::Value * value, type_op operation_tp) {
 const std::string IF_ENTRY = "if";
 const std::string FOR_ENTRY = "for";
 const std::string WHILE_ENTRY = "while";
-const std::string LOOP_ENTRY = "loop";
+const std::string LOOP_ENTRY = "loop_entry";
+const std::string LOOP_BODY = "loop";
 const std::string TRUE_ENTRY = "true";
 const std::string ELSE_ENTRY = "else";
 const std::string NEXT_ENTRY = "next";
@@ -493,16 +494,13 @@ llvm::BasicBlock * createIfBlock(llvm::Function * func) {
 	return createBasicBlockWithLabel(func, IF_ENTRY);
 }
 
-llvm::BasicBlock * createForEntryBlock(llvm::Function * func) {
-	return createBasicBlockWithLabel(func, FOR_ENTRY);
+llvm::BasicBlock * createLoopEntryBlock(llvm::Function * func) {
+	return createBasicBlockWithLabel(func, LOOP_ENTRY);
 }
 
-llvm::BasicBlock * createWhileEntryBlock(llvm::Function * func) {
-	return createBasicBlockWithLabel(func, WHILE_ENTRY);
-}
 
 llvm::BasicBlock * createLoopBlock(llvm::Function * func) {
-	return createBasicBlockWithLabel(func, LOOP_ENTRY);
+	return createBasicBlockWithLabel(func, LOOP_BODY);
 }
 
 llvm::BasicBlock * createTrueBlock(llvm::Function * func) {
@@ -527,7 +525,7 @@ llvm::BasicBlock *  createEndLoopBlock(llvm::Function * func) {
 
 
 llvm::BasicBlock * getNextEntryBlock() {
-	return (llvm::BasicBlock *)getValueFromTables(NEXT_ENTRY);
+	return (llvm::BasicBlock *)getValueFromTables(LOOP_ENTRY);
 }
 
 llvm::BasicBlock * getEndLoopBlock() {
@@ -535,13 +533,18 @@ llvm::BasicBlock * getEndLoopBlock() {
 }
 
 // Create custom basic blocks for short-circuit
-const std::string SC_START = "scblk";
+const std::string SC_START = "scstart";
+const std::string SC_ENTRY = "scblk";
 const std::string PHI_ENTRY = "phiblk";
 const std::string OR_ENTRY = "orblk";
 const std::string AND_ENTRY = "andblk";
 
-llvm::BasicBlock * createShortCircBlock(llvm::Function * func) {
+llvm::BasicBlock * createShortCircStart(llvm::Function * func) {
 	return createBasicBlockWithLabel(func, SC_START);
+}
+
+llvm::BasicBlock * createShortCircBlock(llvm::Function * func) {
+	return createBasicBlockWithLabel(func, SC_ENTRY);
 }
 
 llvm::BasicBlock * createPhiBlock(llvm::Function * func) {

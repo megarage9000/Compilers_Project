@@ -471,7 +471,22 @@ llvm::Value * getBinaryExp(llvm::Value * lval, llvm::Value * rval, type_op opera
 				throw runtime_error("Invalid binary operation for integers!");
 		}
 	}
-	else{
+	else if(lvalType == Builder.getInt1Ty() && rvalType == Builder.getInt1Ty()) {
+		switch (operation_tp)
+		{
+		case OR:
+			return Builder.CreateOr(lval, rval, "ortmp");
+		case AND:
+			return Builder.CreateAnd(lval, rval, "andtmp");	
+		case EQ:
+			return Builder.CreateICmpEQ(lval, rval, "eqtmp");
+		case NEQ:
+			return Builder.CreateICmpNE(lval, rval, "neqtmp");		
+		default:
+			throw runtime_error("Invalid binary operation for booleans!");
+		}
+	}
+	else {
 		return nullptr;
 	}
 }
@@ -556,8 +571,7 @@ llvm::BasicBlock * getEndLoopBlock() {
 const std::string SC_START = "scstart";
 const std::string SC_ENTRY = "scblk";
 const std::string PHI_ENTRY = "phiblk";
-const std::string OR_ENTRY = "orblk";
-const std::string AND_ENTRY = "andblk";
+const std::string OP_ENTRY = "opblk";
 
 llvm::BasicBlock * createShortCircStart(llvm::Function * func) {
 	return createBasicBlockWithLabel(func, SC_START);
@@ -571,10 +585,7 @@ llvm::BasicBlock * createPhiBlock(llvm::Function * func) {
 	return createBasicBlockWithLabel(func, PHI_ENTRY);
 }
 
-llvm::BasicBlock * createOrBlock(llvm::Function * func) {
-	return createBasicBlockWithLabel(func, OR_ENTRY);
+llvm::BasicBlock * createOpBlock(llvm::Function * func) {
+	return createBasicBlockWithLabel(func, OP_ENTRY);
 }
 
-llvm::BasicBlock * createAndBlock(llvm::Function * func) {
-	return createBasicBlockWithLabel(func, AND_ENTRY);
-}

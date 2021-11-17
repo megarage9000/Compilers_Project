@@ -1,26 +1,21 @@
 extern func print_int(int) void;
-
-
+extern func print_string(string) void;
 
 package C {
-
-
+    func foo(x int) bool {
+      print_string("foo");
+      return(x > 200);
+    }
+    func bar(x int, y int) bool {
+      print_string("bar");
+      return(x != y);
+    }
     func main() int {
-        var i, j, k int;
-        for(i = 0; i < 10; i = i + 1) {
-            for(j = 0; j < 10; j = j + 1) {
-                if(j == 5) {
-                    print_int(j);
-                    break;
-                }
-            }
-            for(k = 0; k < 10; k = k + 1) {
-                if(k == 6){
-                    print_int(k);
-                    break;
-                }
-            }
-            break;
-        }
+      var x, y int;
+      var w bool;
+      x = 99;
+      y = 201;
+      w = x < 100 || foo(x) && bar(x,y) || false && true; 
+      print_int(w); 
     }
 }

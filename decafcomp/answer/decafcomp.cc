@@ -288,14 +288,23 @@ public:
 				throw runtime_error("Cannot fetch parent function, is the if statement outside of a function?\n");
 			}
 			
+
 			llvm::BasicBlock * phiBB = createPhiBlock(func);
 			llvm::BasicBlock * scStartBB = createShortCircStart(func);
 			llvm::BasicBlock * scBB = createShortCircBlock(func);
-
+			llvm::BasicBlock * opBB = createOpBlock(func);
+	
 			Builder.CreateBr(scStartBB);
 			
+			// Set start of short circuit
 			Builder.SetInsertPoint(scStartBB);
 			llvm::Value * lval = lvalexpr->Codegen();
+			if(operation == AND) {
+				Builder.CreateCondBr(lval, opBB, scBB);
+			}
+			else {
+				Builder.CreateCondBr(lval, scBB, opBB);
+			}
 			
 			// Set default block
 			Builder.SetInsertPoint(scBB);
@@ -305,37 +314,17 @@ public:
 			Builder.CreateBr(phiBB);
 			
 			// Set bool block
-			llvm::BasicBlock * opBB;
-			llvm::Value * opVal;		
-			llvm::BasicBlock * resultingBB;	
-			if(operation == OR) {
-				opBB = createOrBlock(func);
-				Builder.SetInsertPoint(opBB);
-				llvm::Value * rval = rvalexpr->Codegen();
-				opVal = Builder.CreateOr(lval, rval, "ortmp");
+			Builder.SetInsertPoint(opBB);
+			llvm::Value * rval = rvalexpr->Codegen();
+			llvm::Value * opVal = getBinaryExp(lval, rval, operation);
+			llvm::BasicBlock * resultingBB = Builder.GetInsertBlock();
+			Builder.CreateBr(phiBB);
 
-				// Fetch the resulting block from the operation to match phinode
-				resultingBB = Builder.GetInsertBlock();
-				Builder.CreateBr(phiBB);
-				Builder.SetInsertPoint(scStartBB);
-				Builder.CreateCondBr(lval, scBB, opBB);
-			}
-			else {
-				opBB = createAndBlock(func);
-				Builder.SetInsertPoint(opBB);
-				llvm::Value * rval = rvalexpr->Codegen();
-				opVal = Builder.CreateAnd(lval, rval, "andtmp");
 
-				// Fetch the resulting block from the operation to match phinode
-				resultingBB = Builder.GetInsertBlock();
-				Builder.CreateBr(phiBB);
-				Builder.SetInsertPoint(scStartBB);
-				Builder.CreateCondBr(lval, opBB, scBB);
-			}
-
+	
 			// Set up phi block
 			Builder.SetInsertPoint(phiBB);
-			llvm::PHINode * val = Builder.CreatePHI(Builder.getInt1Ty(), 2, "phival");
+			llvm::PHINode * val = Builder.CreatePHI(Builder.getInt1Ty(), 2, "phi");
 			val->addIncoming(scVal, scBB);
 			val->addIncoming(opVal, resultingBB);
 			return val;
@@ -355,7 +344,7 @@ class Unary_Expr: public decafStmtList {
 	type_op operation;
 	decafAST * valexpr;
 public: 
-	Unary_Expr(decafAST * val, Unary_Operator * op) : decafStmtList() {
+	Unary_Expr(decafAST * val, Unary_Operator * op) : decafStmtList() { 
 		operation = op->get_operator();
 		valexpr = val;
 		push_back(op);
@@ -375,7 +364,8 @@ public:
 
 /// Variable / Array Assignments and Expressions
 class Assign_Var: public decafStmtList {
-	decafAST * varId, * rvalexpr;
+	decafAST * rvalexpr;
+	Identifier * varId;
 public:
 	Assign_Var(Identifier * id, decafAST * expression) : decafStmtList() {
 		varId = id;

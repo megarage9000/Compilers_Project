@@ -15,7 +15,9 @@ llvm::Value * getValueFromTable(std::string name, symTable tbl) {
   if(tbl.empty()) {
 	  return nullptr;
   }
+  std::cout << "-------------------------------------\n";
   for(it = tbl.begin(); it != tbl.end(); it++){
+	  std::cout << "symbl table list entry = " << it->first << '\n';
 	if(it->first == name) {
       return it->second;
     }
@@ -53,11 +55,14 @@ void insertToTable(std::string name, llvm::Value * val) {
 
 void pushTable() {
   symTable newtable;
+ std::cout << "symbol table list size before push: " << symbl_table_list.size() << '\n';	
   symbl_table_list.push_front(newtable);
+
 }
 
 void popTable() {
 	if(!symbl_table_list.empty()) {
+		std::cout << "symbol table list size before pop: " << symbl_table_list.size() << '\n';	
 		symbl_table_list.pop_front();
 	}
 }
@@ -432,31 +437,31 @@ llvm::Value * getBinaryExp(llvm::Value * lval, llvm::Value * rval, type_op opera
 	if(lvalType == Builder.getInt32Ty() && rvalType == Builder.getInt32Ty()) {
 		switch(operation_tp) {
 			case PLUS:
-				return Builder.CreateAdd(lval, rval);
+				return Builder.CreateAdd(lval, rval, "addtmp");
 			case MINUS:
-				return Builder.CreateSub(lval, rval);
+				return Builder.CreateSub(lval, rval, "minustmp");
 			case MULT:
-				return Builder.CreateMul(lval, rval);
+				return Builder.CreateMul(lval, rval, "multmp");
 			case DIV:
-				return Builder.CreateSDiv(lval, rval);
+				return Builder.CreateSDiv(lval, rval, "divtmp");
 			case LEFT_SHIFT:
-				return Builder.CreateShl(lval, rval);
+				return Builder.CreateShl(lval, rval, "l_shifttmp");
 			case RIGHT_SHIFT:
-				return Builder.CreateLShr(lval, rval);
+				return Builder.CreateLShr(lval, rval, "r_shifttmp");
 			case MOD:
-				return Builder.CreateSRem(lval, rval);
+				return Builder.CreateSRem(lval, rval, "modtmp");
 			case LT:
-				return Builder.CreateICmpSLT(lval, rval);
+				return Builder.CreateICmpSLT(lval, rval, "lttmp");
 			case GT:
-				return Builder.CreateICmpSGT(lval, rval);
+				return Builder.CreateICmpSGT(lval, rval, "gttmp");
 			case LEQ:
-				return Builder.CreateICmpSLE(lval, rval);
+				return Builder.CreateICmpSLE(lval, rval, "leqtmp");
 			case GEQ:
-				return Builder.CreateICmpSGE(lval, rval);
+				return Builder.CreateICmpSGE(lval, rval, "geqtmp");
 			case EQ:
-				return Builder.CreateICmpEQ(lval, rval);
+				return Builder.CreateICmpEQ(lval, rval, "eqtmp");
 			case NEQ:
-				return Builder.CreateICmpNE(lval, rval);
+				return Builder.CreateICmpNE(lval, rval, "neqtmp");
 			default:
 				throw runtime_error("Invalid binary operation for integers!");
 		}
@@ -470,9 +475,9 @@ llvm::Value * getBinaryExp(llvm::Value * lval, llvm::Value * rval, type_op opera
 llvm::Value * getUnaryExp(llvm::Value * value, type_op operation_tp) {
 	switch(operation_tp) {
 		case NOT:
-			return Builder.CreateNot(value);
+			return Builder.CreateNot(value, "nottmp");
 		case UNARY_MINUS:
-			return Builder.CreateNeg(value);
+			return Builder.CreateNeg(value, "negtmp");
 		default:
 			throw runtime_error("Invalid unary operation");
 	}
@@ -497,7 +502,6 @@ llvm::BasicBlock * createIfBlock(llvm::Function * func) {
 llvm::BasicBlock * createLoopEntryBlock(llvm::Function * func) {
 	return createBasicBlockWithLabel(func, LOOP_ENTRY);
 }
-
 
 llvm::BasicBlock * createLoopBlock(llvm::Function * func) {
 	return createBasicBlockWithLabel(func, LOOP_BODY);
@@ -525,11 +529,19 @@ llvm::BasicBlock *  createEndLoopBlock(llvm::Function * func) {
 
 
 llvm::BasicBlock * getNextEntryBlock() {
-	return (llvm::BasicBlock *)getValueFromTables(LOOP_ENTRY);
+	symTableList::iterator it = ++symbl_table_list.begin();
+	if(it != symbl_table_list.end()) {
+		return (llvm::BasicBlock *)getValueFromTable(NEXT_ENTRY, *(it));
+	}
+	return nullptr;
 }
 
 llvm::BasicBlock * getEndLoopBlock() {
-	return (llvm::BasicBlock *)getValueFromTables(END_LOOP_ENTRY);
+	symTableList::iterator it = ++symbl_table_list.begin();
+	if(it != symbl_table_list.end()) {
+		return (llvm::BasicBlock *)getValueFromTable(END_LOOP_ENTRY, *(it));
+	}
+	return nullptr;
 }
 
 // Create custom basic blocks for short-circuit

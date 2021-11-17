@@ -312,7 +312,7 @@ public:
 				opBB = createOrBlock(func);
 				Builder.SetInsertPoint(opBB);
 				llvm::Value * rval = rvalexpr->Codegen();
-				opVal = Builder.CreateOr(lval, rval);
+				opVal = Builder.CreateOr(lval, rval, "ortmp");
 
 				// Fetch the resulting block from the operation to match phinode
 				resultingBB = Builder.GetInsertBlock();
@@ -324,7 +324,7 @@ public:
 				opBB = createAndBlock(func);
 				Builder.SetInsertPoint(opBB);
 				llvm::Value * rval = rvalexpr->Codegen();
-				opVal = Builder.CreateAnd(lval, rval);
+				opVal = Builder.CreateAnd(lval, rval, "andtmp");
 
 				// Fetch the resulting block from the operation to match phinode
 				resultingBB = Builder.GetInsertBlock();
@@ -835,18 +835,18 @@ public:
 		if(expVal->getType() != Builder.getInt1Ty()) {
 			throw runtime_error("Invalid terminating condition for the for-loop\n");
 		}
-		Builder.CreateCondBr(expVal, nextBlock, endBlock);
+		Builder.CreateCondBr(expVal, loopBlock, endBlock);
 		
-		// Set up increment block
-		Builder.SetInsertPoint(nextBlock);
-		increm->Codegen();
-		Builder.CreateBr(loopBlock);
 
 		// Set up loop block
 		Builder.SetInsertPoint(loopBlock);
 		loop->Codegen();
-		Builder.CreateBr(forEntry);
+		Builder.CreateBr(nextBlock);
 
+		// Set up increment block
+		Builder.SetInsertPoint(nextBlock);
+		increm->Codegen();
+		Builder.CreateBr(forEntry);
 
 		// Set everything back to end block
 		Builder.SetInsertPoint(endBlock);
@@ -876,6 +876,7 @@ public:
 		llvm::BasicBlock * whileEntry = createLoopEntryBlock(func);
 		llvm::BasicBlock * loopBlock = createLoopBlock(func);
 		llvm::BasicBlock * endBlock = createEndLoopBlock(func);
+		llvm::BasicBlock * nextBlock = createNextBlock(func);
 		Builder.CreateBr(whileEntry);
 
 		Builder.SetInsertPoint(whileEntry);
@@ -888,6 +889,9 @@ public:
 		// Set up loop block
 		Builder.SetInsertPoint(loopBlock);
 		loop->Codegen();
+		Builder.CreateBr(nextBlock);
+
+		Builder.SetInsertPoint(nextBlock);
 		Builder.CreateBr(whileEntry);
 
 		Builder.SetInsertPoint(endBlock);

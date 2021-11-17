@@ -183,21 +183,14 @@ llvm::Value * useVar(std::string id) {
 }
 
 // -- Global Variables
-llvm::GlobalVariable * declareGlobal(std::string id, llvm::Type * tp) {
+llvm::GlobalVariable * declareGlobalWithValue(std::string id, llvm::Type * tp, llvm::Constant* val) {
 	if(isDecafType(tp)) {
-		llvm::Constant * zeroInit;
-		if(tp == Builder.getInt1Ty()) {
-			zeroInit = initializeLLVMVal(tp, 1);
-		}
-		else {
-			zeroInit = initializeLLVMVal(tp, 0);
-		}
 		llvm::GlobalVariable * globalVar = new llvm::GlobalVariable(
 			*TheModule,
 			tp,
 			false,
 			llvm::GlobalVariable::InternalLinkage,
-			zeroInit,
+			val,
 			id
 		);
 		insertToTable(id, globalVar);
@@ -206,6 +199,21 @@ llvm::GlobalVariable * declareGlobal(std::string id, llvm::Type * tp) {
 	else{
 		return nullptr;
 	}
+}
+
+llvm::GlobalVariable * declareGlobal(std::string id, llvm::Type * tp) {
+	llvm::Constant * zeroInit;
+	// Zero initialization
+	if(tp == Builder.getInt1Ty()) {
+		zeroInit = initializeLLVMVal(tp, 1);
+	}
+	else if(tp == Builder.getInt32Ty()) {
+		zeroInit = initializeLLVMVal(tp, 0);
+	}
+	else{
+		return nullptr;
+	}
+	return declareGlobalWithValue(id, tp, zeroInit);
 }
 
 llvm::GlobalVariable * declareGlobalArr(std::string id, llvm::Type * tp, int size) {

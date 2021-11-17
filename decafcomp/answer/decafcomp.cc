@@ -537,6 +537,7 @@ decafStmtList * vector_to_var_defs(string_vector * str_vector, Type * type) {
 
 
 /// Field declarations
+const int SCALAR_VAL = -1;
 class Field_Size : public decafAST {
 	string size;
 	// Temporary fix
@@ -544,10 +545,10 @@ class Field_Size : public decafAST {
 public: 
 	Field_Size() {
 		size = "Scalar";
-		val = -1;
+		val = SCALAR_VAL;
 	}
 	Field_Size(int value) {
-		if(value == -1) {
+		if(value == SCALAR_VAL) {
 			size = "Scalar";
 		}
 		else {
@@ -584,7 +585,7 @@ public:
 		push_back(sz);
 	}
 	Field_Decl(Identifier * id, Type * type) : decafStmtList() {
-		size = -1;
+		size = SCALAR_VAL;
 		name = id->str();
 		tp = getLLVMType(type->get_type());
 		push_back(id);
@@ -595,7 +596,7 @@ public:
 		return "FieldDecl(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		if(size == -1){
+		if(size == SCALAR_VAL){
 			return declareGlobal(name, tp);
 		}
 		else {
@@ -631,13 +632,22 @@ decafStmtList * vector_to_field_decls(string_vector * str_vector, Type * type) {
 
 
 class Assign_Global : public decafStmtList {
+	string name;
+	llvm::Type * tp;
+	decafAST * const_val;
 public:
 	Assign_Global(Identifier * identifier, Type * type, Int_Constant * const_expr) : decafStmtList() {
+		name = identifier->str();
+		tp = getLLVMType(type->get_type());
+		const_val = const_expr;
 		push_back(identifier);
 		push_back(type);
 		push_back(const_expr);
 	}
 	Assign_Global(Identifier * identifier, Type * type, Bool_Constant * const_expr) : decafStmtList() {
+		name = identifier->str();
+		tp = getLLVMType(type->get_type());
+		const_val = const_expr;
 		push_back(identifier);
 		push_back(type);
 		push_back(const_expr);
@@ -646,7 +656,8 @@ public:
 		return "AssignGlobalVar(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		return nullptr;
+		llvm::Constant * value = (llvm::Constant *)const_val->Codegen();
+		return declareGlobalWithValue(name, tp, value);
 	}
 };
 

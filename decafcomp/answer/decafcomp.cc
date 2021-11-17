@@ -757,9 +757,9 @@ public:
 		// Generate True block statment
 		Builder.SetInsertPoint(trueBB);
 		if_block->Codegen();
-		if(trueBB->getTerminator() == nullptr) {
-			Builder.CreateBr(endBB);
-		}
+		// if(trueBB->getTerminator() == nullptr) {
+		// }
+		Builder.CreateBr(endBB);
 
 		// Create conditional branch
 		if(else_block != nullptr) {
@@ -767,9 +767,9 @@ public:
 			llvm::BasicBlock * elseBB = createElseBlock(func);
 			Builder.SetInsertPoint(elseBB);
 			else_block->Codegen();
-			if(elseBB->getTerminator() == nullptr) {
-				Builder.CreateBr(endBB);
-			}
+			// if(elseBB->getTerminator() == nullptr) {
+			// }
+			Builder.CreateBr(endBB);
 
 			// Creates a conditional branch between else and true
 			Builder.SetInsertPoint(ifStatementBB);

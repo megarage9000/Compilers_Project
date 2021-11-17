@@ -745,7 +745,7 @@ public:
 		if(func == nullptr) {
 			throw runtime_error("Cannot fetch parent function, is the if statement outside of a function?\n");
 		}
-
+		pushTable();
 		// Create Blocks
 		llvm::BasicBlock * ifStatementBB = createIfBlock(func);
 		Builder.CreateBr(ifStatementBB);
@@ -792,7 +792,7 @@ public:
 			Builder.CreateCondBr(value, trueBB, endBB);
 		}
 		Builder.SetInsertPoint(endBB);
-
+		popTable();
 		return endBB;
 	}
 };
@@ -836,8 +836,7 @@ public:
 			throw runtime_error("Invalid terminating condition for the for-loop\n");
 		}
 		Builder.CreateCondBr(expVal, loopBlock, endBlock);
-		
-
+	
 		// Set up loop block
 		Builder.SetInsertPoint(loopBlock);
 		loop->Codegen();

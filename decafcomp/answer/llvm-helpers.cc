@@ -15,9 +15,9 @@ llvm::Value * getValueFromTable(std::string name, symTable tbl) {
   if(tbl.empty()) {
 	  return nullptr;
   }
-  std::cout << "-------------------------------------\n";
+  //std::cout << "-------------------------------------\n";
   for(it = tbl.begin(); it != tbl.end(); it++){
-	  std::cout << "symbl table list entry = " << it->first << '\n';
+	  //std::cout << "symbl table list entry = " << it->first << '\n';
 	if(it->first == name) {
       return it->second;
     }
@@ -25,21 +25,23 @@ llvm::Value * getValueFromTable(std::string name, symTable tbl) {
   return nullptr;
 }
 
-llvm::Value * getValueFromTables(std::string name) {
-  symTableList::iterator it;
-  llvm::Value * result = nullptr;
-  if(symbl_table_list.empty()) {
+llvm::Value * getValWithStart(std::string name, symTableList::iterator it) {
+	llvm::Value * result = nullptr;
+	if(symbl_table_list.empty()) {
 	  return result;
-  }
-  for(it = symbl_table_list.begin(); it != symbl_table_list.end(); it++) {
-    result = getValueFromTable(name, *it);
-    if(result != nullptr){
-      return result;
-    }
-  }
-  return result;
+	}
+	for(; it != symbl_table_list.end(); it++) {
+		result = getValueFromTable(name, *it);
+		if(result != nullptr){
+		return result;
+		}
+	}
+	return result;
 }
 
+llvm::Value * getValueFromTables(std::string name) {
+  return getValWithStart(name, symbl_table_list.begin());
+}
 llvm::Value * getValueFromTopTable(std::string name) {
 	return getValueFromTable(name, *(symbl_table_list.begin()));
 }
@@ -49,20 +51,29 @@ llvm::Value * getValueFromSecondTopTable(std::string name) {
 }
 
 void insertToTable(std::string name, llvm::Value * val) {
-  std::pair<std::string, llvm::Value *> tuple (name ,val);
-  symbl_table_list.begin()->insert(tuple);
+	symTable topTable = (*symbl_table_list.begin());
+	auto it = topTable.find(name);
+	if(it != topTable.end()) {
+	std::cout << "symbol " << name << " has been defined! replacing it?\n";
+		it->second = val;
+	}
+	else{
+		std::cout << "symbol " << name << " has not been defined, adding it\n";
+		std::pair<std::string, llvm::Value *> tuple (name ,val);
+		symbl_table_list.begin()->insert(tuple);
+	}
 }
 
 void pushTable() {
   symTable newtable;
- std::cout << "symbol table list size before push: " << symbl_table_list.size() << '\n';	
+ ///std::cout << "symbol table list size before push: " << symbl_table_list.size() << '\n';	
   symbl_table_list.push_front(newtable);
 
 }
 
 void popTable() {
 	if(!symbl_table_list.empty()) {
-		std::cout << "symbol table list size before pop: " << symbl_table_list.size() << '\n';	
+		//std::cout << "symbol table list size before pop: " << symbl_table_list.size() << '\n';	
 		symbl_table_list.pop_front();
 	}
 }
@@ -531,17 +542,20 @@ llvm::BasicBlock *  createEndLoopBlock(llvm::Function * func) {
 llvm::BasicBlock * getNextEntryBlock() {
 	symTableList::iterator it = ++symbl_table_list.begin();
 	if(it != symbl_table_list.end()) {
-		return (llvm::BasicBlock *)getValueFromTable(NEXT_ENTRY, *(it));
+		return (llvm::BasicBlock *)getValWithStart(NEXT_ENTRY, it);  
 	}
 	return nullptr;
+	//return (llvm::BasicBlock *)getValueFromTopTable(NEXT_ENTRY);
 }
 
 llvm::BasicBlock * getEndLoopBlock() {
 	symTableList::iterator it = ++symbl_table_list.begin();
 	if(it != symbl_table_list.end()) {
-		return (llvm::BasicBlock *)getValueFromTable(END_LOOP_ENTRY, *(it));
+		return (llvm::BasicBlock *)getValWithStart(END_LOOP_ENTRY, it);
 	}
 	return nullptr;
+	//return (llvm::BasicBlock *)getValueFromTopTable(END_LOOP_ENTRY);
+	
 }
 
 // Create custom basic blocks for short-circuit

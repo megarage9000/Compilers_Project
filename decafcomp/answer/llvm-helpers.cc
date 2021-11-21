@@ -31,7 +31,7 @@ llvm::Value * getValWithStart(std::string name, symTableList::iterator it) {
 	for(; it != symbl_table_list.end(); it++) {
 		result = getValueFromTable(name, *it);
 		if(result != nullptr){
-		return result;
+			return result;
 		}
 	}
 	return result;
@@ -85,10 +85,10 @@ typedef enum {
 	STRINGTYPE,
 	VOIDTYPE,
 	NULLTYPE
-}	val_type;
+}	ValueType;
 
 // Getting types
-llvm::Type *getLLVMType(val_type type) {
+llvm::Type *getLLVMType(ValueType type) {
 	switch(type) {
 		case VOIDTYPE:
 			return Builder.getVoidTy();
@@ -125,7 +125,7 @@ bool isMainReturnType(llvm::Type * type) {
 }
 
 // -- Getting constants
-llvm::Constant *initializeLLVMVal(val_type type, int initialVal) {
+llvm::Constant *initializeLLVMVal(ValueType type, int initialVal) {
 	switch(type) {
 		case INTTYPE:
 			return Builder.getInt32(initialVal);
@@ -174,7 +174,6 @@ void assignVal(llvm::AllocaInst* lval, llvm::Value * rval) {
 // -- Local Variables
 llvm::AllocaInst * defineVar(llvm::Type * tp, std::string id) {
 	llvm::AllocaInst * allocation = Builder.CreateAlloca(tp, 0, id.c_str());
-	insertToTable(std::string(id), allocation);
 	// Zero initialization
 	if(tp == Builder.getInt1Ty()) {
 		assignVal(allocation, initializeLLVMVal(tp, 1));
@@ -182,6 +181,7 @@ llvm::AllocaInst * defineVar(llvm::Type * tp, std::string id) {
 	else {
 		assignVal(allocation, initializeLLVMVal(tp, 0));
 	}
+	insertToTable(std::string(id), allocation);
 	return allocation;
 
 }
@@ -431,9 +431,9 @@ typedef enum {
 	LT, GT, LEQ, GEQ, EQ, NEQ,
 	AND, OR, NOT,
 	UNARY_MINUS
-} type_op;
+} OperationType;
 
-llvm::Value * getBinaryExp(llvm::Value * lval, llvm::Value * rval, type_op operation_tp) {
+llvm::Value * getBinaryExp(llvm::Value * lval, llvm::Value * rval, OperationType operation_tp) {
 	// TODO: handle correct types (int32s for arithmetic, int1s for booleans)
 	// - Currently we are gonna check if lval and rval are either int1s or int32s
 	llvm::Type * lvalType = lval->getType();
@@ -492,7 +492,7 @@ llvm::Value * getBinaryExp(llvm::Value * lval, llvm::Value * rval, type_op opera
 }
 
 
-llvm::Value * getUnaryExp(llvm::Value * value, type_op operation_tp) {
+llvm::Value * getUnaryExp(llvm::Value * value, OperationType operation_tp) {
 	switch(operation_tp) {
 		case NOT:
 			return Builder.CreateNot(value, "nottmp");

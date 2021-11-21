@@ -12,7 +12,7 @@ int yyerror(char *);
 int yylex_destroy(void);
 
 // print AST?
-bool printAST = true;
+bool printAST = false;
 
 
 using namespace std;
@@ -122,7 +122,7 @@ program: extern_declaration decafpackage
             prog->Codegen();
         } catch(const std::exception& e) {
             std::cout << "Error message: " << e.what() << '\n';
-            delete prog;
+            // TODO set flag here
         } 
         delete prog;
     }
@@ -137,7 +137,8 @@ program: extern_declaration decafpackage
             prog->Codegen();
 
         } catch(const std::exception& e) {
-            delete prog;
+            std::cout << "Error message: " << e.what() << '\n';
+            // TODO set flag here
         } 
         delete prog;
     }
@@ -450,7 +451,7 @@ int main() {
   // Validate the generated code, checking for consistency.
   // verifyFunction(*TheFunction);
   // Print out all of the generated code to stderr
-  //TheModule->print(llvm::errs(), nullptr);
+  TheModule->print(llvm::errs(), nullptr);
   popTable();
   return(retval >= 1 ? EXIT_FAILURE : EXIT_SUCCESS);
 }

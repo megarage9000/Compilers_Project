@@ -12,6 +12,12 @@
 
 using namespace std;
 
+/*
+	CODE STYLE:
+	variables: snake_case/camelCase
+	functions: camelCase
+	classes: CamelCase
+*/
 
 /// decafAST - Base class for all abstract syntax tree nodes.
 class decafAST {
@@ -93,7 +99,6 @@ public:
 	list<decafAST *>::iterator end() {return stmts.end();}
 	bool isEmpty() { return stmts.empty(); }
 	llvm::Value *Codegen() { 
-		
 		return listCodegen<decafAST *>(stmts); 
 	}
 };
@@ -118,9 +123,9 @@ public:
 };
 
 class Type: public decafAST {
-	val_type type;
+	ValueType type;
 public:
-	Type(val_type tp) : decafAST(), type(tp){}
+	Type(ValueType tp) : decafAST(), type(tp){}
 	~Type() {}
 	string str() {
 		switch(type) {
@@ -138,7 +143,7 @@ public:
 				return "None";
 		}
 	}
-	val_type get_type() {return type;}
+	ValueType get_type() {return type;}
 
 	llvm::Value *Codegen() {
 		return nullptr;
@@ -146,9 +151,9 @@ public:
 };
 
 class Binary_Operator : public decafAST {
-	type_op type;
+	OperationType type;
 public:
-	Binary_Operator(type_op tp) : decafAST(), type(tp) {}
+	Binary_Operator(OperationType tp) : decafAST(), type(tp) {}
 	~Binary_Operator() {}
 	string str() {
 		switch(type) {
@@ -186,7 +191,7 @@ public:
 				return "None";
 		}
 	}
-	type_op get_operator() {
+	OperationType getOperator() {
 		return type;
 	}
 	llvm::Value *Codegen() {
@@ -195,9 +200,9 @@ public:
 };
 
 class Unary_Operator : public decafAST {
-	type_op type;
+	OperationType type;
 public:
-	Unary_Operator(type_op tp) : decafAST(), type(tp) {}
+	Unary_Operator(OperationType tp) : decafAST(), type(tp) {}
 	~Unary_Operator() {}
 	string str() {
 		switch (type) {
@@ -209,7 +214,7 @@ public:
 				return "None";
 		}
 	}
-	type_op get_operator() {
+	OperationType getOperator() {
 		return type;
 	}
 	llvm::Value *Codegen() {
@@ -255,17 +260,17 @@ public:
 
 /// Create StringConstant
 class String_Constant : public decafAST {
-	string strVal;
+	string str_value;
 public:
-	String_Constant(string ** val) : decafAST(), strVal(*(*val)) {
+	String_Constant(string ** val) : decafAST(), str_value(*(*val)) {
 		delete *val;
 	}
 	~String_Constant() {}
 	string str() {
-		return "StringConstant(" + strVal + ")";
+		return "StringConstant(" + str_value + ")";
 	}
 	llvm::Value *Codegen() {
-		return getStringConst(strVal);
+		return getStringConst(str_value);
 	}
 };
 
@@ -283,13 +288,13 @@ public:
 
 /// Expressions
 class Binary_Expr : public decafStmtList {
-	type_op operation;
-	decafAST * lvalexpr, *rvalexpr;
+	OperationType operation;
+	decafAST * lval_expr, *rval_expr;
 public:
 	Binary_Expr(decafAST * l_val, decafAST * r_val, Binary_Operator * op) : decafStmtList() {
-		lvalexpr = l_val;
-		rvalexpr = r_val;
-		operation = op->get_operator();
+		lval_expr = l_val;
+		rval_expr = r_val;
+		operation = op->getOperator();
 		push_back(op);
 		push_back(l_val);
 		push_back(r_val);
@@ -314,7 +319,7 @@ public:
 			
 			// Set start of short circuit
 			Builder.SetInsertPoint(scStartBB);
-			llvm::Value * lval = lvalexpr->Codegen();
+			llvm::Value * lval = lval_expr->Codegen();
 			if(operation == AND) {
 				Builder.CreateCondBr(lval, opBB, scBB);
 			}
@@ -324,28 +329,28 @@ public:
 			
 			// Set default block
 			Builder.SetInsertPoint(scBB);
-			llvm::AllocaInst * defVal = defineVar(Builder.getInt1Ty(), "defVal");
-			assignVal(defVal, lval);
-			llvm::Value * scVal = Builder.CreateLoad(defVal, "scVal");
+			llvm::AllocaInst * def_value = defineVar(Builder.getInt1Ty(), "def_value");
+			assignVal(def_value, lval);
+			llvm::Value * sc_value = Builder.CreateLoad(def_value, "sc_value");
 			Builder.CreateBr(phiBB);
 			
 			// Set bool block
 			Builder.SetInsertPoint(opBB);
-			llvm::Value * rval = rvalexpr->Codegen();
-			llvm::Value * opVal = getBinaryExp(lval, rval, operation);
+			llvm::Value * rval = rval_expr->Codegen();
+			llvm::Value * op_value = getBinaryExp(lval, rval, operation);
 			llvm::BasicBlock * resultingBB = Builder.GetInsertBlock();
 			Builder.CreateBr(phiBB);
 	
 			// Set up phi block
 			Builder.SetInsertPoint(phiBB);
 			llvm::PHINode * val = Builder.CreatePHI(Builder.getInt1Ty(), 2, "phi");
-			val->addIncoming(scVal, scBB);
-			val->addIncoming(opVal, resultingBB);
+			val->addIncoming(sc_value, scBB);
+			val->addIncoming(op_value, resultingBB);
 			return val;
 		}
 		else {
-			llvm::Value * lval = lvalexpr->Codegen();
-			llvm::Value * rval = rvalexpr->Codegen();
+			llvm::Value * lval = lval_expr->Codegen();
+			llvm::Value * rval = rval_expr->Codegen();
 			if(lval == rval && lval == nullptr) {
 				return nullptr;
 			}
@@ -355,12 +360,12 @@ public:
 };
 
 class Unary_Expr: public decafStmtList {
-	type_op operation;
-	decafAST * valexpr;
+	OperationType operation;
+	decafAST * val_expr;
 public: 
 	Unary_Expr(decafAST * val, Unary_Operator * op) : decafStmtList() { 
-		operation = op->get_operator();
-		valexpr = val;
+		operation = op->getOperator();
+		val_expr = val;
 		push_back(op);
 		push_back(val);
 	}
@@ -368,7 +373,7 @@ public:
 		return "UnaryExpr(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		llvm::Value * val = valexpr->Codegen();
+		llvm::Value * val = val_expr->Codegen();
 		if(val == nullptr) {
 			return nullptr;
 		}
@@ -378,12 +383,12 @@ public:
 
 /// Variable / Array Assignments and Expressions
 class Assign_Var: public decafStmtList {
-	decafAST * rvalexpr;
-	Identifier * varId;
+	decafAST * rval_expr;
+	std::string var_id;
 public:
 	Assign_Var(Identifier * id, decafAST * expression) : decafStmtList() {
-		varId = id;
-		rvalexpr = expression;
+		var_id = id->str();
+		rval_expr = expression;
 		push_back(id);
 		push_back(expression);
 	}
@@ -391,11 +396,11 @@ public:
 		return "AssignVar(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		llvm::AllocaInst * variable = (llvm::AllocaInst *)getValueFromTables(varId->str());
-		if(variable != nullptr) {
+		llvm::AllocaInst * variable = (llvm::AllocaInst *)getValueFromTables(var_id);
+		if(variable == nullptr) {
 			return nullptr;
 		}
-		llvm::Value * value = rvalexpr->Codegen();
+		llvm::Value * value = rval_expr->Codegen();
 		if(value == nullptr) {
 			return nullptr;
 		}
@@ -438,15 +443,15 @@ public:
 };
 
 class Var_Expr: public decafAST{
-	Identifier * identifier;
+	Identifier * id_ast;
 public:
-	Var_Expr(Identifier * id) : decafAST(), identifier(id) {}
-	~Var_Expr() { if(identifier) {delete identifier;}}
+	Var_Expr(Identifier * id) : decafAST(), id_ast(id) {}
+	~Var_Expr() { if(id_ast) {delete id_ast;}}
 	string str() {
-		return "VariableExpr(" + getString(identifier) + ")";
+		return "VariableExpr(" + getString(id_ast) + ")";
 	}
 	llvm::Value *Codegen() {
-		llvm::Value * var = useVar(identifier->str());
+		llvm::Value * var = useVar(id_ast->str());
 		if(!var) {
 			return nullptr;
 		}
@@ -476,17 +481,17 @@ public:
 class Method_Call: public decafStmtList {
 	decafStmtList * args;
 	std::vector<llvm::Value *> values;
-	std::string funcName;
+	std::string func_name;
 public:
 	Method_Call(Identifier * name, decafStmtList * method_args): decafStmtList()  {
 		args = method_args;
-		funcName = name->str();
+		func_name = name->str();
 		push_back(name);
 		push_back(method_args);
 	}
 	Method_Call(Identifier * name): decafStmtList() {
 		args = nullptr;
-		funcName = name->str();
+		func_name = name->str();
 		push_back(name);
 		push_back(new decafStmtList());
 	}
@@ -495,7 +500,7 @@ public:
 	}
 	llvm::Value *Codegen() {
 		// Get function pointer
-		llvm::Function * func = (llvm::Function *)getValueFromTables(funcName);
+		llvm::Function * func = (llvm::Function *)getValueFromTables(func_name);
 		if(!func) {
 			return nullptr;
 		}
@@ -527,7 +532,7 @@ public:
 // Variable declarations
 class Var_Def : public decafStmtList {
 	string id;
-	val_type tp;
+	ValueType tp;
 public:
 	Var_Def(Identifier * identifier, Type * type) : decafStmtList() {
 		id = identifier->str();
@@ -554,7 +559,7 @@ public:
 	string getId() {
 		return id;
 	}
-	val_type getType() {
+	ValueType getType() {
 		return tp;
 	}
 };
@@ -982,7 +987,7 @@ class Extern_Func: public decafStmtList {
 	vector<llvm::Type*> argTypes;
 	vector<string> argNames;
 	llvm::Type * returnType;
-	string funcName;
+	string func_name;
 public:
 	Extern_Func(Identifier * id, Type * return_type, decafStmtList * typeList)
 	 : decafStmtList(){
@@ -990,7 +995,7 @@ public:
 		push_back(return_type);
 		push_back(typeList);
 		// Extract name and return type
-		funcName = id->str();
+		func_name = id->str();
 		returnType = getLLVMType(return_type->get_type());
 		// Extract arg names and types
 		list<decafAST *>::iterator it;
@@ -1007,7 +1012,7 @@ public:
 	}
 	llvm::Value *Codegen() {
 		// For now we assume we don't store / allocate extern parameters
-		return defineExtern(returnType, argTypes, funcName);
+		return defineExtern(returnType, argTypes, func_name);
 	}
 };
 
@@ -1015,7 +1020,7 @@ class Method_Decl: public decafStmtList {
 	vector<llvm::Type*> argTypes;
 	vector<string> argNames;
 	llvm::Type * returnType;
-	string funcName;
+	string func_name;
 	Block * funcBlock;
 
 	public:
@@ -1041,7 +1046,7 @@ class Method_Decl: public decafStmtList {
 				getLLVMType(arg->getType())
 			);
 		}
-		funcName = id->str();
+		func_name = id->str();
 		returnType = getLLVMType(return_type->get_type());
 	}
 	string str() {
@@ -1049,16 +1054,16 @@ class Method_Decl: public decafStmtList {
 	}
 
 	string getFuncName() {
-		return funcName;
+		return func_name;
 	}
 	llvm::Value *Codegen() {
 		// Defines the function, creates a block and arguments
-		llvm::Function * funcVal = defineMethod(returnType, argTypes, funcName);
+		llvm::Function * funcVal = defineMethod(returnType, argTypes, func_name);
 		return funcVal;
 	}
 
 	llvm::Value *CodegenFuncBlock() {
-		llvm::Function * funcVal = (llvm::Function *)getValueFromTables(funcName);
+		llvm::Function * funcVal = (llvm::Function *)getValueFromTables(func_name);
 		// New symbol table
 		pushTable();
 		// Prepare the arguments and block
@@ -1070,11 +1075,11 @@ class Method_Decl: public decafStmtList {
 		popTable();
 		llvm::raw_ostream &output = llvm::outs();
 		
-		if(llvm::verifyFunction(*funcVal, &output)) {
-			//throw runtime_error("Function " + funcName + " is invalid\n");
-			std::cout << "Function " << funcName << " is not valid\n";
+		// if(llvm::verifyFunction(*funcVal, &output)) {
+		// 	//throw runtime_error("Function " + func_name + " is invalid\n");
+		// 	std::cout << "Function " << func_name << " is not valid\n";
 			
-		}
+		// }
 		return funcVal;
 	}
 };

@@ -15,6 +15,7 @@ package C {
       var w bool;
       x = 99;
       y = 201;
+      x = true + false;
       w = x < 100 || foo(x) && bar(x,y) || false && true; 
       print_int(w); 
     }

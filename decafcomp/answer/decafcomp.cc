@@ -58,6 +58,8 @@ string getString(decafAST *d) {
 	}
 }
 
+// For calling errors
+
 template <class T>
 string commaList(list<T> vec) {
     string s("");

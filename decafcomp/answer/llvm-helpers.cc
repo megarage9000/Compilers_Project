@@ -3,6 +3,13 @@
 #include <string>
 #include <stack>
 
+
+/*
+	Functions here will throw runtime errors.
+	- decafcomp.cc will deal with these
+	- exceptions though are symbol table functions
+*/
+
 /// Symbol table 
 typedef std::map<std::string, llvm::Value*> symTable;
 typedef std::list<symTable> symTableList;
@@ -99,7 +106,7 @@ llvm::Type *getLLVMType(ValueType type) {
 		case STRINGTYPE:
 			return Builder.getInt8PtrTy();
 		default:
-			throw runtime_error("Unknown type!");
+			throw runtime_error("Invalid type");
 	}
 }
 
@@ -144,7 +151,7 @@ llvm::Constant *initializeLLVMVal(llvm::Type * type, int initialVal) {
 		return Builder.getInt1(initialVal);
 	}
 	else {
-		throw runtime_error("invalid type!");
+		throw runtime_error("Invalid type!");
 	}
 }
 
@@ -158,7 +165,7 @@ llvm::Value * promoteBoolToInt(llvm::Value ** val) {
 	if((*val)->getType() == Builder.getInt1Ty()) {
 		return Builder.CreateZExt(*val, Builder.getInt32Ty(), "zexttmp");
 	}
-	return nullptr;
+	throw runtime_error("Value cannot be promoted to integer\n");
 }
 
 // -- Assignments

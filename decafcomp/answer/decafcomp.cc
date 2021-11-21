@@ -24,14 +24,15 @@ public:
 	}
   virtual ~decafAST() {}
   virtual string str() { 
-	  std::cout << "\nat line pos = " << line_pos << "\n at token pos = " << token_pos << '\n';
 	  return string(""); }
   virtual llvm::Value *Codegen() = 0;
   int get_line_pos() { return line_pos; }
   int get_token_pos() { return token_pos; }
   void set_line_pos(int pos) { line_pos = pos;}
   void set_token_pos(int pos) { token_pos = pos;} 	
-  void print_location(){ std::cout << "\nat line pos = " << line_pos << "\n at token pos = " << token_pos << '\n'; }
+  string get_location(){ 
+	  return "\nat line pos = " + std::to_string(line_pos) + "\n at token pos = " + std::to_string(token_pos) + '\n'; 
+	}
 };
 
 // For identifier lists
@@ -87,8 +88,7 @@ public:
 	void push_front(decafAST *e) { stmts.push_front(e); }
 	void push_back(decafAST *e) { stmts.push_back(e); }
 	string str() {
-		print_location();
-		 return commaList<class decafAST *>(stmts); }
+		return commaList<class decafAST *>(stmts); }
 	list<decafAST *>::iterator begin() {return stmts.begin();}
 	list<decafAST *>::iterator end() {return stmts.end();}
 	bool isEmpty() { return stmts.empty(); }
@@ -1045,7 +1045,7 @@ class Method_Decl: public decafStmtList {
 		returnType = getLLVMType(return_type->get_type());
 	}
 	string str() {
-		return "Method(" + decafStmtList::str() + ")";
+		return "Method(" + decafStmtList::str() + ")" ;
 	}
 
 	string getFuncName() {

@@ -35,8 +35,8 @@ static void update_position() {
   int len = yyleng;
   prev_line_column = line_column;
   prev_line_position = line_position;
-  lineno = line_column;
-  tokenpos = line_position;
+  tokenpos = line_column;
+  lineno = line_position;
   for(int i = 0; i < len; i++){
     if(yytext[i] == '\n'){
       prev_line_column = line_column;

@@ -5,9 +5,25 @@
 
 
 /*
-	Functions here will throw runtime errors.
+	Functions here can throw exceptions.
 	- decafcomp.cc will deal with these
 	- exceptions though are symbol table functions
+
+
+	List of functions that can throw exceptions:
+	- getLLVMType()
+	- initializeLLVMVal()
+	- promoteBoolToInt()
+	- assignVal()
+	- useVar()
+	- useArrLoc()
+	- declareGlobalWithValue()
+	- declarGlobal()
+	- declareGlobalArr()
+	- defineMethod()
+	- defineExtern()
+	- getBinaryExp()
+	- getUnaryExp()
 */
 
 /// Symbol table 
@@ -273,7 +289,7 @@ llvm::GlobalVariable * declareGlobal(std::string id, llvm::Type * tp) {
 	}
 	else{
 		std::string globalType = LLVMTypeToString(tp);
-		throw logic_error("global variable " + id + " of type " + globalType + " cannot be initialized with a value.");
+		throw logic_error("global variable " + id + " cannot be of type " + globalType + '.');
 	}
 	return declareGlobalWithValue(id, tp, zeroInit);
 }

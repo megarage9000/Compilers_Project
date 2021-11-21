@@ -332,9 +332,6 @@ public:
 			
 			// Set default block
 			Builder.SetInsertPoint(scBB);
-			llvm::AllocaInst * def_value = defineVar(Builder.getInt1Ty(), "def_value");
-			assignVal(def_value, lval);
-			llvm::Value * sc_value = Builder.CreateLoad(def_value, "sc_value");
 			Builder.CreateBr(phiBB);
 			
 			// Set bool block
@@ -347,7 +344,7 @@ public:
 			// Set up phi block
 			Builder.SetInsertPoint(phiBB);
 			llvm::PHINode * val = Builder.CreatePHI(Builder.getInt1Ty(), 2, "phi");
-			val->addIncoming(sc_value, scBB);
+			val->addIncoming(lval, scBB);
 			val->addIncoming(op_value, resultingBB);
 			return val;
 		}

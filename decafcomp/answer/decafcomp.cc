@@ -15,10 +15,23 @@ using namespace std;
 
 /// decafAST - Base class for all abstract syntax tree nodes.
 class decafAST {
+	int line_pos;
+	int token_pos;
 public:
+	decafAST() {
+		line_pos = lineno;
+		token_pos = tokenpos;
+	}
   virtual ~decafAST() {}
-  virtual string str() { return string(""); }
+  virtual string str() { 
+	  std::cout << "\nat line pos = " << line_pos << "\n at token pos = " << token_pos << '\n';
+	  return string(""); }
   virtual llvm::Value *Codegen() = 0;
+  int get_line_pos() { return line_pos; }
+  int get_token_pos() { return token_pos; }
+  void set_line_pos(int pos) { line_pos = pos;}
+  void set_token_pos(int pos) { token_pos = pos;} 	
+  void print_location(){ std::cout << "\nat line pos = " << line_pos << "\n at token pos = " << token_pos << '\n'; }
 };
 
 // For identifier lists
@@ -64,7 +77,7 @@ llvm::Value *listCodegen(list<T> vec) {
 class decafStmtList : public decafAST {
 	list<decafAST *> stmts;
 public:
-	decafStmtList() {}
+	decafStmtList() : decafAST() {}
 	~decafStmtList() {
 		for (list<decafAST *>::iterator i = stmts.begin(); i != stmts.end(); i++) { 
 			delete *i;
@@ -73,11 +86,14 @@ public:
 	int size() { return stmts.size(); }
 	void push_front(decafAST *e) { stmts.push_front(e); }
 	void push_back(decafAST *e) { stmts.push_back(e); }
-	string str() { return commaList<class decafAST *>(stmts); }
+	string str() {
+		print_location();
+		 return commaList<class decafAST *>(stmts); }
 	list<decafAST *>::iterator begin() {return stmts.begin();}
 	list<decafAST *>::iterator end() {return stmts.end();}
 	bool isEmpty() { return stmts.empty(); }
 	llvm::Value *Codegen() { 
+		
 		return listCodegen<decafAST *>(stmts); 
 	}
 };
@@ -88,7 +104,7 @@ public:
 class Identifier : public decafAST {
 	string id_name;
 public:
-	Identifier(string ** id) : id_name(*(*id)) {
+	Identifier(string ** id) : decafAST(), id_name(*(*id)) {
 		delete *id;
 	}
 	Identifier(string id) : id_name(id) {}
@@ -104,7 +120,7 @@ public:
 class Type: public decafAST {
 	val_type type;
 public:
-	Type(val_type tp) : type(tp){}
+	Type(val_type tp) : decafAST(), type(tp){}
 	~Type() {}
 	string str() {
 		switch(type) {
@@ -132,7 +148,7 @@ public:
 class Binary_Operator : public decafAST {
 	type_op type;
 public:
-	Binary_Operator(type_op tp) : type(tp) {}
+	Binary_Operator(type_op tp) : decafAST(), type(tp) {}
 	~Binary_Operator() {}
 	string str() {
 		switch(type) {
@@ -181,7 +197,7 @@ public:
 class Unary_Operator : public decafAST {
 	type_op type;
 public:
-	Unary_Operator(type_op tp) : type(tp) {}
+	Unary_Operator(type_op tp) : decafAST(), type(tp) {}
 	~Unary_Operator() {}
 	string str() {
 		switch (type) {
@@ -205,7 +221,7 @@ public:
 class Int_Constant : public decafAST {
 	int value;
 public:
-	Int_Constant(int val) : value(val) {}
+	Int_Constant(int val) : decafAST(), value(val) {}
 	~Int_Constant() {}
 	string str() {
 		return "NumberExpr(" + std::to_string(value) + ")";
@@ -221,7 +237,7 @@ public:
 class Bool_Constant : public decafAST {
 	bool value;
 public:
-	Bool_Constant(bool val) : value(val) {}
+	Bool_Constant(bool val) : decafAST(), value(val) {}
 	~Bool_Constant() {}
 	string str() {
 		if(value) {
@@ -241,7 +257,7 @@ public:
 class String_Constant : public decafAST {
 	string strVal;
 public:
-	String_Constant(string ** val) : strVal(*(*val)) {
+	String_Constant(string ** val) : decafAST(), strVal(*(*val)) {
 		delete *val;
 	}
 	~String_Constant() {}
@@ -255,7 +271,7 @@ public:
 
 class Null_Constant : public decafAST {
 public:
-	Null_Constant() {}
+	Null_Constant(): decafAST() {}
 	~Null_Constant() {}
 	string str() {
 		return "NullConstant";
@@ -319,8 +335,6 @@ public:
 			llvm::Value * opVal = getBinaryExp(lval, rval, operation);
 			llvm::BasicBlock * resultingBB = Builder.GetInsertBlock();
 			Builder.CreateBr(phiBB);
-
-
 	
 			// Set up phi block
 			Builder.SetInsertPoint(phiBB);
@@ -378,6 +392,9 @@ public:
 	}
 	llvm::Value *Codegen() {
 		llvm::AllocaInst * variable = (llvm::AllocaInst *)getValueFromTables(varId->str());
+		if(variable != nullptr) {
+			return nullptr;
+		}
 		llvm::Value * value = rvalexpr->Codegen();
 		if(value == nullptr) {
 			return nullptr;
@@ -403,13 +420,17 @@ public:
 		return "AssignArrayLoc(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		llvm::Value * arrayLocation = useArrLoc(name, idx->Codegen());
+		llvm::Value * index = idx->Codegen();
+		if(index->getType() != Builder.getInt32Ty()) {
+			return nullptr;
+		}
+		llvm::Value * arrayLocation = useArrLoc(name, index);
 		llvm::Value * rval = val->Codegen();
 		if(arrayLocation->getType()->getPointerElementType() == rval->getType()) {
 			return Builder.CreateStore(rval, arrayLocation);
 		}
 		else{
-			throw runtime_error("invalid type\n");
+			return nullptr;
 		}
 	
 		return nullptr;
@@ -419,13 +440,17 @@ public:
 class Var_Expr: public decafAST{
 	Identifier * identifier;
 public:
-	Var_Expr(Identifier * id) : identifier(id) {}
+	Var_Expr(Identifier * id) : decafAST(), identifier(id) {}
 	~Var_Expr() { if(identifier) {delete identifier;}}
 	string str() {
 		return "VariableExpr(" + getString(identifier) + ")";
 	}
 	llvm::Value *Codegen() {
-		return useVar(identifier->str());
+		llvm::Value * var = useVar(identifier->str());
+		if(!var) {
+			return nullptr;
+		}
+		return var;
 	}
 };
 
@@ -555,11 +580,11 @@ class Field_Size : public decafAST {
 	// Temporary fix
 	int val;
 public: 
-	Field_Size() {
+	Field_Size(): decafAST() {
 		size = "Scalar";
 		val = SCALAR_VAL;
 	}
-	Field_Size(int value) {
+	Field_Size(int value): decafAST() {
 		if(value == SCALAR_VAL) {
 			size = "Scalar";
 		}
@@ -571,6 +596,8 @@ public:
 	Field_Size(Int_Constant * arrsize) {
 		size = "Array(" + std::to_string(arrsize->get_val()) + ")";
 		val = arrsize->get_val();
+		set_line_pos(arrsize->get_line_pos());
+		set_token_pos(arrsize->get_token_pos());
 	}
 	string str() {
 		return size;
@@ -920,7 +947,7 @@ public:
 
 class Continue: public decafAST {
 public:
-	Continue() {}
+	Continue() : decafAST() {}
 	~Continue() {}
 	string str() {
 		return "ContinueStmt";
@@ -936,7 +963,7 @@ public:
 
 class Break: public decafAST {
 public:
-	Break() {}
+	Break() : decafAST() {}
 	~Break() {}
 	string str() {
 		return "BreakStmt";
@@ -1043,11 +1070,11 @@ class Method_Decl: public decafStmtList {
 		popTable();
 		llvm::raw_ostream &output = llvm::outs();
 		
-		// if(llvm::verifyFunction(*funcVal, &output)) {
-		// 	//throw runtime_error("Function " + funcName + " is invalid\n");
-		// 	std::cout << "Function " << funcName << " is not valid\n";
+		if(llvm::verifyFunction(*funcVal, &output)) {
+			//throw runtime_error("Function " + funcName + " is invalid\n");
+			std::cout << "Function " << funcName << " is not valid\n";
 			
-		// }
+		}
 		return funcVal;
 	}
 };

@@ -16,6 +16,9 @@ int char_val = -1 ;
 // Use YY_USER_ACTION to define function
 // that tracks line position and line column
 
+int lineno = 1;
+int tokenpos = 1;
+
 int prev_line_column = 1;
 int prev_line_position = 1;
 int line_position = 1;
@@ -32,6 +35,8 @@ static void update_position() {
   int len = yyleng;
   prev_line_column = line_column;
   prev_line_position = line_position;
+  lineno = line_column;
+  tokenpos = line_position;
   for(int i = 0; i < len; i++){
     if(yytext[i] == '\n'){
       prev_line_column = line_column;

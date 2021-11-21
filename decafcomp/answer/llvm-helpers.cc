@@ -299,7 +299,7 @@ llvm::BasicBlock * createBasicBlockDefault() {
 }
 
 // For blocks with custom entries
-llvm::BasicBlock * createBasicBlockWithLabel(llvm::Function * func, std::string label) {
+llvm::BasicBlock * createLabelBlock(llvm::Function * func, std::string label) {
 	llvm::BasicBlock * basicBlock = llvm::BasicBlock::Create(
 		TheContext,
 		label,
@@ -516,35 +516,35 @@ const std::string END_ENTRY = "end";
 const std::string END_LOOP_ENTRY = "end_loop";
 
 llvm::BasicBlock * createIfBlock(llvm::Function * func) {
-	return createBasicBlockWithLabel(func, IF_ENTRY);
+	return createLabelBlock(func, IF_ENTRY);
 }
 
 llvm::BasicBlock * createLoopEntryBlock(llvm::Function * func) {
-	return createBasicBlockWithLabel(func, LOOP_ENTRY);
+	return createLabelBlock(func, LOOP_ENTRY);
 }
 
 llvm::BasicBlock * createLoopBlock(llvm::Function * func) {
-	return createBasicBlockWithLabel(func, LOOP_BODY);
+	return createLabelBlock(func, LOOP_BODY);
 }
 
 llvm::BasicBlock * createTrueBlock(llvm::Function * func) {
-	return createBasicBlockWithLabel(func, TRUE_ENTRY);
+	return createLabelBlock(func, TRUE_ENTRY);
 }
 
 llvm::BasicBlock * createElseBlock(llvm::Function * func) {
-	return createBasicBlockWithLabel(func, ELSE_ENTRY);
+	return createLabelBlock(func, ELSE_ENTRY);
 }
 
 llvm::BasicBlock * createNextBlock(llvm::Function * func) {
-	return createBasicBlockWithLabel(func, NEXT_ENTRY);
+	return createLabelBlock(func, NEXT_ENTRY);
 }
 
 llvm::BasicBlock *  createEndBlock(llvm::Function * func) {
-	return createBasicBlockWithLabel(func, END_ENTRY);
+	return createLabelBlock(func, END_ENTRY);
 }
 
 llvm::BasicBlock *  createEndLoopBlock(llvm::Function * func) {
-	return createBasicBlockWithLabel(func, END_LOOP_ENTRY);
+	return createLabelBlock(func, END_LOOP_ENTRY);
 }
 
 
@@ -574,18 +574,18 @@ const std::string PHI_ENTRY = "phiblk";
 const std::string OP_ENTRY = "opblk";
 
 llvm::BasicBlock * createShortCircStart(llvm::Function * func) {
-	return createBasicBlockWithLabel(func, SC_START);
+	return createLabelBlock(func, SC_START);
 }
 
 llvm::BasicBlock * createShortCircBlock(llvm::Function * func) {
-	return createBasicBlockWithLabel(func, SC_ENTRY);
+	return createLabelBlock(func, SC_ENTRY);
 }
 
 llvm::BasicBlock * createPhiBlock(llvm::Function * func) {
-	return createBasicBlockWithLabel(func, PHI_ENTRY);
+	return createLabelBlock(func, PHI_ENTRY);
 }
 
 llvm::BasicBlock * createOpBlock(llvm::Function * func) {
-	return createBasicBlockWithLabel(func, OP_ENTRY);
+	return createLabelBlock(func, OP_ENTRY);
 }
 

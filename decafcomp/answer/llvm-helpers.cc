@@ -110,7 +110,26 @@ llvm::Type *getLLVMType(ValueType type) {
 	}
 }
 
-// -- Checking specific types (decaf, method, externs)
+std::string LLVMTypeToString(llvm::Type * type) {
+	if(type == Builder.getVoidTy()) {
+		return "void";
+	}
+	else if(type == Builder.getInt32Ty()) {
+		return "int";
+	}
+	else if(type == Builder.getInt1Ty()) {
+		return "bool";
+	}
+	else if(type == Builder.getInt8PtrTy()) {
+		return "string";
+	}
+	else {
+		return "";
+	}
+}
+
+// -- Checking specific types (decaf, method, externs, bool, int, string, etc.)
+
 bool isDecafType(llvm::Type * type) {
 	return (type == Builder.getInt32Ty() || type == Builder.getInt1Ty());
 }
@@ -151,7 +170,8 @@ llvm::Constant *initializeLLVMVal(llvm::Type * type, int initialVal) {
 		return Builder.getInt1(initialVal);
 	}
 	else {
-		throw runtime_error("Invalid type!");
+		std::string typeStr = LLVMTypeToString(type);
+		throw runtime_error("constant of type " + typeStr + " cannot be initialized.");
 	}
 }
 
@@ -165,7 +185,7 @@ llvm::Value * promoteBoolToInt(llvm::Value ** val) {
 	if((*val)->getType() == Builder.getInt1Ty()) {
 		return Builder.CreateZExt(*val, Builder.getInt32Ty(), "zexttmp");
 	}
-	throw runtime_error("Value cannot be promoted to integer\n");
+	throw runtime_error("value cannot be promoted to integer.");
 }
 
 // -- Assignments
@@ -174,6 +194,11 @@ void assignVal(llvm::AllocaInst* lval, llvm::Value * rval) {
 	const llvm::PointerType * lvalType = lval->getType();
 	if(rvalType == lvalType) {
 		Builder.CreateStore(rval, lval);
+	}
+	else {
+		std::string rvalstr = LLVMTypeToString(rvalType->getElementType());
+		std::string lvalstr = LLVMTypeToString(lvalType->getElementType());
+		throw std::logic_error("Cannot assign lvalue of type " + lvalstr + " with rvalue of type " + rvalstr + '.');
 	}
 }
 
@@ -195,7 +220,7 @@ llvm::AllocaInst * defineVar(llvm::Type * tp, std::string id) {
 llvm::Value * useVar(std::string id) {
 	llvm::Value * val = getValueFromTables(id);
 	if(val == nullptr) {
-		throw runtime_error("variable " + id + " not found in any table.");
+		throw runtime_error("variable " + id + " cannot be found. Either it is not within scope or is not defined.");
 	}
 	return Builder.CreateLoad(val, id.c_str());
 }
@@ -203,7 +228,12 @@ llvm::Value * useVar(std::string id) {
 llvm::Value * useArrLoc(std::string id, llvm::Value * index) {
 	llvm::GlobalVariable * val = (llvm::GlobalVariable *)getValueFromTables(id);
 	if(val == nullptr) {
-		throw runtime_error("variable " + id + " not found in any table.");
+		throw runtime_error("array " + id + " cannot be found. Either it is not within scope or is not defined.");
+	}
+	llvm::Type * indexType = index->getType();
+	if(indexType != Builder.getInt32Ty()) {
+		std::string typeToStr = LLVMTypeToString(indexType);
+		throw logic_error("array " + id + " cannot be indexed with value of type " + typeToStr + '.');
 	}
 
 	llvm::ArrayType * arrayTp = (llvm::ArrayType *)val->getValueType();
@@ -227,7 +257,8 @@ llvm::GlobalVariable * declareGlobalWithValue(std::string id, llvm::Type * tp, l
 		return globalVar;
 	}
 	else{
-		return nullptr;
+		std::string globalType = LLVMTypeToString(tp);
+		throw logic_error("global variable " + id + " of type " + globalType + " cannot be initialized with a value.");
 	}
 }
 
@@ -241,7 +272,8 @@ llvm::GlobalVariable * declareGlobal(std::string id, llvm::Type * tp) {
 		zeroInit = initializeLLVMVal(tp, 0);
 	}
 	else{
-		return nullptr;
+		std::string globalType = LLVMTypeToString(tp);
+		throw logic_error("global variable " + id + " of type " + globalType + " cannot be initialized with a value.");
 	}
 	return declareGlobalWithValue(id, tp, zeroInit);
 }
@@ -262,26 +294,14 @@ llvm::GlobalVariable * declareGlobalArr(std::string id, llvm::Type * tp, int siz
 		return globalVar;
 	}
 	else{
-		return nullptr;
+		std::string globalType = LLVMTypeToString(tp);
+		throw logic_error("global array " + id + " of type " + globalType + " is not valid.");
 	}
 }
 
 
 
 // -- Blocks
-std::stack<llvm::BasicBlock *> blockStack;
-
-void onInsertBlock(llvm::BasicBlock * block) {
-	blockStack.push(block);
-	Builder.SetInsertPoint(block);
-}
-
-void onBlockEnd() {
-	if(!blockStack.empty()) {
-		blockStack.pop();
-		Builder.SetInsertPoint(blockStack.top());
-	}
-}
 
 const std::string BLOCK_ENTRY_ID = "entry";
 llvm::BasicBlock * createBasicBlock(llvm::Function * func) {
@@ -357,12 +377,12 @@ llvm::Function * defineMethod(
 {
 	// Check if return type is valid
 	if(!isMethodType(returnTp) && !isMainReturnType(returnTp)) {
-		throw runtime_error("Invalid return type for method");
+		throw logic_error("method can not be defined with a return type of " + LLVMTypeToString(returnTp) + '.');
 	}
 	// Validate arguments to make sure they are correct type
 	for(llvm::Type * argType : argTypes) {
 		if(!isDecafType(argType)){
-			throw runtime_error("Invalid arg type for method");
+			throw runtime_error("method argument cannot be of type " + LLVMTypeToString(argType) + '.');
 		}
 	}
 	// One it passes the tests, define function
@@ -376,12 +396,12 @@ llvm::Function * defineExtern(
 {
 	// Check if return type is valid
 	if(!isMethodType(returnTp)) {
-		throw runtime_error("Invalid return type for extern");
+		throw logic_error("extern method can not be defined with a return type of " + LLVMTypeToString(returnTp) + '.');
 	}
 	// Validate arguments to make sure they are correct type
 	for(llvm::Type * argType : argTypes) {
 		if(!isExternType(argType)){
-			throw runtime_error("Invalid arg type for extern");
+			throw runtime_error("extern method argument cannot be of type " + LLVMTypeToString(argType) + '.');
 		}
 	}
 	// One it passes the tests, define function
@@ -440,9 +460,49 @@ typedef enum {
 	UNARY_MINUS
 } OperationType;
 
+std::string operationToString(OperationType opType) {
+	switch(opType) {
+			case PLUS:
+				return "plus(+)";
+			case MINUS:
+				return "minus(-)";
+			case MULT:
+				return "multiply(*)";
+			case DIV:
+				return "divide(/)";
+			case LEFT_SHIFT:
+				return "left shift(<<)";
+			case RIGHT_SHIFT:
+				return "right shift(>>)";
+			case MOD:
+				return "modulus(%)";
+			case LT:
+				return "less than(<)";
+			case GT:
+				return "greater than(>)";
+			case LEQ:
+				return "less than/equal to(<=)";
+			case GEQ:
+				return "greater than/equal to(>=)";
+			case EQ:
+				return "equal to(==)";
+			case NEQ:
+				return "not equal to(!=)";
+			case OR:
+				return "or(||)";
+			case AND:
+				return "and(&&)";	
+			case NOT:
+				return "not(!)";
+			case UNARY_MINUS:
+				return "negative(-)";
+			default:
+				return "";
+		
+	}
+}
+
 llvm::Value * getBinaryExp(llvm::Value * lval, llvm::Value * rval, OperationType operation_tp) {
-	// TODO: handle correct types (int32s for arithmetic, int1s for booleans)
-	// - Currently we are gonna check if lval and rval are either int1s or int32s
 	llvm::Type * lvalType = lval->getType();
 	llvm::Type * rvalType = rval->getType();
 
@@ -475,22 +535,22 @@ llvm::Value * getBinaryExp(llvm::Value * lval, llvm::Value * rval, OperationType
 			case NEQ:
 				return Builder.CreateICmpNE(lval, rval, "neqtmp");
 			default:
-				throw runtime_error("Invalid binary operation for integers!");
+				throw logic_error("cannot apply operation " + operationToString(operation_tp) + " on integers.");
 		}
 	}
 	else if(lvalType == Builder.getInt1Ty() && rvalType == Builder.getInt1Ty()) {
 		switch (operation_tp)
 		{
-		case OR:
-			return Builder.CreateOr(lval, rval, "ortmp");
-		case AND:
-			return Builder.CreateAnd(lval, rval, "andtmp");	
-		case EQ:
-			return Builder.CreateICmpEQ(lval, rval, "eqtmp");
-		case NEQ:
-			return Builder.CreateICmpNE(lval, rval, "neqtmp");		
-		default:
-			throw runtime_error("Invalid binary operation for booleans!");
+			case OR:
+				return Builder.CreateOr(lval, rval, "ortmp");
+			case AND:
+				return Builder.CreateAnd(lval, rval, "andtmp");	
+			case EQ:
+				return Builder.CreateICmpEQ(lval, rval, "eqtmp");
+			case NEQ:
+				return Builder.CreateICmpNE(lval, rval, "neqtmp");		
+			default:
+				throw logic_error("cannot apply operation " + operationToString(operation_tp) + " on booleans.");
 		}
 	}
 	else {
@@ -502,11 +562,17 @@ llvm::Value * getBinaryExp(llvm::Value * lval, llvm::Value * rval, OperationType
 llvm::Value * getUnaryExp(llvm::Value * value, OperationType operation_tp) {
 	switch(operation_tp) {
 		case NOT:
+			if(value->getType() != Builder.getInt1Ty()) {
+				throw logic_error("cannot apply unary not operation on type " + LLVMTypeToString(value->getType()) + '.');
+			}
 			return Builder.CreateNot(value, "nottmp");
 		case UNARY_MINUS:
+			if(value->getType() != Builder.getInt32Ty()) {
+				throw logic_error("cannot apply unary minus operation on type " + LLVMTypeToString(value->getType()) + '.');
+			}
 			return Builder.CreateNeg(value, "negtmp");
 		default:
-			throw runtime_error("Invalid unary operation");
+			throw logic_error("cannot apply operation " + operationToString(operation_tp) + " on unary");
 	}
 }
 

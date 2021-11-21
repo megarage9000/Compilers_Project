@@ -322,6 +322,7 @@ public:
 			// Set start of short circuit
 			Builder.SetInsertPoint(scStartBB);
 			llvm::Value * lval = lval_expr->Codegen();
+			
 			if(operation == AND) {
 				Builder.CreateCondBr(lval, opBB, scBB);
 			}

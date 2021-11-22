@@ -46,7 +46,7 @@ public:
 		throw_semantic_error(std::string(e.what()));
 	}
 	void throw_semantic_error(std::string message) {
-		std::string error_message = "\nSEMANTIC ERROR: " + message + get_location();
+		std::string error_message = "SEMANTIC ERROR: " + message + get_location();
 		throw std::runtime_error(error_message.c_str());
 	}
 };
@@ -436,7 +436,7 @@ public:
 		}
 		llvm::Value * value = rval_expr->Codegen();
 		if(value == nullptr) {
-			throw_semantic_error("could not evaluate rval expression.");
+			rval_expr->throw_semantic_error("could not evaluate rval expression.");
 			return nullptr;
 		}
 		assignVal(variable, value);
@@ -462,7 +462,7 @@ public:
 	llvm::Value *Codegen() {
 		llvm::Value * index = idx->Codegen();
 		if(index->getType() != Builder.getInt32Ty()) {
-			throw_semantic_error("index does not evaluate to integer.");
+			idx->throw_semantic_error("index does not evaluate to integer.");
 			return nullptr;
 		}
 
@@ -477,7 +477,9 @@ public:
 			return Builder.CreateStore(rval, arrayLocation);
 		}
 		else{
-			throw_semantic_error("index does not evaluate to integer.");
+			throw_semantic_error("cannot assign array of type " 
+								+ LLVMTypeToString(arrayLocation->getType()->getPointerElementType()) 
+								+ " with value of type " + LLVMTypeToString(rval->getType()));
 			return nullptr;
 		}
 	}
@@ -570,11 +572,16 @@ public:
 						try {
 							val = promoteBoolToInt(&val);
 						} catch (std::exception &e) {
-							throw_semantic_error(e);
+							(*it)->throw_semantic_error(e);
+							return nullptr;
 						}
 					}
 					else if(valType != argType) {
-						throw_semantic_error("arguement type " + LLVMTypeToString(argType) + " cannot accept parameter of type " + LLVMTypeToString(argType));
+						(*it)->throw_semantic_error("arguement type " 
+													+ LLVMTypeToString(argType)
+													+ " cannot accept parameter of type " 
+													+ LLVMTypeToString(valType));
+						return nullptr;
 					}
 					values.push_back(val);
 					funcArgIt++;
@@ -608,6 +615,7 @@ public:
 		// Check if the variable is already stored in the table, if not, define it
 		if(getValueFromTopTable(id) != nullptr) {
 			throw_semantic_error("variable " + id + " is already defined within scope.");
+			return nullptr;
 		} 
 
 		return defineVar(getLLVMType(tp), id);
@@ -871,11 +879,11 @@ public:
 			// Get the conditional value of expr
 			llvm::Value * value = val->Codegen();
 			if(value == nullptr) {
-				throw_semantic_error("cannot evaluate if expression.");
+				val->throw_semantic_error("cannot evaluate if expression.");
 				return nullptr;
 			}
 			else if(value->getType() != Builder.getInt1Ty()) {
-				throw_semantic_error("if expression is not a boolean.");
+				val->throw_semantic_error("if expression is not a boolean.");
 				return nullptr;
 			}
 
@@ -887,11 +895,11 @@ public:
 			// Get the conditional value of expr
 			llvm::Value * value = val->Codegen();
 			if(value == nullptr) {
-				throw_semantic_error("cannot evaluate if expression.");
+				val->throw_semantic_error("cannot evaluate if expression.");
 				return nullptr;
 			}
 			else if(value->getType() != Builder.getInt1Ty()) {
-				throw_semantic_error("if expression is not a boolean.");
+				val->throw_semantic_error("if expression is not a boolean.");
 				return nullptr;
 			}
 			Builder.CreateCondBr(value, trueBB, endBB);
@@ -942,7 +950,7 @@ public:
 		Builder.SetInsertPoint(forEntry);
 		llvm::Value * expVal = exp->Codegen();
 		if(expVal->getType() != Builder.getInt1Ty()) {
-			throw_semantic_error("for loop condition is not of type boolean");
+			exp->throw_semantic_error("for loop condition is not of type boolean");
 			return nullptr;
 		}
 		Builder.CreateCondBr(expVal, loopBlock, endBlock);
@@ -965,11 +973,11 @@ public:
 };
 
 class While_Loop: public decafStmtList {
-	decafAST * exprAST;
+	decafAST * exp;
 	Block * loop;
 public:
 	While_Loop(decafAST * expression, Block * block) : decafStmtList(){
-		exprAST = expression;
+		exp = expression;
 		loop = block;
 		push_back(expression);
 		push_back(block);
@@ -992,9 +1000,9 @@ public:
 		Builder.CreateBr(whileEntry);
 
 		Builder.SetInsertPoint(whileEntry);
-		llvm::Value * expVal = exprAST->Codegen();
+		llvm::Value * expVal = exp->Codegen();
 		if(expVal->getType() != Builder.getInt1Ty()) {
-			throw_semantic_error("while loop condition is not of type boolean.");
+			exp->throw_semantic_error("while loop condition is not of type boolean.");
 			return nullptr;
 		}
 		Builder.CreateCondBr(expVal, loopBlock, endBlock);

@@ -12,6 +12,9 @@
 
 using namespace std;
 
+
+static llvm::Function * mainFunction = nullptr;
+
 /*
 	CODE STYLE:
 	variables: snake_case/camelCase
@@ -37,7 +40,14 @@ public:
   void set_line_pos(int pos) { line_pos = pos;}
   void set_token_pos(int pos) { token_pos = pos;} 	
   string get_location(){ 
-	  return "\nat line pos = " + std::to_string(line_pos) + "\n at token pos = " + std::to_string(token_pos) + '\n'; 
+	  return ".\nAt line pos = " + std::to_string(line_pos) + ", token pos = " + std::to_string(token_pos); 
+	}
+	void throw_semantic_error(std::exception e) {
+		throw_semantic_error(std::string(e.what()));
+	}
+	void throw_semantic_error(std::string message) {
+		std::string error_message = "\nSEMANTIC ERROR: " + message + get_location();
+		throw std::runtime_error(error_message.c_str());
 	}
 };
 
@@ -58,7 +68,6 @@ string getString(decafAST *d) {
 	}
 }
 
-// For calling errors
 
 template <class T>
 string commaList(list<T> vec) {
@@ -237,7 +246,12 @@ public:
 		return value;
 	}
 	llvm::Value *Codegen() {
-		return initializeLLVMVal(INTTYPE,  value);
+		try {
+			return initializeLLVMVal(INTTYPE,  value);
+		} catch (std::exception& e) {
+			throw_semantic_error(e);
+			return nullptr;
+		}
 	}
 };
 
@@ -256,7 +270,12 @@ public:
 		return value;
 	}
 	llvm::Value *Codegen() {
-		return initializeLLVMVal(BOOLTYPE,  value);
+		try {
+			return initializeLLVMVal(BOOLTYPE,  value);
+		} catch (std::exception& e) {
+			throw_semantic_error(e);
+			return nullptr;
+		}
 	}
 };
 
@@ -308,7 +327,8 @@ public:
 		if(operation == AND || operation == OR) {
 			llvm::Function * func = Builder.GetInsertBlock()->getParent();
 			if(func == nullptr) {
-				throw runtime_error("Cannot fetch parent function, is the if statement outside of a function?\n");
+				throw_semantic_error("binary expression cannot find parent function.");
+				return nullptr;
 			}
 			
 
@@ -337,7 +357,13 @@ public:
 			// Set bool block
 			Builder.SetInsertPoint(opBB);
 			llvm::Value * rval = rval_expr->Codegen();
-			llvm::Value * op_value = getBinaryExp(lval, rval, operation);
+			llvm::Value * op_value;
+			try {
+				op_value = getBinaryExp(lval, rval, operation);
+			} catch (std::exception &e) {
+				throw_semantic_error(e);
+				return nullptr;
+			}
 			llvm::BasicBlock * resultingBB = Builder.GetInsertBlock();
 			Builder.CreateBr(phiBB);
 	
@@ -352,9 +378,15 @@ public:
 			llvm::Value * lval = lval_expr->Codegen();
 			llvm::Value * rval = rval_expr->Codegen();
 			if(lval == rval && lval == nullptr) {
+				throw_semantic_error("cannot evaluate lval and rval expressions.");
 				return nullptr;
 			}
-			return getBinaryExp(lval, rval, operation);
+			try {
+				return getBinaryExp(lval, rval, operation);
+			} catch (std::exception &e) {
+				throw_semantic_error(e);
+				return nullptr;
+			}
 		}
 	}
 };
@@ -375,6 +407,7 @@ public:
 	llvm::Value *Codegen() {
 		llvm::Value * val = val_expr->Codegen();
 		if(val == nullptr) {
+			throw_semantic_error("cannot evaluate unary expression.");
 			return nullptr;
 		}
 		return getUnaryExp(val, operation);
@@ -398,10 +431,12 @@ public:
 	llvm::Value *Codegen() {
 		llvm::AllocaInst * variable = (llvm::AllocaInst *)getValueFromTables(var_id);
 		if(variable == nullptr) {
+			throw_semantic_error("variable " + var_id + " is not within scope.");
 			return nullptr;
 		}
 		llvm::Value * value = rval_expr->Codegen();
 		if(value == nullptr) {
+			throw_semantic_error("could not evaluate rval expression.");
 			return nullptr;
 		}
 		assignVal(variable, value);
@@ -427,18 +462,24 @@ public:
 	llvm::Value *Codegen() {
 		llvm::Value * index = idx->Codegen();
 		if(index->getType() != Builder.getInt32Ty()) {
+			throw_semantic_error("index does not evaluate to integer.");
 			return nullptr;
 		}
-		llvm::Value * arrayLocation = useArrLoc(name, index);
+
+		llvm::Value * arrayLocation;
+		try {
+			arrayLocation = useArrLoc(name, index);
+		} catch(std::exception &e) {
+			throw_semantic_error(e);
+		}
 		llvm::Value * rval = val->Codegen();
 		if(arrayLocation->getType()->getPointerElementType() == rval->getType()) {
 			return Builder.CreateStore(rval, arrayLocation);
 		}
 		else{
+			throw_semantic_error("index does not evaluate to integer.");
 			return nullptr;
 		}
-	
-		return nullptr;
 	}
 };
 
@@ -453,6 +494,7 @@ public:
 	llvm::Value *Codegen() {
 		llvm::Value * var = useVar(id_ast->str());
 		if(!var) {
+			throw_semantic_error("variable " + id_ast->str() + " is not within scope.");
 			return nullptr;
 		}
 		return var;
@@ -473,7 +515,14 @@ public:
 		return "ArrayLocExpr(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		return Builder.CreateLoad(useArrLoc(name, exp->Codegen()), name + "tmp");
+		llvm::Value * arr_loc;
+		try {
+			arr_loc = useArrLoc(name, exp->Codegen());
+		} catch (std::exception& e) {
+			throw_semantic_error(e);
+			return nullptr;
+		}
+		return Builder.CreateLoad(arr_loc, name + "tmp");
 	}
 };
 
@@ -502,6 +551,7 @@ public:
 		// Get function pointer
 		llvm::Function * func = (llvm::Function *)getValueFromTables(func_name);
 		if(!func) {
+			throw_semantic_error("function " + func_name + " is not defined within this scope.");
 			return nullptr;
 		}
 		if(args != nullptr) {
@@ -514,11 +564,17 @@ public:
 					llvm::Value * val = (*it)->Codegen();
 					// Checking arg types and val types to see if there needs
 					// to be an int1 -> int32 conversion
-					const llvm::Type * valType = val->getType();
-					const llvm::Type * argType = funcArgIt->getType();
+					llvm::Type * valType = val->getType();
+					llvm::Type * argType = funcArgIt->getType();
 					if(argType == Builder.getInt32Ty() && valType == Builder.getInt1Ty()) { 
-						val = promoteBoolToInt(&val);
-						const llvm::Type * newType = val->getType();
+						try {
+							val = promoteBoolToInt(&val);
+						} catch (std::exception &e) {
+							throw_semantic_error(e);
+						}
+					}
+					else if(valType != argType) {
+						throw_semantic_error("arguement type " + LLVMTypeToString(argType) + " cannot accept parameter of type " + LLVMTypeToString(argType));
 					}
 					values.push_back(val);
 					funcArgIt++;
@@ -551,7 +607,7 @@ public:
 	llvm::Value *Codegen() {
 		// Check if the variable is already stored in the table, if not, define it
 		if(getValueFromTopTable(id) != nullptr) {
-			throw runtime_error("variable " + id + " is already defined\n");
+			throw_semantic_error("variable " + id + " is already defined within scope.");
 		} 
 
 		return defineVar(getLLVMType(tp), id);
@@ -641,10 +697,20 @@ public:
 	}
 	llvm::Value *Codegen() {
 		if(size == SCALAR_VAL){
-			return declareGlobal(name, tp);
+			try{
+				return declareGlobal(name, tp);
+			} catch(std::exception &e) {
+				throw_semantic_error(e);
+				return nullptr;
+			}
 		}
 		else {
-			return declareGlobalArr(name, tp, size);
+			try {
+				return declareGlobalArr(name, tp, size);
+			} catch (std::exception &e) {
+				throw_semantic_error(e);
+				return nullptr;
+			}
 		}
 	}
 };
@@ -701,7 +767,12 @@ public:
 	}
 	llvm::Value *Codegen() {
 		llvm::Constant * value = (llvm::Constant *)const_val->Codegen();
-		return declareGlobalWithValue(name, tp, value);
+		try {
+			return declareGlobalWithValue(name, tp, value);
+		} catch(std::exception &e) {
+			throw_semantic_error(e);
+			return nullptr;
+		}
 	}
 };
 
@@ -766,7 +837,8 @@ public:
 		// Get parent function
 		llvm::Function * func = Builder.GetInsertBlock()->getParent();
 		if(func == nullptr) {
-			throw runtime_error("Cannot fetch parent function, is the if statement outside of a function?\n");
+			throw_semantic_error("if statement cannot find parent function.");
+			return nullptr;
 		}
 		pushTable();
 		// Create Blocks
@@ -799,7 +871,12 @@ public:
 			// Get the conditional value of expr
 			llvm::Value * value = val->Codegen();
 			if(value == nullptr) {
-				throw runtime_error("Cannot evaluate value\n");
+				throw_semantic_error("cannot evaluate if expression.");
+				return nullptr;
+			}
+			else if(value->getType() != Builder.getInt1Ty()) {
+				throw_semantic_error("if expression is not a boolean.");
+				return nullptr;
 			}
 
 			Builder.CreateCondBr(value, trueBB, elseBB);
@@ -810,7 +887,12 @@ public:
 			// Get the conditional value of expr
 			llvm::Value * value = val->Codegen();
 			if(value == nullptr) {
-				throw runtime_error("Cannot evaluate value\n");
+				throw_semantic_error("cannot evaluate if expression.");
+				return nullptr;
+			}
+			else if(value->getType() != Builder.getInt1Ty()) {
+				throw_semantic_error("if expression is not a boolean.");
+				return nullptr;
 			}
 			Builder.CreateCondBr(value, trueBB, endBB);
 		}
@@ -844,7 +926,8 @@ public:
 
 		llvm::Function * func = Builder.GetInsertBlock()->getParent();	
 		if(func == nullptr) {
-			throw runtime_error("Cannot fetch parent function, is the if statement outside of a function?\n");
+			throw_semantic_error("for loop cannot find parent function.");
+			return nullptr;
 		}
 
 		// Create blocks for labels
@@ -859,7 +942,8 @@ public:
 		Builder.SetInsertPoint(forEntry);
 		llvm::Value * expVal = exp->Codegen();
 		if(expVal->getType() != Builder.getInt1Ty()) {
-			throw runtime_error("Invalid terminating condition for the for-loop\n");
+			throw_semantic_error("for loop condition is not of type boolean");
+			return nullptr;
 		}
 		Builder.CreateCondBr(expVal, loopBlock, endBlock);
 	
@@ -897,7 +981,8 @@ public:
 		pushTable();
 		llvm::Function * func = Builder.GetInsertBlock()->getParent();	
 		if(func == nullptr) {
-			throw runtime_error("Cannot fetch parent function, is the if statement outside of a function?\n");
+			throw_semantic_error("while loop cannot find parent function.");
+			return nullptr;
 		}
 
 		llvm::BasicBlock * whileEntry = createLoopEntryBlock(func);
@@ -909,7 +994,8 @@ public:
 		Builder.SetInsertPoint(whileEntry);
 		llvm::Value * expVal = exprAST->Codegen();
 		if(expVal->getType() != Builder.getInt1Ty()) {
-			throw runtime_error("Invalid terminating condition for the for-loop\n");
+			throw_semantic_error("while loop condition is not of type boolean.");
+			return nullptr;
 		}
 		Builder.CreateCondBr(expVal, loopBlock, endBlock);
 
@@ -944,7 +1030,7 @@ public:
 	}
 	llvm::Value *Codegen() {
 		if(!value) {
-			return nullptr;
+			return Builder.CreateRetVoid();
 		}
 		return Builder.CreateRet(value->Codegen());
 	}
@@ -960,7 +1046,8 @@ public:
 	llvm::Value *Codegen() {
 		llvm::BasicBlock * label = getNextEntryBlock();
 		if(label == nullptr) {
-			throw runtime_error("Could not find a loop entry label, are you inside a while / for loop?\n");
+			throw_semantic_error("continue statement is invalid in this block.");
+			return nullptr;
 		}
 		return Builder.CreateBr(label);
 	}
@@ -976,7 +1063,8 @@ public:
 	llvm::Value *Codegen() {
 		llvm::BasicBlock * label = getEndLoopBlock();
 		if(label == nullptr) {
-			throw runtime_error("Could not find a end entry label, are you inside a while / for loop?\n");
+			throw_semantic_error("break statement is invalid in this block.");
+			return nullptr;
 		}
 		return Builder.CreateBr(label);
 	}
@@ -1012,7 +1100,12 @@ public:
 	}
 	llvm::Value *Codegen() {
 		// For now we assume we don't store / allocate extern parameters
-		return defineExtern(returnType, argTypes, func_name);
+		try {
+			return defineExtern(returnType, argTypes, func_name);
+		} catch (std::exception &e) {
+			throw_semantic_error(e);
+			return nullptr;
+		}
 	}
 };
 
@@ -1058,23 +1151,39 @@ class Method_Decl: public decafStmtList {
 	}
 	llvm::Value *Codegen() {
 		// Defines the function, creates a block and arguments
-		llvm::Function * funcVal = defineMethod(returnType, argTypes, func_name);
-		return funcVal;
+		try {
+			return defineMethod(returnType, argTypes, func_name);
+		} catch (std::exception &e) {
+			throw_semantic_error(e);
+			return nullptr;
+		}
 	}
 
 	llvm::Value *CodegenFuncBlock() {
 		llvm::Function * funcVal = (llvm::Function *)getValueFromTables(func_name);
+		if(funcVal == nullptr) {
+			throw_semantic_error(func_name + " is not yet defined.");
+			return nullptr;
+		}
 		// New symbol table
 		pushTable();
 		// Prepare the arguments and block
 		setupFunc(funcVal, argNames);
 		// Define the block statements
 		funcBlock->Codegen();
-		checkFxn(funcVal);
 		// Check function if it has a valid return value, if not add a default value
+		checkFxn(funcVal);
+		// If it's a main function
+		if(func_name == "main" && mainFunction == nullptr) {
+			mainFunction = funcVal;
+		}
+		// is this a semantic error?
+		// else if(func_name == "main" && mainFunction != nullptr) {
+		// 	throw_semantic_error("main function is already defined.")
+		// }
 		popTable();
-		llvm::raw_ostream &output = llvm::outs();
 		
+		// llvm::raw_ostream &output = llvm::outs();
 		// if(llvm::verifyFunction(*funcVal, &output)) {
 		// 	//throw runtime_error("Function " + func_name + " is invalid\n");
 		// 	std::cout << "Function " << func_name << " is not valid\n";

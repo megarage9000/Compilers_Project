@@ -13,6 +13,7 @@ int yylex_destroy(void);
 
 // print AST?
 bool printAST = false;
+bool success = true;
 
 
 using namespace std;
@@ -23,27 +24,6 @@ using namespace std;
 
 #include "decafcomp.cc"
 
-// dummy main function
-// WARNING: this is not how you should implement code generation
-// for the main function!
-// You should write the codegen for the main method as 
-// part of the codegen for method declarations (MethodDecl)
-static llvm::Function *TheFunction = 0;
-
-// we have to create a main function 
-llvm::Function *gen_main_def() {
-  // create the top-level definition for main
-  llvm::FunctionType *FT = llvm::FunctionType::get(llvm::IntegerType::get(TheContext, 32), false);
-  llvm::Function *TheFunction = llvm::Function::Create(FT, llvm::Function::ExternalLinkage, "main", TheModule);
-  if (TheFunction == 0) {
-    throw runtime_error("empty function block"); 
-  }
-  // Create a new basic block which contains a sequence of LLVM instructions
-  llvm::BasicBlock *BB = llvm::BasicBlock::Create(TheContext, "entry", TheFunction);
-  // All subsequent calls to IRBuilder will place instructions in this location
-  Builder.SetInsertPoint(BB);
-  return TheFunction;
-}
 
 // For AST lists, starts as the base case
 decafStmtList * initialize_recursive_list(decafAST * a, decafAST * b) {
@@ -121,7 +101,8 @@ program: extern_declaration decafpackage
         try {
             prog->Codegen();
         } catch(const std::exception& e) {
-            std::cout << "Error message: " << e.what() << '\n';
+            std::cerr << e.what() << '\n';
+            success = false;
             // TODO set flag here
         } 
         delete prog;
@@ -137,7 +118,8 @@ program: extern_declaration decafpackage
             prog->Codegen();
 
         } catch(const std::exception& e) {
-            std::cout << "Error message: " << e.what() << '\n';
+            std::cerr << e.what() << '\n';
+            success = false;
             // TODO set flag here
         } 
         delete prog;
@@ -444,6 +426,9 @@ int main() {
     pushTable();
   // parse the input and create the abstract syntax tree
   int retval = yyparse();
+  if(mainFunction == nullptr) {
+      success = false;
+  }
   // remove symbol table
   // Finish off the main function. (see the WARNING above)
   // return 0 from main, which is EXIT_SUCCESS
@@ -451,7 +436,9 @@ int main() {
   // Validate the generated code, checking for consistency.
   // verifyFunction(*TheFunction);
   // Print out all of the generated code to stderr
-  TheModule->print(llvm::errs(), nullptr);
+  if(success) {
+    TheModule->print(llvm::errs(), nullptr);
+  }
   popTable();
   return(retval >= 1 ? EXIT_FAILURE : EXIT_SUCCESS);
 }

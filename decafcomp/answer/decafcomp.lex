@@ -217,10 +217,7 @@ while                      { return T_WHILE; }
     Integer Rules
   */
 {decimal_digit}      {
-  string input = std::string(yytext);
-  stringstream ss(input);
-  yylval.inval = 0;
-  ss >> yylval.inval;
+  yylval.inval = strtol(yytext, nullptr, 10);
   return T_INTCONSTANT;
 } 
 {hex_digit}                       {

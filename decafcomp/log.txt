@@ -1,600 +1,417 @@
 INFO:root:path=dev
-INFO:root:Checking dev/unreachable-nobrute.out
-INFO:root:Diff between reference and your output for dev/unreachable-nobrute.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +0,0 @@
--b'hello'
-INFO:root:Checking dev/4.ret
-INFO:root:dev/4.ret Correct!
-INFO:root:Checking dev/unreachable.out
-INFO:root:Diff between reference and your output for dev/unreachable.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +0,0 @@
--b'hello'
-INFO:root:Checking dev/global-int-def.out
-INFO:root:Diff between reference and your output for dev/global-int-def.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +0,0 @@
--b'3'
-INFO:root:Checking dev/safe2.out
-INFO:root:Diff between reference and your output for dev/safe2.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +0,0 @@
--b'Hello, world!'
-INFO:root:Checking dev/geq.out
-INFO:root:dev/geq.out Correct!
-INFO:root:Checking dev/default-passes-ok.out
-INFO:root:dev/default-passes-ok.out Correct!
-INFO:root:Checking dev/intcallcallerexpr.out
-INFO:root:dev/intcallcallerexpr.out Correct!
-INFO:root:Checking dev/var2.out
-INFO:root:dev/var2.out Correct!
-INFO:root:Checking dev/undefined-statements-1.out
-INFO:root:dev/undefined-statements-1.out Correct!
-INFO:root:Checking dev/no-main.ret
-INFO:root:dev/no-main.ret Correct!
-INFO:root:Checking dev/lshift.out
-INFO:root:dev/lshift.out Correct!
-INFO:root:Checking dev/charexpr-2.out
-INFO:root:dev/charexpr-2.out Correct!
-INFO:root:Checking dev/returncheck.out
-INFO:root:dev/returncheck.out Correct!
-INFO:root:Checking dev/multvar.out
-INFO:root:dev/multvar.out Correct!
-INFO:root:Checking dev/empty.ret
-INFO:root:dev/empty.ret Correct!
-INFO:root:Checking dev/1.ret
-INFO:root:dev/1.ret Correct!
-INFO:root:Checking dev/onlystate.out
-INFO:root:dev/onlystate.out Correct!
-INFO:root:Checking dev/if-func3.ret
-INFO:root:dev/if-func3.ret Correct!
-INFO:root:Checking dev/bgr.out
-INFO:root:dev/bgr.out Correct!
-INFO:root:Checking dev/externprintstring.out
-INFO:root:dev/externprintstring.out Correct!
-INFO:root:Checking dev/and.out
-INFO:root:dev/and.out Correct!
-INFO:root:Checking dev/ok-scoping-2.out
-INFO:root:dev/ok-scoping-2.out Correct!
-INFO:root:Checking dev/truefalse.out
-INFO:root:Diff between reference and your output for dev/truefalse.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +0,0 @@
--b'hello'
-INFO:root:Checking dev/expr-testfile-6.out
-INFO:root:dev/expr-testfile-6.out Correct!
-INFO:root:Checking dev/method0.out
-INFO:root:dev/method0.out Correct!
-INFO:root:Checking dev/for-break-1.out
-INFO:root:dev/for-break-1.out Correct!
-INFO:root:Checking dev/if-else-nested.out
-INFO:root:dev/if-else-nested.out Correct!
-INFO:root:Checking dev/if-simple.out
-INFO:root:dev/if-simple.out Correct!
-INFO:root:Checking dev/mod.out
-INFO:root:dev/mod.out Correct!
-INFO:root:Checking dev/18.ret
-INFO:root:dev/18.ret Correct!
-INFO:root:Checking dev/15.ret
-INFO:root:dev/15.ret Correct!
-INFO:root:Checking dev/e3.ret
-INFO:root:dev/e3.ret Correct!
-INFO:root:Checking dev/intcallcalleeexpr.out
-INFO:root:dev/intcallcalleeexpr.out Correct!
-INFO:root:Checking dev/21.ret
-INFO:root:dev/21.ret Correct!
-INFO:root:Checking dev/expr-testfile-8.out
-INFO:root:dev/expr-testfile-8.out Correct!
-INFO:root:Checking dev/emptyblock.out
-INFO:root:dev/emptyblock.out Correct!
-INFO:root:Checking dev/global-int-array-def.out
-INFO:root:Diff between reference and your output for dev/global-int-array-def.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +1 @@
--b'2'
-+b'0'
-INFO:root:Checking dev/boolcall2.out
-INFO:root:dev/boolcall2.out Correct!
-INFO:root:Checking dev/method0-prev.ret
-INFO:root:dev/method0-prev.ret Correct!
-INFO:root:Checking dev/bintneq.out
-INFO:root:dev/bintneq.out Correct!
-INFO:root:Checking dev/stringescapequote.out
-INFO:root:dev/stringescapequote.out Correct!
-INFO:root:Checking dev/global-bool-array-def.out
-INFO:root:Diff between reference and your output for dev/global-bool-array-def.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +1 @@
--b'1'
-+b'0'
-INFO:root:Checking dev/times.out
-INFO:root:dev/times.out Correct!
-INFO:root:Checking dev/var3.out
-INFO:root:dev/var3.out Correct!
-INFO:root:Checking dev/boolvar.out
-INFO:root:dev/boolvar.out Correct!
-INFO:root:Checking dev/ifelse.ret
-INFO:root:dev/ifelse.ret Correct!
-INFO:root:Checking dev/12.ret
-INFO:root:dev/12.ret Correct!
-INFO:root:Checking dev/inthexconst.out
-INFO:root:dev/inthexconst.out Correct!
-INFO:root:Checking dev/for-break.out
-INFO:root:Diff between reference and your output for dev/for-break.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +0,0 @@
--b'012345'
-INFO:root:Checking dev/boolcallcallerexpr.out
-INFO:root:dev/boolcallcallerexpr.out Correct!
-INFO:root:Checking dev/callexpr.out
-INFO:root:dev/callexpr.out Correct!
-INFO:root:Checking dev/backward.out
-INFO:root:dev/backward.out Correct!
-INFO:root:Checking dev/externprintint.out
-INFO:root:dev/externprintint.out Correct!
-INFO:root:Checking dev/whileloop.ret
-INFO:root:dev/whileloop.ret Correct!
-INFO:root:Checking dev/while-break-scope-test.out
-INFO:root:Diff between reference and your output for dev/while-break-scope-test.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +1 @@
--b'60'
-+b'10'
-INFO:root:Checking dev/methodcall1.ret
-INFO:root:dev/methodcall1.ret Correct!
-INFO:root:Checking dev/block.ret
-INFO:root:dev/block.ret Correct!
-INFO:root:Checking dev/statements-assign-to-param.out
-INFO:root:dev/statements-assign-to-param.out Correct!
-INFO:root:Checking dev/global-var-assign.out
-INFO:root:Diff between reference and your output for dev/global-var-assign.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +0,0 @@
--b'421'
-INFO:root:Checking dev/assignmismatch-intofchar-ok.out
-INFO:root:dev/assignmismatch-intofchar-ok.out Correct!
-INFO:root:Checking dev/methodcall2.ret
-INFO:root:dev/methodcall2.ret Correct!
-INFO:root:Checking dev/gr.out
-INFO:root:dev/gr.out Correct!
-INFO:root:Checking dev/returnnoparens.ret
-INFO:root:dev/returnnoparens.ret Correct!
-INFO:root:Checking dev/expr-testfile-7.out
-INFO:root:dev/expr-testfile-7.out Correct!
-INFO:root:Checking dev/mixedcallchainexprmultibranch.out
-INFO:root:dev/mixedcallchainexprmultibranch.out Correct!
-INFO:root:Checking dev/bboolneq.out
-INFO:root:dev/bboolneq.out Correct!
-INFO:root:Checking dev/unreachable-all.out
-INFO:root:Diff between reference and your output for dev/unreachable-all.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1,2 +0,0 @@
--b'hello'
--b'hello'
-INFO:root:Checking dev/10.ret
-INFO:root:dev/10.ret Correct!
-INFO:root:Checking dev/or.out
-INFO:root:dev/or.out Correct!
-INFO:root:Checking dev/boolconst-var.out
-INFO:root:dev/boolconst-var.out Correct!
-INFO:root:Checking dev/methodcall0.ret
-INFO:root:dev/methodcall0.ret Correct!
-INFO:root:Checking dev/booleq.out
-INFO:root:dev/booleq.out Correct!
-INFO:root:Checking dev/var4.out
-INFO:root:Diff between reference and your output for dev/var4.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +1 @@
--b'00001111'
-+b'04198992001111'
-INFO:root:Checking dev/9.ret
-INFO:root:dev/9.ret Correct!
-INFO:root:Checking dev/externreadint.out
-INFO:root:dev/externreadint.out Correct!
-INFO:root:Checking dev/method2.out
-INFO:root:dev/method2.out Correct!
 INFO:root:Checking dev/arith1.out
 INFO:root:dev/arith1.out Correct!
-INFO:root:Checking dev/binteq.out
-INFO:root:dev/binteq.out Correct!
-INFO:root:Checking dev/undefined-statements-3.out
-INFO:root:dev/undefined-statements-3.out Correct!
-INFO:root:Checking dev/while-continue.out
-INFO:root:Diff between reference and your output for dev/while-continue.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +0,0 @@
--b'13579'
-INFO:root:Checking dev/global-bool-def.out
-INFO:root:Diff between reference and your output for dev/global-bool-def.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +0,0 @@
--b'1'
-INFO:root:Checking dev/returnemptyparens.out
-INFO:root:dev/returnemptyparens.out Correct!
-INFO:root:Checking dev/returnempty.ret
-INFO:root:dev/returnempty.ret Correct!
-INFO:root:Checking dev/boolcallchain3expr.out
-INFO:root:dev/boolcallchain3expr.out Correct!
-INFO:root:Checking dev/neg.out
-INFO:root:dev/neg.out Correct!
-INFO:root:Checking dev/bgeq.out
-INFO:root:dev/bgeq.out Correct!
-INFO:root:Checking dev/arith3.ret
-INFO:root:dev/arith3.ret Correct!
-INFO:root:Checking dev/7.ret
-INFO:root:dev/7.ret Correct!
 INFO:root:Checking dev/boolconst.out
 INFO:root:dev/boolconst.out Correct!
-INFO:root:Checking dev/whiles.out
-INFO:root:Diff between reference and your output for dev/whiles.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1,26 +1 @@
- b'hello'
--b'1,1'
--b'1,2'
--b'1,3'
--b'1,5'
--b'1,6'
--b'2,1'
--b'2,2'
--b'2,3'
--b'2,5'
--b'2,6'
--b'3,1'
--b'3,2'
--b'3,3'
--b'3,5'
--b'3,6'
--b'4,1'
--b'4,2'
--b'4,3'
--b'4,5'
--b'4,6'
--b'6,1'
--b'6,2'
--b'6,3'
--b'6,5'
--b'6,6'
-INFO:root:Checking dev/gcd.out
-INFO:root:Diff between reference and your output for dev/gcd.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +0,0 @@
--b'10'
-INFO:root:Checking dev/3.ret
-INFO:root:dev/3.ret Correct!
-INFO:root:Checking dev/externs.ret
-INFO:root:dev/externs.ret Correct!
-INFO:root:Checking dev/ok-scoping-1.out
-INFO:root:dev/ok-scoping-1.out Correct!
-INFO:root:Checking dev/blt.out
-INFO:root:dev/blt.out Correct!
+INFO:root:Checking dev/prec.out
+INFO:root:dev/prec.out Correct!
+INFO:root:Checking dev/boolvar.out
+INFO:root:dev/boolvar.out Correct!
+INFO:root:Checking dev/intcallchain3.out
+INFO:root:dev/intcallchain3.out Correct!
+INFO:root:Checking dev/ok-scoping-2.out
+INFO:root:dev/ok-scoping-2.out Correct!
 INFO:root:Checking dev/returnexpr.ret
 INFO:root:dev/returnexpr.ret Correct!
+INFO:root:Checking dev/lshift.out
+INFO:root:dev/lshift.out Correct!
+INFO:root:Checking dev/gcd.out
+INFO:root:dev/gcd.out Correct!
+INFO:root:Checking dev/15.ret
+INFO:root:dev/15.ret Correct!
+INFO:root:Checking dev/err-return-type.ret
+INFO:root:dev/err-return-type.ret Correct!
+INFO:root:Checking dev/21.ret
+INFO:root:dev/21.ret Correct!
+INFO:root:Checking dev/neg.out
+INFO:root:dev/neg.out Correct!
+INFO:root:Checking dev/unreachable-nobrute.out
+INFO:root:dev/unreachable-nobrute.out Correct!
+INFO:root:Checking dev/method0.out
+INFO:root:dev/method0.out Correct!
+INFO:root:Checking dev/undefined-statements-3.out
+INFO:root:dev/undefined-statements-3.out Correct!
+INFO:root:Checking dev/if-func3.ret
+INFO:root:dev/if-func3.ret Correct!
+INFO:root:Checking dev/boolcallchain3expr.out
+INFO:root:dev/boolcallchain3expr.out Correct!
+INFO:root:Checking dev/intcall1.out
+INFO:root:dev/intcall1.out Correct!
+INFO:root:Checking dev/externreadint.out
+INFO:root:dev/externreadint.out Correct!
+INFO:root:Checking dev/truefalse.out
+INFO:root:dev/truefalse.out Correct!
+INFO:root:Checking dev/boolcallchain3.out
+INFO:root:dev/boolcallchain3.out Correct!
+INFO:root:Checking dev/intmethod.out
+INFO:root:dev/intmethod.out Correct!
+INFO:root:Checking dev/forward2.out
+INFO:root:dev/forward2.out Correct!
+INFO:root:Checking dev/boolcall1.out
+INFO:root:dev/boolcall1.out Correct!
+INFO:root:Checking dev/geq.out
+INFO:root:dev/geq.out Correct!
+INFO:root:Checking dev/decls.ret
+INFO:root:dev/decls.ret Correct!
+INFO:root:Checking dev/charexpr-3.out
+INFO:root:dev/charexpr-3.out Correct!
+INFO:root:Checking dev/call0.out
+INFO:root:dev/call0.out Correct!
+INFO:root:Checking dev/externprintstring.out
+INFO:root:dev/externprintstring.out Correct!
+INFO:root:Checking dev/bbooleq.out
+INFO:root:dev/bbooleq.out Correct!
+INFO:root:Checking dev/arith2.ret
+INFO:root:dev/arith2.ret Correct!
+INFO:root:Checking dev/emptymethod.out
+INFO:root:dev/emptymethod.out Correct!
+INFO:root:Checking dev/14.ret
+INFO:root:dev/14.ret Correct!
+INFO:root:Checking dev/returncheck.out
+INFO:root:dev/returncheck.out Correct!
+INFO:root:Checking dev/assignmismatch-intofchar-ok.out
+INFO:root:dev/assignmismatch-intofchar-ok.out Correct!
+INFO:root:Checking dev/expr-testfile-2.out
+INFO:root:dev/expr-testfile-2.out Correct!
+INFO:root:Checking dev/safe2.out
+INFO:root:dev/safe2.out Correct!
+INFO:root:Checking dev/no-main.ret
+INFO:root:dev/no-main.ret Correct!
+INFO:root:Checking dev/intcall2.out
+INFO:root:dev/intcall2.out Correct!
+INFO:root:Checking dev/charvar.out
+INFO:root:dev/charvar.out Correct!
+INFO:root:Checking dev/shadow.out
+INFO:root:dev/shadow.out Correct!
+INFO:root:Checking dev/methodcall0.ret
+INFO:root:dev/methodcall0.ret Correct!
+INFO:root:Checking dev/minus.out
+INFO:root:dev/minus.out Correct!
+INFO:root:Checking dev/ifelse-prev.ret
+INFO:root:dev/ifelse-prev.ret Correct!
+INFO:root:Checking dev/skct.out
+INFO:root:dev/skct.out Correct!
+INFO:root:Checking dev/bboolneq.out
+INFO:root:dev/bboolneq.out Correct!
+INFO:root:Checking dev/1.ret
+INFO:root:dev/1.ret Correct!
+INFO:root:Checking dev/onlyvar.out
+INFO:root:dev/onlyvar.out Correct!
+INFO:root:Checking dev/times.out
+INFO:root:dev/times.out Correct!
+INFO:root:Checking dev/var4.out
+INFO:root:dev/var4.out Correct!
+INFO:root:Checking dev/if-else-simple.out
+INFO:root:dev/if-else-simple.out Correct!
+INFO:root:Checking dev/div.out
+INFO:root:dev/div.out Correct!
+INFO:root:Checking dev/while-break.out
+INFO:root:dev/while-break.out Correct!
+INFO:root:Checking dev/charexpr-2.out
+INFO:root:dev/charexpr-2.out Correct!
+INFO:root:Checking dev/e2.ret
+INFO:root:dev/e2.ret Correct!
+INFO:root:Checking dev/if-func2.ret
+INFO:root:dev/if-func2.ret Correct!
+INFO:root:Checking dev/gr.out
+INFO:root:dev/gr.out Correct!
+INFO:root:Checking dev/inteq.out
+INFO:root:dev/inteq.out Correct!
+INFO:root:Checking dev/externsmultinocomma.ret
+INFO:root:dev/externsmultinocomma.ret Correct!
+INFO:root:Checking dev/if-func1.ret
+INFO:root:dev/if-func1.ret Correct!
+INFO:root:Checking dev/charexpr-1.out
+INFO:root:dev/charexpr-1.out Correct!
+INFO:root:Checking dev/inthexconst.out
+INFO:root:dev/inthexconst.out Correct!
+INFO:root:Checking dev/quicksort.ret
+INFO:root:dev/quicksort.ret Correct!
+INFO:root:Checking dev/returnemptyparens.out
+INFO:root:dev/returnemptyparens.out Correct!
+INFO:root:Checking dev/booleq.out
+INFO:root:dev/booleq.out Correct!
+INFO:root:Checking dev/break.ret
+INFO:root:dev/break.ret Correct!
+INFO:root:Checking dev/onlyfields.ret
+INFO:root:dev/onlyfields.ret Correct!
+INFO:root:Checking dev/onlystate.out
+INFO:root:dev/onlystate.out Correct!
+INFO:root:Checking dev/charexprprint.out
+INFO:root:dev/charexprprint.out Correct!
+INFO:root:Checking dev/for-continue-1.out
+INFO:root:dev/for-continue-1.out Correct!
+INFO:root:Checking dev/e1.ret
+INFO:root:dev/e1.ret Correct!
+INFO:root:Checking dev/var2.out
+INFO:root:dev/var2.out Correct!
+INFO:root:Checking dev/externs.ret
+INFO:root:dev/externs.ret Correct!
+INFO:root:Checking dev/limits.out
+INFO:root:dev/limits.out Correct!
+INFO:root:Checking dev/or.out
+INFO:root:dev/or.out Correct!
+INFO:root:Checking dev/whiles.out
+INFO:root:dev/whiles.out Correct!
+INFO:root:Checking dev/bintneq.out
+INFO:root:dev/bintneq.out Correct!
+INFO:root:Checking dev/fshadow.out
+INFO:root:dev/fshadow.out Correct!
+INFO:root:Checking dev/onlymethods.ret
+INFO:root:dev/onlymethods.ret Correct!
+INFO:root:Checking dev/if-func5.ret
+INFO:root:dev/if-func5.ret Correct!
+INFO:root:Checking dev/emptyblock.out
+INFO:root:dev/emptyblock.out Correct!
+INFO:root:Checking dev/e3.ret
+INFO:root:dev/e3.ret Correct!
+INFO:root:Checking dev/while-break-scope-test.out
+INFO:root:dev/while-break-scope-test.out Correct!
+INFO:root:Checking dev/returnemptyparans.ret
+INFO:root:dev/returnemptyparans.ret Correct!
+INFO:root:Checking dev/default-passes.out
+INFO:root:dev/default-passes.out Correct!
+INFO:root:Checking dev/while-simple.out
+INFO:root:dev/while-simple.out Correct!
+INFO:root:Checking dev/12.ret
+INFO:root:dev/12.ret Correct!
+INFO:root:Checking dev/7.ret
+INFO:root:dev/7.ret Correct!
+INFO:root:Checking dev/empty.ret
+INFO:root:dev/empty.ret Correct!
+INFO:root:Checking dev/forward3.out
+INFO:root:dev/forward3.out Correct!
+INFO:root:Checking dev/16.ret
+INFO:root:dev/16.ret Correct!
+INFO:root:Checking dev/lt.out
+INFO:root:dev/lt.out Correct!
+INFO:root:Checking dev/intneq.out
+INFO:root:dev/intneq.out Correct!
+INFO:root:Checking dev/whileloop.ret
+INFO:root:dev/whileloop.ret Correct!
+INFO:root:Checking dev/19.ret
+INFO:root:dev/19.ret Correct!
+INFO:root:Checking dev/intcallchain2.out
+INFO:root:dev/intcallchain2.out Correct!
+INFO:root:Checking dev/backward.out
+INFO:root:dev/backward.out Correct!
+INFO:root:Checking dev/unreachable-all.out
+INFO:root:dev/unreachable-all.out Correct!
+INFO:root:Checking dev/intcallcalleeexpr.out
+INFO:root:dev/intcallcalleeexpr.out Correct!
+INFO:root:Checking dev/binteq.out
+INFO:root:dev/binteq.out Correct!
+INFO:root:Checking dev/arith3.ret
+INFO:root:dev/arith3.ret Correct!
+INFO:root:Checking dev/3.ret
+INFO:root:dev/3.ret Correct!
+INFO:root:Checking dev/for-simple.out
+INFO:root:dev/for-simple.out Correct!
+INFO:root:Checking dev/block.ret
+INFO:root:dev/block.ret Correct!
+INFO:root:Checking dev/expr-testfile-8.out
+INFO:root:dev/expr-testfile-8.out Correct!
+INFO:root:Checking dev/unreachable.out
+INFO:root:dev/unreachable.out Correct!
+INFO:root:Checking dev/returnmismatch-intofchar-ok.out
+INFO:root:dev/returnmismatch-intofchar-ok.out Correct!
+INFO:root:Checking dev/boolconst-var.out
+INFO:root:dev/boolconst-var.out Correct!
+INFO:root:Checking dev/safe1.out
+INFO:root:dev/safe1.out Correct!
+INFO:root:Checking dev/expr-testfile-3.out
+INFO:root:dev/expr-testfile-3.out Correct!
+INFO:root:Checking dev/bgeq.out
+INFO:root:dev/bgeq.out Correct!
+INFO:root:Checking dev/continue.ret
+INFO:root:dev/continue.ret Correct!
+INFO:root:Checking dev/undefined-return.out
+INFO:root:dev/undefined-return.out Correct!
+INFO:root:Checking dev/bgr.out
+INFO:root:dev/bgr.out Correct!
+INFO:root:Checking dev/expr-testfile-5.out
+INFO:root:dev/expr-testfile-5.out Correct!
+INFO:root:Checking dev/2.ret
+INFO:root:dev/2.ret Correct!
+INFO:root:Checking dev/escapes.ret
+INFO:root:dev/escapes.ret Correct!
+INFO:root:Checking dev/for-break-1.out
+INFO:root:dev/for-break-1.out Correct!
+INFO:root:Checking dev/returnnoparens.ret
+INFO:root:dev/returnnoparens.ret Correct!
+INFO:root:Checking dev/err-continue.ret
+INFO:root:dev/err-continue.ret Correct!
+INFO:root:Checking dev/if-func4.ret
+INFO:root:dev/if-func4.ret Correct!
+INFO:root:Checking dev/global-var-assign.out
+INFO:root:dev/global-var-assign.out Correct!
+INFO:root:Checking dev/11.ret
+INFO:root:dev/11.ret Correct!
+INFO:root:Checking dev/4.ret
+INFO:root:dev/4.ret Correct!
+INFO:root:Checking dev/boolcallcalleeexpr.out
+INFO:root:dev/boolcallcalleeexpr.out Correct!
+INFO:root:Checking dev/and.out
+INFO:root:dev/and.out Correct!
+INFO:root:Checking dev/boolcall2.out
+INFO:root:dev/boolcall2.out Correct!
+INFO:root:Checking dev/statements-assign-to-param.out
+INFO:root:dev/statements-assign-to-param.out Correct!
+INFO:root:Checking dev/intcallchain3expr.out
+INFO:root:dev/intcallchain3expr.out Correct!
+INFO:root:Checking dev/returnempty.ret
+INFO:root:dev/returnempty.ret Correct!
+INFO:root:Checking dev/externsmulti.ret
+INFO:root:dev/externsmulti.ret Correct!
+INFO:root:Checking dev/mixedcallchainexprmultibranch.out
+INFO:root:dev/mixedcallchainexprmultibranch.out Correct!
+INFO:root:Checking dev/intconst.out
+INFO:root:dev/intconst.out Correct!
+INFO:root:Checking dev/forward.out
+INFO:root:dev/forward.out Correct!
+INFO:root:Checking dev/assign.ret
+INFO:root:dev/assign.ret Correct!
+INFO:root:Checking dev/intcallcallerexpr.out
+INFO:root:dev/intcallcallerexpr.out Correct!
+INFO:root:Checking dev/expr-testfile-7.out
+INFO:root:dev/expr-testfile-7.out Correct!
+INFO:root:Checking dev/method2.out
+INFO:root:dev/method2.out Correct!
+INFO:root:Checking dev/method1.out
+INFO:root:dev/method1.out Correct!
+INFO:root:Checking dev/ok-scoping-3.out
+INFO:root:dev/ok-scoping-3.out Correct!
+INFO:root:Checking dev/for-break.out
+INFO:root:dev/for-break.out Correct!
+INFO:root:Checking dev/expr-testfile-9.out
+INFO:root:dev/expr-testfile-9.out Correct!
+INFO:root:Checking dev/default-passes-ok.out
+INFO:root:dev/default-passes-ok.out Correct!
+INFO:root:Checking dev/catalan.ret
+INFO:root:dev/catalan.ret Correct!
+INFO:root:Checking dev/if-simple.out
+INFO:root:dev/if-simple.out Correct!
+INFO:root:Checking dev/arith4.out
+INFO:root:dev/arith4.out Correct!
+INFO:root:Checking dev/while-continue.out
+INFO:root:dev/while-continue.out Correct!
+INFO:root:Checking dev/mod.out
+INFO:root:dev/mod.out Correct!
+INFO:root:Checking dev/rshift.out
+INFO:root:dev/rshift.out Correct!
+INFO:root:Checking dev/charprint.out
+INFO:root:dev/charprint.out Correct!
+INFO:root:Checking dev/global-bool-def.out
+INFO:root:dev/global-bool-def.out Correct!
+INFO:root:Checking dev/intvar.out
+INFO:root:dev/intvar.out Correct!
+INFO:root:Checking dev/method0-prev.ret
+INFO:root:dev/method0-prev.ret Correct!
+INFO:root:Checking dev/forloop.ret
+INFO:root:dev/forloop.ret Correct!
+INFO:root:Checking dev/boolcallchain2.out
+INFO:root:dev/boolcallchain2.out Correct!
+INFO:root:Checking dev/expr-testfile-6.out
+INFO:root:dev/expr-testfile-6.out Correct!
+INFO:root:Checking dev/leq.out
+INFO:root:dev/leq.out Correct!
+INFO:root:Checking dev/if.ret
+INFO:root:dev/if.ret Correct!
+INFO:root:Checking dev/assoc.ret
+INFO:root:dev/assoc.ret Correct!
+INFO:root:Checking dev/boolcallcallerexpr.out
+INFO:root:dev/boolcallcallerexpr.out Correct!
+INFO:root:Checking dev/multvar.out
+INFO:root:dev/multvar.out Correct!
+INFO:root:Checking dev/18.ret
+INFO:root:dev/18.ret Correct!
+INFO:root:Checking dev/noexterns.out
+INFO:root:dev/noexterns.out Correct!
+INFO:root:Checking dev/ok-scoping-1.out
+INFO:root:dev/ok-scoping-1.out Correct!
+INFO:root:Checking dev/expr-testfile-1.out
+INFO:root:dev/expr-testfile-1.out Correct!
+INFO:root:Checking dev/global-int-def.out
+INFO:root:dev/global-int-def.out Correct!
 INFO:root:Checking dev/8.ret
 INFO:root:dev/8.ret Correct!
 INFO:root:Checking dev/decls-fail.ret
 INFO:root:dev/decls-fail.ret Correct!
-INFO:root:Checking dev/if-func4.ret
-INFO:root:dev/if-func4.ret Correct!
-INFO:root:Checking dev/method1.out
-INFO:root:dev/method1.out Correct!
-INFO:root:Checking dev/for-continue-1.out
-INFO:root:Diff between reference and your output for dev/for-continue-1.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +0,0 @@
--b'012345'
-INFO:root:Checking dev/if-scoping.out
-INFO:root:dev/if-scoping.out Correct!
-INFO:root:Checking dev/noexterns.out
-INFO:root:dev/noexterns.out Correct!
-INFO:root:Checking dev/onlyvar.out
-INFO:root:dev/onlyvar.out Correct!
-INFO:root:Checking dev/boolneq.out
-INFO:root:dev/boolneq.out Correct!
-INFO:root:Checking dev/quicksort.ret
-INFO:root:dev/quicksort.ret Correct!
-INFO:root:Checking dev/shadow.out
-INFO:root:dev/shadow.out Correct!
 INFO:root:Checking dev/e4.ret
 INFO:root:dev/e4.ret Correct!
-INFO:root:Checking dev/19.ret
-INFO:root:dev/19.ret Correct!
-INFO:root:Checking dev/arith4.out
-INFO:root:dev/arith4.out Correct!
-INFO:root:Checking dev/leq.out
-INFO:root:dev/leq.out Correct!
-INFO:root:Checking dev/charexpr-1.out
-INFO:root:dev/charexpr-1.out Correct!
-INFO:root:Checking dev/parens.ret
-INFO:root:dev/parens.ret Correct!
-INFO:root:Checking dev/rshift.out
-INFO:root:dev/rshift.out Correct!
-INFO:root:Checking dev/if-else-simple.out
-INFO:root:dev/if-else-simple.out Correct!
-INFO:root:Checking dev/catalan.ret
-INFO:root:dev/catalan.ret Correct!
-INFO:root:Checking dev/assign.ret
-INFO:root:dev/assign.ret Correct!
-INFO:root:Checking dev/2.ret
-INFO:root:dev/2.ret Correct!
-INFO:root:Checking dev/expr-testfile-1.out
-INFO:root:dev/expr-testfile-1.out Correct!
-INFO:root:Checking dev/forward2.out
-INFO:root:dev/forward2.out Correct!
-INFO:root:Checking dev/err-return-type.ret
-INFO:root:dev/err-return-type.ret Correct!
-INFO:root:Checking dev/expr-testfile-0.out
-INFO:root:dev/expr-testfile-0.out Correct!
-INFO:root:Checking dev/default-passes.out
-INFO:root:dev/default-passes.out Correct!
-INFO:root:Checking dev/intcall1.out
-INFO:root:dev/intcall1.out Correct!
-INFO:root:Checking dev/forward3.out
-INFO:root:dev/forward3.out Correct!
-INFO:root:Checking dev/boolcallchain3.out
-INFO:root:dev/boolcallchain3.out Correct!
-INFO:root:Checking dev/break.ret
-INFO:root:dev/break.ret Correct!
-INFO:root:Checking dev/expr-testfile-10.out
-INFO:root:dev/expr-testfile-10.out Correct!
-INFO:root:Checking dev/charexprprint.out
-INFO:root:dev/charexprprint.out Correct!
-INFO:root:Checking dev/lt.out
-INFO:root:dev/lt.out Correct!
-INFO:root:Checking dev/continue.ret
-INFO:root:dev/continue.ret Correct!
-INFO:root:Checking dev/prec.out
-INFO:root:dev/prec.out Correct!
-INFO:root:Checking dev/if-func2.ret
-INFO:root:dev/if-func2.ret Correct!
-INFO:root:Checking dev/intneq.out
-INFO:root:dev/intneq.out Correct!
-INFO:root:Checking dev/for-continue.out
-INFO:root:Diff between reference and your output for dev/for-continue.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +0,0 @@
--b'13579'
-INFO:root:Checking dev/intmethod.out
-INFO:root:dev/intmethod.out Correct!
-INFO:root:Checking dev/div.out
-INFO:root:dev/div.out Correct!
-INFO:root:Checking dev/returnemptyparans.ret
-INFO:root:dev/returnemptyparans.ret Correct!
-INFO:root:Checking dev/charexpr-3.out
-INFO:root:dev/charexpr-3.out Correct!
-INFO:root:Checking dev/minus.out
-INFO:root:dev/minus.out Correct!
-INFO:root:Checking dev/if-func1.ret
-INFO:root:dev/if-func1.ret Correct!
-INFO:root:Checking dev/intcallchain3.out
-INFO:root:dev/intcallchain3.out Correct!
-INFO:root:Checking dev/callexprprint.out
-INFO:root:dev/callexprprint.out Correct!
-INFO:root:Checking dev/bbooleq.out
-INFO:root:dev/bbooleq.out Correct!
-INFO:root:Checking dev/mixedcallchainexpr.out
-INFO:root:dev/mixedcallchainexpr.out Correct!
-INFO:root:Checking dev/expr-testfile-4.out
-INFO:root:dev/expr-testfile-4.out Correct!
-INFO:root:Checking dev/boolcall1.out
-INFO:root:dev/boolcall1.out Correct!
-INFO:root:Checking dev/5.ret
-INFO:root:dev/5.ret Correct!
-INFO:root:Checking dev/err-continue.ret
-INFO:root:Diff between reference and your output for dev/err-continue.ret
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +1 @@
--b'1'
-+b'0'
-INFO:root:Checking dev/onlyfields.ret
-INFO:root:dev/onlyfields.ret Correct!
-INFO:root:Checking dev/undefined-return.out
-INFO:root:dev/undefined-return.out Correct!
-INFO:root:Checking dev/charprint.out
-INFO:root:dev/charprint.out Correct!
-INFO:root:Checking dev/charexpr.out
-INFO:root:dev/charexpr.out Correct!
-INFO:root:Checking dev/short-circuit-bool.out
-INFO:root:Diff between reference and your output for dev/short-circuit-bool.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +1 @@
--b'1'
-+b'foobar1'
-INFO:root:Checking dev/16.ret
-INFO:root:dev/16.ret Correct!
-INFO:root:Checking dev/intcallchain3expr.out
-INFO:root:dev/intcallchain3expr.out Correct!
-INFO:root:Checking dev/intcall2.out
-INFO:root:dev/intcall2.out Correct!
-INFO:root:Checking dev/boolcallcalleeexpr.out
-INFO:root:dev/boolcallcalleeexpr.out Correct!
-INFO:root:Checking dev/undefined-statements-2.out
-INFO:root:dev/undefined-statements-2.out Correct!
-INFO:root:Checking dev/unreachable-break.out
-INFO:root:Diff between reference and your output for dev/unreachable-break.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +0,0 @@
--b'hello'
-INFO:root:Checking dev/externsmulti.ret
-INFO:root:dev/externsmulti.ret Correct!
-INFO:root:Checking dev/e2.ret
-INFO:root:dev/e2.ret Correct!
-INFO:root:Checking dev/expr-testfile-5.out
-INFO:root:dev/expr-testfile-5.out Correct!
-INFO:root:Checking dev/for-simple.out
-INFO:root:Diff between reference and your output for dev/for-simple.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +0,0 @@
--b'0123456789'
-INFO:root:Checking dev/if.ret
-INFO:root:dev/if.ret Correct!
-INFO:root:Checking dev/emptymethod.out
-INFO:root:dev/emptymethod.out Correct!
-INFO:root:Checking dev/limits.out
-INFO:root:Diff between reference and your output for dev/limits.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +0,0 @@
--b'2147483647 -2147483648 -2147483648 -2147483648 1 '
-INFO:root:Checking dev/err-bool-index.ret
-INFO:root:Diff between reference and your output for dev/err-bool-index.ret
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +1 @@
--b'1'
-+b'0'
-INFO:root:Checking dev/safe1.out
-INFO:root:dev/safe1.out Correct!
-INFO:root:Checking dev/inteq.out
-INFO:root:dev/inteq.out Correct!
-INFO:root:Checking dev/fshadow.out
-INFO:root:dev/fshadow.out Correct!
-INFO:root:Checking dev/statements-bool-parameter-to-int.out
-INFO:root:dev/statements-bool-parameter-to-int.out Correct!
-INFO:root:Checking dev/err-break.ret
-INFO:root:Diff between reference and your output for dev/err-break.ret
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +1 @@
--b'1'
-+b'0'
-INFO:root:Checking dev/charvar.out
-INFO:root:dev/charvar.out Correct!
-INFO:root:Checking dev/returnmismatch-intofchar-ok.out
-INFO:root:dev/returnmismatch-intofchar-ok.out Correct!
-INFO:root:Checking dev/if-func5.ret
-INFO:root:dev/if-func5.ret Correct!
-INFO:root:Checking dev/13.ret
-INFO:root:dev/13.ret Correct!
-INFO:root:Checking dev/forward.out
-INFO:root:dev/forward.out Correct!
-INFO:root:Checking dev/14.ret
-INFO:root:dev/14.ret Correct!
-INFO:root:Checking dev/arith2.ret
-INFO:root:dev/arith2.ret Correct!
-INFO:root:Checking dev/11.ret
-INFO:root:dev/11.ret Correct!
-INFO:root:Checking dev/e1.ret
-INFO:root:dev/e1.ret Correct!
-INFO:root:Checking dev/assoc.ret
-INFO:root:dev/assoc.ret Correct!
-INFO:root:Checking dev/expr-testfile-9.out
-INFO:root:dev/expr-testfile-9.out Correct!
-INFO:root:Checking dev/plus.out
-INFO:root:dev/plus.out Correct!
-INFO:root:Checking dev/ok-scoping-3.out
-INFO:root:dev/ok-scoping-3.out Correct!
-INFO:root:Checking dev/ifelse-prev.ret
-INFO:root:dev/ifelse-prev.ret Correct!
-INFO:root:Checking dev/safe3.out
-INFO:root:dev/safe3.out Correct!
-INFO:root:Checking dev/boolcallchain2.out
-INFO:root:dev/boolcallchain2.out Correct!
-INFO:root:Checking dev/not.out
-INFO:root:dev/not.out Correct!
-INFO:root:Checking dev/intconst.out
-INFO:root:dev/intconst.out Correct!
-INFO:root:Checking dev/while-simple.out
-INFO:root:Diff between reference and your output for dev/while-simple.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +0,0 @@
--b'123456789'
-INFO:root:Checking dev/intvar.out
-INFO:root:dev/intvar.out Correct!
-INFO:root:Checking dev/skct.out
-INFO:root:Diff between reference and your output for dev/skct.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +1 @@
--b'1'
-+b'foo1'
-INFO:root:Checking dev/forloop.ret
-INFO:root:dev/forloop.ret Correct!
-INFO:root:Checking dev/expr-testfile-3.out
-INFO:root:dev/expr-testfile-3.out Correct!
-INFO:root:Checking dev/escapes.ret
-INFO:root:dev/escapes.ret Correct!
 INFO:root:Checking dev/intconst-var.out
 INFO:root:dev/intconst-var.out Correct!
-INFO:root:Checking dev/decls.ret
-INFO:root:dev/decls.ret Correct!
-INFO:root:Checking dev/intcallchain2.out
-INFO:root:dev/intcallchain2.out Correct!
-INFO:root:Checking dev/externsmultinocomma.ret
-INFO:root:dev/externsmultinocomma.ret Correct!
-INFO:root:Checking dev/expr-testfile-2.out
-INFO:root:dev/expr-testfile-2.out Correct!
-INFO:root:Checking dev/while-break.out
-INFO:root:Diff between reference and your output for dev/while-break.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1 +1 @@
--b'6'
-+b'1'
-INFO:root:Checking dev/call0.out
-INFO:root:dev/call0.out Correct!
-INFO:root:Checking dev/nest.out
-INFO:root:Diff between reference and your output for dev/nest.out
-INFO:root:
---- reference
-+++ your-output
-@@ -1,2 +1,2 @@
- b'hello'
--b'8014'
-+b'0'
-INFO:root:Checking dev/onlymethods.ret
-INFO:root:dev/onlymethods.ret Correct!
+INFO:root:Checking dev/expr-testfile-4.out
+INFO:root:dev/expr-testfile-4.out Correct!
+INFO:root:Checking dev/err-bool-index.ret
+INFO:root:dev/err-bool-index.ret Correct!
+INFO:root:Checking dev/short-circuit-bool.out
+INFO:root:dev/short-circuit-bool.out Correct!
+INFO:root:Checking dev/9.ret
+INFO:root:dev/9.ret Correct!
+INFO:root:Checking dev/10.ret
+INFO:root:dev/10.ret Correct!
+INFO:root:Checking dev/for-continue.out
+INFO:root:dev/for-continue.out Correct!
+INFO:root:Checking dev/not.out
+INFO:root:dev/not.out Correct!
+INFO:root:Checking dev/5.ret
+INFO:root:dev/5.ret Correct!
+INFO:root:Checking dev/plus.out
+INFO:root:dev/plus.out Correct!
+INFO:root:Checking dev/err-break.ret
+INFO:root:dev/err-break.ret Correct!
+INFO:root:Checking dev/parens.ret
+INFO:root:dev/parens.ret Correct!
+INFO:root:Checking dev/methodcall2.ret
+INFO:root:dev/methodcall2.ret Correct!
+INFO:root:Checking dev/stringescapequote.out
+INFO:root:dev/stringescapequote.out Correct!
+INFO:root:Checking dev/safe3.out
+INFO:root:dev/safe3.out Correct!
+INFO:root:Checking dev/statements-bool-parameter-to-int.out
+INFO:root:dev/statements-bool-parameter-to-int.out Correct!
+INFO:root:Checking dev/externprintint.out
+INFO:root:dev/externprintint.out Correct!
+INFO:root:Checking dev/boolneq.out
+INFO:root:dev/boolneq.out Correct!
+INFO:root:Checking dev/methodcall1.ret
+INFO:root:dev/methodcall1.ret Correct!
+INFO:root:Checking dev/global-int-array-def.out
+INFO:root:dev/global-int-array-def.out Correct!
+INFO:root:Checking dev/undefined-statements-2.out
+INFO:root:dev/undefined-statements-2.out Correct!
+INFO:root:Checking dev/expr-testfile-10.out
+INFO:root:dev/expr-testfile-10.out Correct!
+INFO:root:Checking dev/mixedcallchainexpr.out
+INFO:root:dev/mixedcallchainexpr.out Correct!
+INFO:root:Checking dev/unreachable-break.out
+INFO:root:dev/unreachable-break.out Correct!
+INFO:root:Checking dev/if-scoping.out
+INFO:root:dev/if-scoping.out Correct!
+INFO:root:Checking dev/ifelse.ret
+INFO:root:dev/ifelse.ret Correct!
+INFO:root:Checking dev/var3.out
+INFO:root:dev/var3.out Correct!
+INFO:root:Checking dev/13.ret
+INFO:root:dev/13.ret Correct!
+INFO:root:Checking dev/blt.out
+INFO:root:dev/blt.out Correct!
 INFO:root:Checking dev/bleq.out
 INFO:root:dev/bleq.out Correct!
+INFO:root:Checking dev/undefined-statements-1.out
+INFO:root:dev/undefined-statements-1.out Correct!
+INFO:root:Checking dev/charexpr.out
+INFO:root:dev/charexpr.out Correct!
+INFO:root:Checking dev/global-bool-array-def.out
+INFO:root:dev/global-bool-array-def.out Correct!
+INFO:root:Checking dev/nest.out
+INFO:root:dev/nest.out Correct!
+INFO:root:Checking dev/if-else-nested.out
+INFO:root:dev/if-else-nested.out Correct!
+INFO:root:Checking dev/expr-testfile-0.out
+INFO:root:dev/expr-testfile-0.out Correct!
+INFO:root:Checking dev/callexprprint.out
+INFO:root:dev/callexprprint.out Correct!
+INFO:root:Checking dev/callexpr.out
+INFO:root:dev/callexpr.out Correct!

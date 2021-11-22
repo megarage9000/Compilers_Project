@@ -216,7 +216,13 @@ while                      { return T_WHILE; }
   /*
     Integer Rules
   */
-{decimal_digit}      {yylval.inval = std::stoi(yytext); return T_INTCONSTANT;} 
+{decimal_digit}      {
+  string input = std::string(yytext);
+  stringstream ss(input);
+  yylval.inval = 0;
+  ss >> yylval.inval;
+  return T_INTCONSTANT;
+} 
 {hex_digit}                       {
                                   std::stringstream ss;
                                   int val;

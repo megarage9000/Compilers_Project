@@ -1,13 +1,16 @@
 extern func print_int(int) void;
 extern func print_string(string) void;
 package C {
-    func main() int {
+
+    func main() void {
       var x, y int;
       for(x = 0; x < 10 ; x=x+1) {
         y = y + 1;
       }
-      print_int(y);
-      print_int(add("hello", "there"));
+      // print_int(y);
+      // print_int(add("hello", "there"));
+      // break;
+      return(1 && 2);
     }
 
     func add(opA int, opB int) int {

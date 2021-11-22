@@ -40,14 +40,14 @@ public:
   void set_line_pos(int pos) { line_pos = pos;}
   void set_token_pos(int pos) { token_pos = pos;} 	
   string get_location(){ 
-	  return ".\nAt line pos = " + std::to_string(line_pos) + ", token pos = " + std::to_string(token_pos); 
-	}
-	void throw_semantic_error(std::exception e) {
-		throw_semantic_error(std::string(e.what()));
+	  return "\nAt line position = " + std::to_string(line_pos) + "\nAt token position = " + std::to_string(token_pos); 
 	}
 	void throw_semantic_error(std::string message) {
 		std::string error_message = "SEMANTIC ERROR: " + message + get_location();
 		throw std::runtime_error(error_message.c_str());
+	}
+	void throw_semantic_error(const char * message) {
+		throw_semantic_error(std::string(message));
 	}
 };
 
@@ -249,7 +249,7 @@ public:
 		try {
 			return initializeLLVMVal(INTTYPE,  value);
 		} catch (std::exception& e) {
-			throw_semantic_error(e);
+			throw_semantic_error(e.what());
 			return nullptr;
 		}
 	}
@@ -273,7 +273,7 @@ public:
 		try {
 			return initializeLLVMVal(BOOLTYPE,  value);
 		} catch (std::exception& e) {
-			throw_semantic_error(e);
+			throw_semantic_error(e.what());
 			return nullptr;
 		}
 	}
@@ -361,7 +361,7 @@ public:
 			try {
 				op_value = getBinaryExp(lval, rval, operation);
 			} catch (std::exception &e) {
-				throw_semantic_error(e);
+				throw_semantic_error(e.what());
 				return nullptr;
 			}
 			llvm::BasicBlock * resultingBB = Builder.GetInsertBlock();
@@ -384,7 +384,7 @@ public:
 			try {
 				return getBinaryExp(lval, rval, operation);
 			} catch (std::exception &e) {
-				throw_semantic_error(e);
+				throw_semantic_error(e.what());
 				return nullptr;
 			}
 		}
@@ -470,7 +470,7 @@ public:
 		try {
 			arrayLocation = useArrLoc(name, index);
 		} catch(std::exception &e) {
-			throw_semantic_error(e);
+			throw_semantic_error(e.what());
 		}
 		llvm::Value * rval = val->Codegen();
 		if(arrayLocation->getType()->getPointerElementType() == rval->getType()) {
@@ -521,7 +521,7 @@ public:
 		try {
 			arr_loc = useArrLoc(name, exp->Codegen());
 		} catch (std::exception& e) {
-			throw_semantic_error(e);
+			throw_semantic_error(e.what());
 			return nullptr;
 		}
 		return Builder.CreateLoad(arr_loc, name + "tmp");
@@ -572,7 +572,7 @@ public:
 						try {
 							val = promoteBoolToInt(&val);
 						} catch (std::exception &e) {
-							(*it)->throw_semantic_error(e);
+							(*it)->throw_semantic_error(e.what());
 							return nullptr;
 						}
 					}
@@ -708,7 +708,7 @@ public:
 			try{
 				return declareGlobal(name, tp);
 			} catch(std::exception &e) {
-				throw_semantic_error(e);
+				throw_semantic_error(e.what());
 				return nullptr;
 			}
 		}
@@ -716,7 +716,7 @@ public:
 			try {
 				return declareGlobalArr(name, tp, size);
 			} catch (std::exception &e) {
-				throw_semantic_error(e);
+				throw_semantic_error(e.what());
 				return nullptr;
 			}
 		}
@@ -778,7 +778,7 @@ public:
 		try {
 			return declareGlobalWithValue(name, tp, value);
 		} catch(std::exception &e) {
-			throw_semantic_error(e);
+			throw_semantic_error(e.what());
 			return nullptr;
 		}
 	}
@@ -1037,10 +1037,24 @@ public:
 		return "ReturnStmt(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
+		llvm::Function * func = Builder.GetInsertBlock()->getParent();	
+		if(func == nullptr) {
+			throw_semantic_error("return cannot find parent function.");
+			return nullptr;
+		}
 		if(!value) {
 			return Builder.CreateRetVoid();
 		}
-		return Builder.CreateRet(value->Codegen());
+		else {
+			llvm::Value * returnValue = value->Codegen();
+			if(returnValue->getType() != func->getReturnType()) {
+				throw_semantic_error("return statment yields value of type " 
+									+ LLVMTypeToString(returnValue->getType()) 
+									+ " in a function that expects a return type of " 
+									+ LLVMTypeToString(func->getReturnType()));
+			}
+			return Builder.CreateRet(returnValue);
+		}
 	}
 };
 
@@ -1111,7 +1125,7 @@ public:
 		try {
 			return defineExtern(returnType, argTypes, func_name);
 		} catch (std::exception &e) {
-			throw_semantic_error(e);
+			throw_semantic_error(e.what());
 			return nullptr;
 		}
 	}
@@ -1159,10 +1173,15 @@ class Method_Decl: public decafStmtList {
 	}
 	llvm::Value *Codegen() {
 		// Defines the function, creates a block and arguments
+		llvm::Function * funcVal = (llvm::Function *)getValueFromTables(func_name);
+		if(funcVal != nullptr) {
+			throw_semantic_error("function " + func_name + " is already defined");
+			return nullptr;
+		}
 		try {
 			return defineMethod(returnType, argTypes, func_name);
 		} catch (std::exception &e) {
-			throw_semantic_error(e);
+			throw_semantic_error(e.what());
 			return nullptr;
 		}
 	}

@@ -7,7 +7,7 @@ package C {
     var arr [10] int;
     var x int = 10;
     func main() void {
-      var y int;
+      var y, a int;
       y = arr[10];
       print_int(y);
     }

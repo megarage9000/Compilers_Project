@@ -253,9 +253,9 @@ llvm::Value * useVar(std::string id) {
 }
 
 llvm::Value * useArrLoc(std::string id, llvm::Value * index) {
-	llvm::GlobalVariable * val = (llvm::GlobalVariable *)getValueFromTables(id);
+	llvm::GlobalVariable * val = llvm::dyn_cast_or_null<llvm::GlobalVariable>(getValueFromTables(id));
 	if(val == nullptr) {
-		throw llvm_exception("array " + id + " cannot be found. Either it is not within scope or is not defined.");
+		throw llvm_exception("array " + id + " is either not an array or is not defined.");
 	}
 	llvm::Type * indexType = index->getType();
 	if(indexType != Builder.getInt32Ty()) {
@@ -264,7 +264,7 @@ llvm::Value * useArrLoc(std::string id, llvm::Value * index) {
 	}
 	llvm::Type * idType = val->getValueType();
 	if(idType == Builder.getInt32Ty() || idType == Builder.getInt1Ty()) {
-		throw llvm_exception("trying to use variable " + id + " as an array when it is of type scalar " + LLVMTypeToString(idType) + ".");
+		throw llvm_exception("trying to use field " + id + " as an array when it is of type scalar " + LLVMTypeToString(idType) + ".");
 	}
 	llvm::ArrayType * arrayTp = (llvm::ArrayType *)idType;
 	llvm::Value * arrayLoc = Builder.CreateStructGEP(arrayTp, val, 0, "arrayloc");

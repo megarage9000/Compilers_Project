@@ -83,15 +83,15 @@ llvm::Value * getValueFromSecondTopTable(std::string name) {
 }
 
 void insertToTable(std::string name, llvm::Value * val) {
-	symTable topTable = (*symbl_table_list.begin());
-	auto it = topTable.find(name);
-	if(it != topTable.end()) {
-		it->second = val;
-	}
-	else{
+// 	symTable topTable = (*symbl_table_list.begin());
+// 	auto it = topTable.find(name);
+// 	if(it != topTable.end()) {
+// 		it->second = val;
+// 	}
+// 	else{
+// 	}
 		std::pair<std::string, llvm::Value *> tuple (name ,val);
 		symbl_table_list.begin()->insert(tuple);
-	}
 }
 
 void pushTable() {
@@ -274,6 +274,11 @@ llvm::Value * useArrLoc(std::string id, llvm::Value * index) {
 
 // -- Global Variables
 llvm::GlobalVariable * declareGlobalWithValue(std::string id, llvm::Type * tp, llvm::Constant* val) {
+	llvm::Value * tableVal = getValueFromTables(id);
+	if(tableVal != nullptr) {
+		throw llvm_exception("global variable " + id + " is already defined.");
+		return nullptr;
+	}
 	if(isDecafType(tp)) {
 		llvm::GlobalVariable * globalVar = new llvm::GlobalVariable(
 			*TheModule,
@@ -283,7 +288,7 @@ llvm::GlobalVariable * declareGlobalWithValue(std::string id, llvm::Type * tp, l
 			val,
 			id
 		);
-		insertToTable(id, globalVar);
+		insertToTable(std::string(id), globalVar);
 		return globalVar;
 	}
 	else{
@@ -293,6 +298,7 @@ llvm::GlobalVariable * declareGlobalWithValue(std::string id, llvm::Type * tp, l
 }
 
 llvm::GlobalVariable * declareGlobal(std::string id, llvm::Type * tp) {
+
 	llvm::Constant * zeroInit;
 	// Zero initialization
 	if(tp == Builder.getInt1Ty()) {

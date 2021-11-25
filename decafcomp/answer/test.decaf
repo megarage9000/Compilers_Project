@@ -5,9 +5,11 @@ extern func print_string(string) void;
 package C {
 
     var arr [10] int;
-    var x int = 10;
+    var x int;
+    var x int;
     func main() void {
       var y, a int;
+      var x bool;
       y = arr[10];
       print_int(y);
       for(y = 0; y < 10; y = y + 1) {
@@ -17,7 +19,7 @@ package C {
       while(a < 10) {
         a = a + 1;
       }
-
+       
       if(true) {
         print_int(10);
       }

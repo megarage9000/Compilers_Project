@@ -423,7 +423,7 @@ int main() {
   // Make the module, which holds all the code.
   TheModule = new llvm::Module("Test", Context);
   // set up symbol table
-    pushTable();
+  pushTable();
   // parse the input and create the abstract syntax tree
   int retval = yyparse();
   if(mainFunction == nullptr) {

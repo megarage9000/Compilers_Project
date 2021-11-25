@@ -429,6 +429,9 @@ int main() {
   if(mainFunction == nullptr) {
       success = false;
   }
+  if(success == false) {
+      retval = 1;
+  }
   // remove symbol table
   // Finish off the main function. (see the WARNING above)
   // return 0 from main, which is EXIT_SUCCESS
@@ -437,7 +440,7 @@ int main() {
   // verifyFunction(*TheFunction);
   // Print out all of the generated code to stderr
   if(success) {
-    TheModule->print(llvm::errs(), nullptr);
+      TheModule->print(llvm::errs(), nullptr);
   }
   popTable();
   return(retval >= 1 ? EXIT_FAILURE : EXIT_SUCCESS);

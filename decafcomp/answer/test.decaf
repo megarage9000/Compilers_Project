@@ -5,29 +5,12 @@ extern func print_string(string) void;
 package C {
 
     var arr [10] int;
-    
+    var x int = 10;
     func main() void {
-      var x, y int;
-      for(x = 0; x < 40 ; x=x+1) {
-        y = y + 1;
-        print_int(arr[x]);
-      }
-      // print_int(y);
-      // print_int(add("hello", "there"));
-      // break;
-      print_int(add(11, 11));
-      boolTest(true);
-      return;
+      var y int;
+      y = arr[10];
+      print_int(y);
     }
 
-    func add(opA int, opB int) int {
-      var x, y, z int;
-      opA = 10;
-      opB = 10;
-      return(opA + opB + x + y + z);
-    }
 
-    func boolTest(hello int) int {
-      return(hello);
-    }
 }

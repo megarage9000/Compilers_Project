@@ -262,8 +262,11 @@ llvm::Value * useArrLoc(std::string id, llvm::Value * index) {
 		std::string typeToStr = LLVMTypeToString(indexType);
 		throw llvm_exception("array " + id + " cannot be indexed with value of type " + typeToStr + '.');
 	}
-
-	llvm::ArrayType * arrayTp = (llvm::ArrayType *)val->getValueType();
+	llvm::Type * idType = val->getValueType();
+	if(idType == Builder.getInt32Ty() || idType == Builder.getInt1Ty()) {
+		throw llvm_exception("trying to use variable " + id + " as an array when it is of type scalar " + LLVMTypeToString(idType) + ".");
+	}
+	llvm::ArrayType * arrayTp = (llvm::ArrayType *)idType;
 	llvm::Value * arrayLoc = Builder.CreateStructGEP(arrayTp, val, 0, "arrayloc");
 	llvm::Value * arrayIndex = Builder.CreateGEP(arrayTp->getElementType(), arrayLoc, index, "arrayIndex");
 	return arrayIndex;

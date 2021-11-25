@@ -533,6 +533,7 @@ llvm::Value * getBinaryExp(llvm::Value * lval, llvm::Value * rval, OperationType
 	llvm::Type * lvalType = lval->getType();
 	llvm::Type * rvalType = rval->getType();
 
+
 	if(lvalType == Builder.getInt32Ty() && rvalType == Builder.getInt32Ty()) {
 		switch(operation_tp) {
 			case PLUS:
@@ -575,13 +576,15 @@ llvm::Value * getBinaryExp(llvm::Value * lval, llvm::Value * rval, OperationType
 			case EQ:
 				return Builder.CreateICmpEQ(lval, rval, "eqtmp");
 			case NEQ:
-				return Builder.CreateICmpNE(lval, rval, "neqtmp");		
+				return Builder.CreateICmpNE(lval, rval, "neqtmp");
 			default:
-				throw llvm_exception("cannot apply operation " + operationToString(operation_tp) + " on booleans.");
+				throw llvm_exception("cannot apply operation " + operationToString(operation_tp) + " on boolean types." );
 		}
 	}
 	else {
-		return nullptr;
+		throw llvm_exception("cannot apply operation " + operationToString(operation_tp) 
+								+ " on types " + LLVMTypeToString(lvalType) 
+								+ " and " + LLVMTypeToString(rvalType));
 	}
 }
 
@@ -590,12 +593,12 @@ llvm::Value * getUnaryExp(llvm::Value * value, OperationType operation_tp) {
 	switch(operation_tp) {
 		case NOT:
 			if(value->getType() != Builder.getInt1Ty()) {
-				throw llvm_exception("cannot apply unary not operation on type " + LLVMTypeToString(value->getType()) + '.');
+				throw llvm_exception("cannot apply unary not(!) operation on type " + LLVMTypeToString(value->getType()) + '.');
 			}
 			return Builder.CreateNot(value, "nottmp");
 		case UNARY_MINUS:
 			if(value->getType() != Builder.getInt32Ty()) {
-				throw llvm_exception("cannot apply unary minus operation on type " + LLVMTypeToString(value->getType()) + '.');
+				throw llvm_exception("cannot apply unary minus(-) operation on type " + LLVMTypeToString(value->getType()) + '.');
 			}
 			return Builder.CreateNeg(value, "negtmp");
 		default:

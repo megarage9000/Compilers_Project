@@ -410,7 +410,12 @@ public:
 			throw_semantic_error("cannot evaluate unary expression.");
 			return nullptr;
 		}
-		return getUnaryExp(val, operation);
+		try {
+			return getUnaryExp(val, operation);
+		} catch (std::exception &e) {
+			throw_semantic_error(e.what());
+			return nullptr;
+		}
 	}
 };
 

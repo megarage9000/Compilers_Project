@@ -1,0 +1,79 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package CrashTime {
+    func main() int {
+        var ifstmt, ifbody, iftrue, iffalse, ifend,
+            whilestmt, whilebody, whiletrue, whilefalse, whileend,
+            forstmt, forbody, fornext, forend,
+            continuestmt, breakstmt, endstmt, returnstmt,
+            entry, next, end int;
+
+        while(true) {
+            var ifstmt, ifbody, iftrue, iffalse, ifend,
+                whilestmt, whilebody, whiletrue, whilefalse, whileend,
+                forstmt, forbody, fornext, forend,
+                continuestmt, breakstmt, endstmt, returnstmt,
+                entry, next, end, i int;
+
+            for (i = 0; i < 5; i = i + 1) {
+                var ifstmt, ifbody, iftrue, iffalse, ifend,
+                    whilestmt, whilebody, whiletrue, whilefalse, whileend,
+                    forstmt, forbody, fornext, forend,
+                    continuestmt, breakstmt, endstmt, returnstmt,
+                    entry, next, end int;
+                
+                print_string("for:");
+                print_int(i);
+                print_string("\n");
+
+                if (i%2 == 0) {
+                    var ifstmt, ifbody, iftrue, iffalse, ifend,
+                        whilestmt, whilebody, whiletrue, whilefalse, whileend,
+                        forstmt, forbody, fornext, forend,
+                        continuestmt, breakstmt, endstmt, returnstmt,
+                        entry, next, end int;
+
+                    print_string("if:true\n");
+                } else {
+                    var ifstmt, ifbody, iftrue, iffalse, ifend,
+                        whilestmt, whilebody, whiletrue, whilefalse, whileend,
+                        forstmt, forbody, fornext, forend,
+                        continuestmt, breakstmt, endstmt, returnstmt,
+                        entry, next, end int;
+
+                    print_string("if:false\n");
+                }
+
+                if (i == 1) {
+                    var ifstmt, ifbody, iftrue, iffalse, ifend,
+                        whilestmt, whilebody, whiletrue, whilefalse, whileend,
+                        forstmt, forbody, fornext, forend,
+                        continuestmt, breakstmt, endstmt, returnstmt,
+                        entry, next, end int;
+
+                    continue;
+                }
+
+                if (i == 2) {
+                    continue;
+                }
+
+                if (i == 3) {
+                    var ifstmt, ifbody, iftrue, iffalse, ifend,
+                        whilestmt, whilebody, whiletrue, whilefalse, whileend,
+                        forstmt, forbody, fornext, forend,
+                        continuestmt, breakstmt, endstmt, returnstmt,
+                        entry, next, end int;
+
+                    break;
+                }
+
+                print_string("for:end\n");
+            }
+
+            print_string("while:end\n");
+            break;
+        }
+    }
+}

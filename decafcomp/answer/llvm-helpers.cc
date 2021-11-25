@@ -339,7 +339,7 @@ llvm::GlobalVariable * declareGlobalArr(std::string id, llvm::Type * tp, int siz
 
 // -- Blocks
 
-const std::string BLOCK_ENTRY_ID = "entry";
+const std::string BLOCK_ENTRY_ID = "blkentry";
 llvm::BasicBlock * createBasicBlock(llvm::Function * func) {
 	llvm::BasicBlock * basicBlock = llvm::BasicBlock::Create(
 		TheContext,
@@ -625,7 +625,7 @@ const std::string LOOP_ENTRY = "loop_entry";
 const std::string LOOP_BODY = "loop";
 const std::string TRUE_ENTRY = "true";
 const std::string ELSE_ENTRY = "else";
-const std::string NEXT_ENTRY = "next";
+const std::string NEXT_ENTRY = "loop_next";
 const std::string END_ENTRY = "end";
 const std::string END_LOOP_ENTRY = "end_loop";
 

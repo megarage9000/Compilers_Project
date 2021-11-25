@@ -10,6 +10,36 @@ package C {
       var y, a int;
       y = arr[10];
       print_int(y);
+      for(y = 0; y < 10; y = y + 1) {
+        print_int(100);
+      }
+
+      while(a < 10) {
+        a = a + 1;
+      }
+
+      if(true) {
+        print_int(10);
+      }
+    }
+
+    func bar() void {
+      return();
+    } 
+    func foo() void {
+      return ();
+    }
+
+    func test2() int {
+
+    }
+
+    func test3() bool {
+
+    }
+
+    func test() void {
+      return;
     }
 
 

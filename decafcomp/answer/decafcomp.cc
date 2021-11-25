@@ -444,8 +444,13 @@ public:
 			rval_expr->throw_semantic_error("could not evaluate rval expression.");
 			return nullptr;
 		}
-		assignVal(variable, value);
-		return nullptr;
+		try {
+			assignVal(variable, value);
+			return nullptr;
+		} catch (std::exception &e) {
+			throw_semantic_error(e.what());
+			return nullptr;
+		}
 	}	
 };
 
@@ -591,6 +596,13 @@ public:
 					values.push_back(val);
 					funcArgIt++;
 				}
+			}
+			else {
+				int argSize = args->size();
+				int funcArgSize = (int)func->arg_size();
+				throw_semantic_error("function " + func_name + " did not expect " + std::to_string(argSize) 
+				+ " number of arguments, but rather " + std::to_string(funcArgSize) + " number of arguments.");
+				return nullptr;
 			}
 		}
 		return getFuncCall(func, values);
@@ -1050,8 +1062,15 @@ public:
 		if(!value) {
 			return Builder.CreateRetVoid();
 		}
+		else if(func->getReturnType() == Builder.getVoidTy() && value != nullptr) {
+			throw_semantic_error("void function does not permit expressions in return statements");
+			return nullptr;
+		}
 		else {
 			llvm::Value * returnValue = value->Codegen();
+			if(returnValue == nullptr) {
+				throw_semantic_error("return statement cannot evaluate expression.");
+			}
 			if(returnValue->getType() != func->getReturnType()) {
 				throw_semantic_error("return statment yields value of type " 
 									+ LLVMTypeToString(returnValue->getType()) 

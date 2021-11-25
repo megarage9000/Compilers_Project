@@ -472,12 +472,14 @@ void checkFxn(llvm::Function * func) {
 
 // -- Method calls
 llvm::Value * getFuncCall(llvm::Function * funcCall, std::vector<llvm::Value *> args) {
-	std::string twine = (funcCall->getReturnType()->isVoidTy()) ? "" : "calltmp";
-	return Builder.CreateCall(
-		funcCall,
-		args,
-		twine
-	);
+	bool isVoidTy = funcCall->getReturnType()->isVoidTy();
+	std::string twine = (isVoidTy ? "" : "calltmp");
+	llvm::Value * returnVal = Builder.CreateCall(
+								funcCall,
+								args,
+								twine
+							);
+	return returnVal;
 }	
 
 // Expressions

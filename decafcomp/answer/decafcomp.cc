@@ -128,6 +128,9 @@ public:
 	string str() {
 		return id_name;
 	}
+	string str_llvm() {
+		return id_name + "_id";
+	}
 	llvm::Value *Codegen() {
 		return nullptr;
 	}
@@ -342,7 +345,9 @@ public:
 			// Set start of short circuit
 			Builder.SetInsertPoint(scStartBB);
 			llvm::Value * lval = lval_expr->Codegen();
-			
+			if(lval->getType() != Builder.getInt1Ty()) {
+				lval_expr->throw_semantic_error("lval is not a boolean.");
+			}
 			if(operation == AND) {
 				Builder.CreateCondBr(lval, opBB, scBB);
 			}
@@ -423,9 +428,11 @@ public:
 class Assign_Var: public decafStmtList {
 	decafAST * rval_expr;
 	std::string var_id;
+	std::string llvm_id;
 public:
 	Assign_Var(Identifier * id, decafAST * expression) : decafStmtList() {
 		var_id = id->str();
+		llvm_id = id->str_llvm();
 		rval_expr = expression;
 		push_back(id);
 		push_back(expression);
@@ -434,7 +441,7 @@ public:
 		return "AssignVar(" + decafStmtList::str() + ")";
 	}
 	llvm::Value *Codegen() {
-		llvm::AllocaInst * variable = (llvm::AllocaInst *)getValueFromTables(var_id);
+		llvm::AllocaInst * variable = (llvm::AllocaInst *)getValueFromTables(llvm_id);
 		if(variable == nullptr) {
 			throw_semantic_error("variable " + var_id + " is not within scope.");
 			return nullptr;
@@ -456,10 +463,12 @@ public:
 
 class Assign_Arr_Loc: public decafStmtList {
 	string name;
+	string llvm_id;
 	decafAST * idx, * val;
 public:
 	Assign_Arr_Loc(Identifier * id, decafAST * index, decafAST * expression) : decafStmtList() {
 		name = id->str();
+		llvm_id = id->str_llvm();
 		idx = index;
 		val = expression;
 		push_back(id);
@@ -478,7 +487,7 @@ public:
 
 		llvm::Value * arrayLocation;
 		try {
-			arrayLocation = useArrLoc(name, index);
+			arrayLocation = useArrLoc(llvm_id, index);
 		} catch(std::exception &e) {
 			throw_semantic_error(e.what());
 		}
@@ -497,14 +506,17 @@ public:
 
 class Var_Expr: public decafAST{
 	Identifier * id_ast;
+	std::string llvm_id;
 public:
-	Var_Expr(Identifier * id) : decafAST(), id_ast(id) {}
+	Var_Expr(Identifier * id) : decafAST(), id_ast(id) {
+		llvm_id = id->str_llvm();
+	}
 	~Var_Expr() { if(id_ast) {delete id_ast;}}
 	string str() {
 		return "VariableExpr(" + getString(id_ast) + ")";
 	}
 	llvm::Value *Codegen() {
-		llvm::Value * var = useVar(id_ast->str());
+		llvm::Value * var = useVar(llvm_id);
 		if(!var) {
 			throw_semantic_error("variable " + id_ast->str() + " is not within scope.");
 			return nullptr;
@@ -515,10 +527,12 @@ public:
 
 class Arr_Loc_Expr: public decafStmtList{
 	string name;
+	std::string llvm_id;
 	decafAST * exp;
 public:
 	Arr_Loc_Expr(Identifier * id, decafAST * expression) : decafStmtList(){
 		name = id->str();
+		llvm_id = id->str_llvm();
 		exp = expression;
 		push_back(id);
 		push_back(expression);
@@ -529,7 +543,7 @@ public:
 	llvm::Value *Codegen() {
 		llvm::Value * arr_loc;
 		try {
-			arr_loc = useArrLoc(name, exp->Codegen());
+			arr_loc = useArrLoc(llvm_id, exp->Codegen());
 		} catch (std::exception& e) {
 			throw_semantic_error(e.what());
 			return nullptr;
@@ -543,16 +557,19 @@ class Method_Call: public decafStmtList {
 	decafStmtList * args;
 	std::vector<llvm::Value *> values;
 	std::string func_name;
+	std::string llvm_id;
 public:
 	Method_Call(Identifier * name, decafStmtList * method_args): decafStmtList()  {
 		args = method_args;
 		func_name = name->str();
+		llvm_id = name->str_llvm();
 		push_back(name);
 		push_back(method_args);
 	}
 	Method_Call(Identifier * name): decafStmtList() {
 		args = nullptr;
 		func_name = name->str();
+		llvm_id = name->str_llvm();
 		push_back(name);
 		push_back(new decafStmtList());
 	}
@@ -561,7 +578,7 @@ public:
 	}
 	llvm::Value *Codegen() {
 		// Get function pointer
-		llvm::Function * func = (llvm::Function *)getValueFromTables(func_name);
+		llvm::Function * func = (llvm::Function *)getValueFromTables(llvm_id);
 		if(!func) {
 			throw_semantic_error("function " + func_name + " is not defined within this scope.");
 			return nullptr;
@@ -612,16 +629,19 @@ public:
 // Variable declarations
 class Var_Def : public decafStmtList {
 	string id;
+	std::string llvm_id;
 	ValueType tp;
 public:
 	Var_Def(Identifier * identifier, Type * type) : decafStmtList() {
 		id = identifier->str();
+		llvm_id = identifier->str_llvm();
 		tp = type->get_type();
 		push_back(identifier);
 		push_back(type);
 	}
 	Var_Def(Type * type) : decafStmtList() {
 		id = "";
+		llvm_id = "";
 		tp = type->get_type();
 		push_back(type);
 	}
@@ -630,15 +650,15 @@ public:
 	}
 	llvm::Value *Codegen() {
 		// Check if the variable is already stored in the table, if not, define it
-		if(getValueFromTopTable(id) != nullptr) {
+		if(getValueFromTopTable(llvm_id) != nullptr) {
 			throw_semantic_error("variable " + id + " is already defined within scope.");
 			return nullptr;
 		} 
 
-		return defineVar(getLLVMType(tp), id);
+		return defineVar(getLLVMType(tp), llvm_id);
 	}
 	string getId() {
-		return id;
+		return llvm_id;
 	}
 	ValueType getType() {
 		return tp;
@@ -699,11 +719,13 @@ public:
 class Field_Decl : public decafStmtList{
 	int size;
 	string name;
+	string llvm_id;
 	llvm::Type * tp;
 public:
 	Field_Decl(Identifier * id, Type * type, Field_Size * sz) : decafStmtList(){
 		size = sz->get_val();
 		name = id->str();
+		llvm_id = id->str_llvm();
 		tp = getLLVMType(type->get_type());
 		push_back(id);
 		push_back(type);
@@ -712,6 +734,7 @@ public:
 	Field_Decl(Identifier * id, Type * type) : decafStmtList() {
 		size = SCALAR_VAL;
 		name = id->str();
+		llvm_id = id->str_llvm();
 		tp = getLLVMType(type->get_type());
 		push_back(id);
 		push_back(type);
@@ -723,7 +746,7 @@ public:
 	llvm::Value *Codegen() {
 		if(size == SCALAR_VAL){
 			try{
-				return declareGlobal(name, tp);
+				return declareGlobal(llvm_id, tp);
 			} catch(std::exception &e) {
 				throw_semantic_error(e.what());
 				return nullptr;
@@ -731,7 +754,7 @@ public:
 		}
 		else {
 			try {
-				return declareGlobalArr(name, tp, size);
+				return declareGlobalArr(llvm_id, tp, size);
 			} catch (std::exception &e) {
 				throw_semantic_error(e.what());
 				return nullptr;
@@ -768,11 +791,13 @@ decafStmtList * vector_to_field_decls(string_vector * str_vector, Type * type) {
 
 class Assign_Global : public decafStmtList {
 	string name;
+	string llvm_id;
 	llvm::Type * tp;
 	decafAST * const_val;
 public:
 	Assign_Global(Identifier * identifier, Type * type, Int_Constant * const_expr) : decafStmtList() {
 		name = identifier->str();
+		llvm_id = identifier->str_llvm();
 		tp = getLLVMType(type->get_type());
 		const_val = const_expr;
 		push_back(identifier);
@@ -781,6 +806,7 @@ public:
 	}
 	Assign_Global(Identifier * identifier, Type * type, Bool_Constant * const_expr) : decafStmtList() {
 		name = identifier->str();
+		llvm_id = identifier->str_llvm();
 		tp = getLLVMType(type->get_type());
 		const_val = const_expr;
 		push_back(identifier);
@@ -793,7 +819,7 @@ public:
 	llvm::Value *Codegen() {
 		llvm::Constant * value = (llvm::Constant *)const_val->Codegen();
 		try {
-			return declareGlobalWithValue(name, tp, value);
+			return declareGlobalWithValue(llvm_id, tp, value);
 		} catch(std::exception &e) {
 			throw_semantic_error(e.what());
 			return nullptr;
@@ -1122,6 +1148,7 @@ class Extern_Func: public decafStmtList {
 	vector<string> argNames;
 	llvm::Type * returnType;
 	string func_name;
+	string llvm_id;
 public:
 	Extern_Func(Identifier * id, Type * return_type, decafStmtList * typeList)
 	 : decafStmtList(){
@@ -1130,6 +1157,7 @@ public:
 		push_back(typeList);
 		// Extract name and return type
 		func_name = id->str();
+		llvm_id = id->str_llvm();
 		returnType = getLLVMType(return_type->get_type());
 		// Extract arg names and types
 		list<decafAST *>::iterator it;
@@ -1147,7 +1175,7 @@ public:
 	llvm::Value *Codegen() {
 		// For now we assume we don't store / allocate extern parameters
 		try {
-			return defineExtern(returnType, argTypes, func_name);
+			return defineExtern(returnType, argTypes, func_name, llvm_id);
 		} catch (std::exception &e) {
 			throw_semantic_error(e.what());
 			return nullptr;
@@ -1160,6 +1188,7 @@ class Method_Decl: public decafStmtList {
 	vector<string> argNames;
 	llvm::Type * returnType;
 	string func_name;
+	string llvm_id;
 	Block * funcBlock;
 
 	public:
@@ -1186,24 +1215,22 @@ class Method_Decl: public decafStmtList {
 			);
 		}
 		func_name = id->str();
+		llvm_id = id->str_llvm();
 		returnType = getLLVMType(return_type->get_type());
 	}
 	string str() {
 		return "Method(" + decafStmtList::str() + ")" ;
 	}
 
-	string getFuncName() {
-		return func_name;
-	}
 	llvm::Value *Codegen() {
 		// Defines the function, creates a block and arguments
-		llvm::Function * funcVal = (llvm::Function *)getValueFromTables(func_name);
+		llvm::Function * funcVal = (llvm::Function *)getValueFromTables(llvm_id);
 		if(funcVal != nullptr) {
 			throw_semantic_error("function " + func_name + " is already defined");
 			return nullptr;
 		}
 		try {
-			return defineMethod(returnType, argTypes, func_name);
+			return defineMethod(returnType, argTypes, func_name, llvm_id);
 		} catch (std::exception &e) {
 			throw_semantic_error(e.what());
 			return nullptr;
@@ -1211,7 +1238,7 @@ class Method_Decl: public decafStmtList {
 	}
 
 	llvm::Value *CodegenFuncBlock() {
-		llvm::Function * funcVal = (llvm::Function *)getValueFromTables(func_name);
+		llvm::Function * funcVal = (llvm::Function *)getValueFromTables(llvm_id);
 		if(funcVal == nullptr) {
 			throw_semantic_error(func_name + " is not yet defined.");
 			return nullptr;

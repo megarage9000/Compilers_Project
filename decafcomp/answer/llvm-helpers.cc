@@ -255,16 +255,16 @@ llvm::Value * useVar(std::string id) {
 llvm::Value * useArrLoc(std::string id, llvm::Value * index) {
 	llvm::GlobalVariable * val = llvm::dyn_cast_or_null<llvm::GlobalVariable>(getValueFromTables(id));
 	if(val == nullptr) {
-		throw llvm_exception("array " + id + " is either not an array or is not defined.");
+		throw llvm_exception("array is either not an array or is not defined.");
 	}
 	llvm::Type * indexType = index->getType();
 	if(indexType != Builder.getInt32Ty()) {
 		std::string typeToStr = LLVMTypeToString(indexType);
-		throw llvm_exception("array " + id + " cannot be indexed with value of type " + typeToStr + '.');
+		throw llvm_exception("array cannot be indexed with value of type " + typeToStr + '.');
 	}
 	llvm::Type * idType = val->getValueType();
 	if(idType == Builder.getInt32Ty() || idType == Builder.getInt1Ty()) {
-		throw llvm_exception("trying to use field " + id + " as an array when it is of type scalar " + LLVMTypeToString(idType) + ".");
+		throw llvm_exception("trying to use field variable as an array when it is of type scalar " + LLVMTypeToString(idType) + ".");
 	}
 	llvm::ArrayType * arrayTp = (llvm::ArrayType *)idType;
 	llvm::Value * arrayLoc = Builder.CreateStructGEP(arrayTp, val, 0, "arrayloc");
@@ -394,7 +394,8 @@ void setupFuncArgs(llvm::Function * func, std::vector<std::string> argNames) {
 llvm::Function * defineFunc(
 	llvm::Type * returnTp, 
 	std::vector<llvm::Type *> argTypes, 
-	std::string funcName) 
+	std::string funcName,
+	std::string llvm_id) 
 {
 	llvm::Function * func = llvm::Function::Create(
 		llvm::FunctionType::get(returnTp, argTypes, false),
@@ -402,14 +403,15 @@ llvm::Function * defineFunc(
 		funcName,
 		TheModule
 	);
-	insertToTable(funcName, func);
+	insertToTable(llvm_id, func);
 	return func;
 }
 
 llvm::Function * defineMethod(
 	llvm::Type * returnTp, 
 	std::vector<llvm::Type *> argTypes, 
-	std::string funcName) 
+	std::string funcName,
+	std::string llvm_id) 
 {
 	// Check if return type is valid
 	if(!isMethodType(returnTp) && !isMainReturnType(returnTp)) {
@@ -422,13 +424,14 @@ llvm::Function * defineMethod(
 		}
 	}
 	// One it passes the tests, define function
-	return defineFunc(returnTp, argTypes, funcName);
+	return defineFunc(returnTp, argTypes, funcName, llvm_id);
 }
 
 llvm::Function * defineExtern(
 	llvm::Type * returnTp, 
 	std::vector<llvm::Type *> argTypes, 
-	std::string funcName) 
+	std::string funcName,
+	std::string llvm_id) 
 {
 	// Check if return type is valid
 	if(!isMethodType(returnTp)) {
@@ -441,7 +444,7 @@ llvm::Function * defineExtern(
 		}
 	}
 	// One it passes the tests, define function
-	return defineFunc(returnTp, argTypes, funcName);
+	return defineFunc(returnTp, argTypes, funcName, llvm_id);
 }
 
 

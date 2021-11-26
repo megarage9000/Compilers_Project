@@ -6,14 +6,14 @@ package C {
 
     var arr [10] int;
     var x int;
-    var x int;
+    var test2 int;
     func main() void {
       var y, a int;
       var x bool;
       y = arr[10];
-      print_int(y);
+      print_int();
       for(y = 0; y < 10; y = y + 1) {
-        print_int(100);
+        print_int();
       }
 
       while(a < 10) {
@@ -21,7 +21,7 @@ package C {
       }
        
       if(true) {
-        print_int(10);
+        print_int();
       }
     }
 
@@ -32,7 +32,7 @@ package C {
       return ();
     }
 
-    func test2() int {
+    func print_int() int {
 
     }
 

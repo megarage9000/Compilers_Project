@@ -42,12 +42,12 @@ public:
   string get_location(){ 
 	  return "\nAt line position = " + std::to_string(line_pos) + "\nAt token position = " + std::to_string(token_pos); 
 	}
-	void throw_semantic_error(std::string message) {
-		std::string error_message = "SEMANTIC ERROR: " + message + get_location();
+	void throw_semantic_error(string message) {
+		string error_message = "SEMANTIC ERROR: " + message + get_location();
 		throw std::runtime_error(error_message.c_str());
 	}
 	void throw_semantic_error(const char * message) {
-		throw_semantic_error(std::string(message));
+		throw_semantic_error(string(message));
 	}
 };
 
@@ -427,8 +427,8 @@ public:
 /// Variable / Array Assignments and Expressions
 class Assign_Var: public decafStmtList {
 	decafAST * rval_expr;
-	std::string var_id;
-	std::string llvm_id;
+	string var_id;
+	string llvm_id;
 public:
 	Assign_Var(Identifier * id, decafAST * expression) : decafStmtList() {
 		var_id = id->str();
@@ -506,7 +506,7 @@ public:
 
 class Var_Expr: public decafAST{
 	Identifier * id_ast;
-	std::string llvm_id;
+	string llvm_id;
 public:
 	Var_Expr(Identifier * id) : decafAST(), id_ast(id) {
 		llvm_id = id->str_llvm();
@@ -527,7 +527,7 @@ public:
 
 class Arr_Loc_Expr: public decafStmtList{
 	string name;
-	std::string llvm_id;
+	string llvm_id;
 	decafAST * exp;
 public:
 	Arr_Loc_Expr(Identifier * id, decafAST * expression) : decafStmtList(){
@@ -556,8 +556,8 @@ public:
 class Method_Call: public decafStmtList {
 	decafStmtList * args;
 	std::vector<llvm::Value *> values;
-	std::string func_name;
-	std::string llvm_id;
+	string func_name;
+	string llvm_id;
 public:
 	Method_Call(Identifier * name, decafStmtList * method_args): decafStmtList()  {
 		args = method_args;
@@ -629,7 +629,7 @@ public:
 // Variable declarations
 class Var_Def : public decafStmtList {
 	string id;
-	std::string llvm_id;
+	string llvm_id;
 	ValueType tp;
 public:
 	Var_Def(Identifier * identifier, Type * type) : decafStmtList() {
@@ -1224,7 +1224,7 @@ class Method_Decl: public decafStmtList {
 
 	llvm::Value *Codegen() {
 		// Defines the function, creates a block and arguments
-		llvm::Function * funcVal = (llvm::Function *)getValueFromTables(llvm_id);
+		llvm::Function * funcVal = (llvm::Function *)getValueFromTopTable(llvm_id);
 		if(funcVal != nullptr) {
 			throw_semantic_error("function " + func_name + " is already defined");
 			return nullptr;
@@ -1238,7 +1238,7 @@ class Method_Decl: public decafStmtList {
 	}
 
 	llvm::Value *CodegenFuncBlock() {
-		llvm::Function * funcVal = (llvm::Function *)getValueFromTables(llvm_id);
+		llvm::Function * funcVal = (llvm::Function *)getValueFromTopTable(llvm_id);
 		if(funcVal == nullptr) {
 			throw_semantic_error(func_name + " is not yet defined.");
 			return nullptr;
@@ -1287,6 +1287,7 @@ public:
 	}
 	llvm::Value *Codegen() { 
 		llvm::Value *val = NULL;
+		pushTable();
 		TheModule->setModuleIdentifier(llvm::StringRef(Name)); 
 		if (NULL != FieldDeclList) {
 			val = FieldDeclList->Codegen();
@@ -1301,6 +1302,7 @@ public:
 				declaration->CodegenFuncBlock();
 			}
 		} 
+		popTable();
 		// Q: should we enter the class name into the symbol table?
 		return val; 
 	}

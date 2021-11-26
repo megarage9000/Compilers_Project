@@ -276,7 +276,7 @@ llvm::Value * useArrLoc(std::string id, llvm::Value * index) {
 llvm::GlobalVariable * declareGlobalWithValue(std::string id, llvm::Type * tp, llvm::Constant* val) {
 	llvm::Value * tableVal = getValueFromTables(id);
 	if(tableVal != nullptr) {
-		throw llvm_exception("global variable " + id + " is already defined.");
+		throw llvm_exception("global variable is already defined.");
 		return nullptr;
 	}
 	if(isDecafType(tp)) {
@@ -293,7 +293,7 @@ llvm::GlobalVariable * declareGlobalWithValue(std::string id, llvm::Type * tp, l
 	}
 	else{
 		std::string globalType = LLVMTypeToString(tp);
-		throw llvm_exception("global variable " + id + " of type " + globalType + " cannot be initialized with a value.");
+		throw llvm_exception("global variable of type " + globalType + " cannot be initialized with a value.");
 	}
 }
 
@@ -309,7 +309,7 @@ llvm::GlobalVariable * declareGlobal(std::string id, llvm::Type * tp) {
 	}
 	else{
 		std::string globalType = LLVMTypeToString(tp);
-		throw llvm_exception("global variable " + id + " cannot be of type " + globalType + '.');
+		throw llvm_exception("global variable cannot be of type " + globalType + '.');
 	}
 	return declareGlobalWithValue(id, tp, zeroInit);
 }
@@ -331,7 +331,7 @@ llvm::GlobalVariable * declareGlobalArr(std::string id, llvm::Type * tp, int siz
 	}
 	else{
 		std::string globalType = LLVMTypeToString(tp);
-		throw llvm_exception("global array " + id + " of type " + globalType + " is not valid.");
+		throw llvm_exception("global array of type " + globalType + " is not valid.");
 	}
 }
 

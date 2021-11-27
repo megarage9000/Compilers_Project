@@ -151,7 +151,7 @@ std::string LLVMTypeToString(llvm::Type * type) {
 		return "string";
 	}
 	else {
-		return "";
+		return "non-scalar";
 	}
 }
 
@@ -234,12 +234,7 @@ void assignVal(llvm::AllocaInst* lval, llvm::Value * rval) {
 llvm::AllocaInst * defineVar(llvm::Type * tp, std::string id) {
 	llvm::AllocaInst * allocation = Builder.CreateAlloca(tp, 0, id.c_str());
 	// Zero initialization
-	if(tp == Builder.getInt1Ty()) {
-		assignVal(allocation, initializeLLVMVal(tp, 1));
-	}
-	else {
-		assignVal(allocation, initializeLLVMVal(tp, 0));
-	}
+	assignVal(allocation, initializeLLVMVal(tp, 0));
 	insertToTable(std::string(id), allocation);
 	return allocation;
 

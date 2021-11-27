@@ -4,36 +4,48 @@ extern func print_string(string) void;
 
 package C {
 
-    var arr [10] int;
+    var arr [1000] int;
     var x int;
     var test2 int;
     func main() void {
       var y, a int;
       var x bool;
+      if(x){
+        print_string("nothing happens here");
+      }
       y = arr[10];
-      print_int();
+      print_int(y);
       for(y = 0; y < 10; y = y + 1) {
-        print_int();
+        if(y == 5){
+          continue;
+        }
+        print_int(y);
       }
 
       while(a < 10) {
         a = a + 1;
       }
-       
-      if(true) {
-        print_int();
+      a = -100;
+      x = true;
+      print_int(x);
+      if(x) {
+        print_int(100);
+        print_string("YES\n");
       }
+      foo(69);
     }
 
     func bar() void {
-      return();
+      var x bool;
+      x = true;
+      if(x) {
+        var x int;
+        x = 10;
+        print_int(x);
+      }
     } 
-    func foo() void {
-      return ();
-    }
-
-    func print_int() int {
-
+    func foo(x int) void {
+      var bar int;
     }
 
     func test3() bool {

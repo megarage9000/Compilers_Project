@@ -578,9 +578,10 @@ public:
 	}
 	llvm::Value *Codegen() {
 		// Get function pointer
-		llvm::Function * func = (llvm::Function *)getValueFromTables(llvm_id);
+		//llvm::Function * func = (llvm::Function *)getValueFromTables(llvm_id);
+		llvm::Function * func = llvm::dyn_cast_or_null<llvm::Function>(getValueFromTables(llvm_id));
 		if(!func) {
-			throw_semantic_error("function " + func_name + " is not defined within this scope.");
+			throw_semantic_error("function " + func_name + " is not defined within this scope or is a variable.");
 			return nullptr;
 		}
 		if(args != nullptr) {

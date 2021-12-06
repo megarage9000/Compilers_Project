@@ -77,6 +77,39 @@ string get_actual_escape_char(string escape_char) {
   return std::string(1, actualChar);
 }
 
+// From: https://gist.github.com/MrLogarithm/9a49d5efb2a15e891d52c072c574adb5
+// Thanks Logan!
+int hexToInt( string s ) { 
+    int value = 0;
+    for ( char& c : s ) { 
+        char digit;
+        c = tolower(c);
+        if ( c >= '0' && c <= '9' ) { 
+          digit = c - '0';
+        } else if ( c >= 'a' && c <= 'f' ) { 
+          digit = 10 + c - 'a';
+        } else {
+          throw runtime_error("malformed integer");
+        }   
+        value = (16*value) + digit;
+    }   
+    return value;
+}
+
+int strToInt( string s ) { 
+    int value = 0;
+    for ( char& c : s ) { 
+        char digit;
+        if ( c >= '0' && c <= '9' ) { 
+            digit = c - '0';
+        } else {
+          throw runtime_error("malformed integer");
+        }   
+        value = (10*value) + digit;
+    }   
+    return value;
+}
+
 #define YY_USER_ACTION  update_position();
 
 %}
@@ -216,18 +249,14 @@ while                      { return T_WHILE; }
   /*
     Integer Rules
   */
-{decimal_digit}      {
-  yylval.inval = strtol(yytext, nullptr, 10);
+{decimal_digit} {
+  yylval.inval = strToInt(string(yytext));
   return T_INTCONSTANT;
 } 
-{hex_digit}                       {
-                                  std::stringstream ss;
-                                  int val;
-                                  ss << std::hex << yytext;
-                                  ss >> val;     
-                                  yylval.inval = val; 
-                                  return T_INTCONSTANT;
-                                  } 
+{hex_digit} {
+  yylval.inval = hexToInt(string(yytext).substr(2)); 
+  return T_INTCONSTANT;
+} 
   /*
     EOF?
   */

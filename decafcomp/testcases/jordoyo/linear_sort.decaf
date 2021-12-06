@@ -1,0 +1,35 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+
+package LinearSort {
+
+    var arr [1000]int;
+
+    func main() void {
+        var largestNum, i, j, l, val, k int;
+        largestNum = 1000;
+        // Setup array
+        for(i = 0; i < 1000; i = i + 1) {
+            arr[i] = largestNum;
+            largestNum = largestNum - 1;
+        }
+
+        // Do a linear sort
+        for(j = 1; j < 1000; j = j + 1) {
+            val = arr[j];
+            k = j - 1;
+            while(k >= 0 && arr[k] > val) {
+                arr[k + 1] = arr[k];
+                k = k - 1;
+            }
+            arr[k + 1] = val;
+        }
+
+        // Print the first 10 numbers
+        for(l = 0; l < 10; l = l + 1) {
+            print_int(arr[l]);
+        }
+    }
+}
+

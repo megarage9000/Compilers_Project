@@ -1,0 +1,37 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+
+package RecursiveReverse{
+
+    var arr [100]int;
+    func main() void {
+        var i int;
+        for(i = 0; i < 100; i = i + 1) {
+            arr[i] = i * 10;
+            print_int(arr[i]);
+            print_string("\n"); 
+        }
+        print_string("--------Reversing----------\n");
+        reverse(0, 100);
+        for(i = 0; i < 100; i = i + 1) {
+           print_int(arr[i]);
+           print_string("\n"); 
+        }
+    }
+
+    func reverse(curr int, max int) void {
+        var num int;
+        if(curr == max / 2) {
+            return;
+        }
+        else {
+            num = arr[curr];
+            arr[curr] = arr[max - curr - 1];
+            arr[max - curr - 1] = num;
+            curr = curr + 1;
+            reverse(curr, max);
+        }
+    }
+}
+

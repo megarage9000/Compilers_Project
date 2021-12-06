@@ -1,0 +1,30 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+extern func read_int() int;
+
+
+package ExternShadow{
+
+    func main() void {
+        var compare, val int;
+        var res bool;
+        compare = 7812;
+        val = print_int(10, 10);
+        res = read_int(1322, 1321);
+        if(compare > val && res) {
+            print_string("compare > val\n");
+            print_string("1322 > 1321 && 1322 != 1321\n");
+        }
+
+    }
+
+    func print_int(x int, y int) int {
+        return(((x << 13) % 13 ) * (y << 2));
+    }
+
+    func read_int(j int, k int) bool {
+        return (j > k && j != k);
+    }
+
+}
+

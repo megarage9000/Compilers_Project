@@ -1,0 +1,75 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+
+package Blocks{
+    
+
+
+    func main() void {
+        var a, b, c, d int;
+        a = 1;
+        b = 2;
+        c = 3;
+        d = 4;
+        {
+            var a, b, c, d bool;
+            a = true;
+            b = false;
+            c = 800 > 99 && a || b;
+            d = !!!!!!!!!!!!!!!!!!(800 * 500 < 10000);
+            {
+                var a, b, c, d int;
+                a = 1;
+                b = 2;
+                c = 3;
+                d = 4;
+                {
+                    var a, b, c, d bool;
+                    a = true;
+                    b = false;
+                    c = 800 > 99 && a || b;
+                    d = !!!!!!!!!!!!!!!!!!(800 * 500 < 10000);
+                    {
+                        var a, b, c, d int;
+                        a = 1;
+                        b = 2;
+                        c = 3;
+                        d = 4;
+                        {
+                            var a, b, c, d bool;
+                            a = true;
+                            b = false;
+                            c = 800 > 99 && a || b;
+                            d = !!!!!!!!!!!!!!!!!!(800 * 500 < 10000);
+                            {
+                                var a, b, c, d int;
+                                a = 1;
+                                b = 2;
+                                c = 3;
+                                d = 4;
+                                {
+                                    var a, b, c, d bool;
+                                    a = true;
+                                    b = false;
+                                    c = 800 > 99 && a || b;
+                                    d = !!!!!!!!!!!!!!!!!!!(800 * 500 < 10000);                 
+                                    print_int(a);
+                                    print_string("\n");
+                                    print_int(b);
+                                    print_string("\n");
+                                    print_int(c);
+                                    print_string("\n");
+                                    print_int(d);
+                                    print_string("\n");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }        
+    }
+
+}
+

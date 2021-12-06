@@ -1,0 +1,76 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+
+package BreakContinueBlocks{
+    func main() void {
+        var max, target, i int;
+        max = 0x912321912321321321321321321321321BEDCfab;
+        target = (max % 1000) << 2;
+        while(i < max) {
+            {
+                {
+                    {
+                        {
+                            {
+                                {
+                                    {
+                                        {
+                                            {
+                                                {
+                                                    {
+                                                        {
+                                                            {
+                                                                {
+                                                                    {
+                                                                        {
+                                                                            {
+                                                                                {
+                                                                                    {
+                                                                                        {
+                                                                                            {
+                                                                                                {
+                                                                                                    {
+                                                                                                        {
+                                                                                                            {
+                                                                                                                {
+                                                                                                                    if(i == target) {
+                                                                                                                        print_string("Found target = ");
+                                                                                                                        print_int(i);
+                                                                                                                        print_string("\n");
+                                                                                                                        break;
+                                                                                                                    }
+                                                                                                                    else {
+                                                                                                                        i = i + 1;
+                                                                                                                        continue;
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+

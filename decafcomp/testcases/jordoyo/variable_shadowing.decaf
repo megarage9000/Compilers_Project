@@ -1,0 +1,54 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+
+package VariableShadow{
+
+    var a int;
+    func main() int{
+        var a int;
+        a = 0xabcdef12345;
+        {
+            dummy_b(a);
+            {
+                var a bool;
+                a = 100 > 99 && true && (231 % 10 > 0);
+                dummy_a(a);
+                {
+                    var i int;
+                    for(i = 0; i < 5; i = i + 1) {
+                        var val int;
+                        val = i * 5;
+                        dummy_b(val);
+                    }
+                    dummy_c();
+                }
+            }
+        }
+        return(a);
+    }
+
+    func dummy_a(a bool) void{
+        print_string("dummy_a value for a = ");
+        print_int(a);
+        print_string("\n");
+    }
+
+    func dummy_b(a int) void {
+        a = a * 10;
+        print_string("dummy_b value for a = ");
+        print_int(a);
+        print_string("\n");
+    }
+
+    func dummy_c() void {
+        print_string("global a value = ");
+        print_int(a);
+        print_string("\n");
+        print_string("global a value = 3 << 2 = ");
+        a = 3 << 2;
+        print_int(a);
+        print_string("\n");
+    }
+}
+

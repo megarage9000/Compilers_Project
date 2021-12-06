@@ -1,0 +1,33 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+
+package MultipleReturns{
+
+    func main() void {
+        var x, y, z int;
+        var a, b, c bool;
+
+        x = 11;
+        y = 10;
+        z = (12 << 2 * 5 + -----------11);
+
+        a = x > y && !(x < z);
+        b = z < y || !(y > z);
+        c = false;
+        if(a) {
+            print_string("a true");
+            return();
+        }
+        if(b) {
+            print_string("b true");
+            return;
+        }
+        if(c || (a && b)) {
+            print_string("c || (a && b) true");
+            return();
+        }
+        return;
+    }
+}
+

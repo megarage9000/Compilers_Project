@@ -1,0 +1,24 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+
+package MethodIndexing{
+
+    var arr [100]int;    
+
+    func main() bool {
+        var i int;
+        var randBool bool;
+        randBool = !!(69 > 420 || 0xDADBAD % 11 > 2);
+        for(i = 0; i < 100; i = i + 1) {
+            arr[boolToInt(randBool)] = boolToInt(randBool) << i + '\r';
+            print_int(arr[boolToInt(randBool)]);
+            print_string("\n");
+        }
+    }
+
+    func boolToInt(val int) int {
+        return(val);
+    }
+}
+

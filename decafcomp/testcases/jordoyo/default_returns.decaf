@@ -1,0 +1,28 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+
+package DefaultReturns{
+
+    func main() bool {
+        def_int();
+        def_bool();
+        def_void();
+        return(true);
+    }
+
+    func def_int() int {   
+        print_string("Default return int...\n");
+    }
+
+    func def_bool() bool {
+        print_string("Default return bool...\n");
+    }
+
+    func def_void() void {
+        print_string("Default return void...\n");
+    }
+
+
+}
+

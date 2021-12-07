@@ -5,7 +5,7 @@ extern func read_int() int;
 
 package ExternShadow{
 
-    func main() void {
+    func main() int {
         var compare, val int;
         var res bool;
         compare = 7812;

@@ -6,7 +6,7 @@ package LinearSort {
 
     var arr [1000]int;
 
-    func main() void {
+    func main() int {
         var largestNum, i, j, l, val, k int;
         largestNum = 1000;
         for(i = 0; i < 1000; i = i + 1) {

@@ -25,7 +25,6 @@ package VariableShadow{
                 }
             }
         }
-        return(a);
     }
 
     func dummy_a(a bool) void{

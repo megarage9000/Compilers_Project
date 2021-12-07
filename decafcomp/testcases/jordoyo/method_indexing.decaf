@@ -6,7 +6,7 @@ package MethodIndexing{
 
     var arr [100]int;    
 
-    func main() bool {
+    func main() int {
         var i int;
         var randBool bool;
         randBool = !!(69 > 420 || 0xDADBAD % 11 > 2);

@@ -3,7 +3,7 @@ extern func print_string(string) void;
 
 
 package BreakContinueBlocks{
-    func main() void {
+    func main() int {
         var max, target, i int;
         max = 0x912321912321321321321321321321321BEDCfab;
         target = (max % 1000) << 2;

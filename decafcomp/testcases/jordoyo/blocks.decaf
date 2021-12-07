@@ -6,7 +6,7 @@ package Blocks{
     
 
 
-    func main() void {
+    func main() int {
         var a, b, c, d int;
         a = 1;
         b = 2;

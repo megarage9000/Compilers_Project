@@ -6,7 +6,7 @@ package NestedArrayIndexing{
 
     var a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p [1000]int;
 
-    func main() void {
+    func main() int {
         var index int;
         while(index < 1000) {
             a[index] = index;

@@ -8,7 +8,7 @@ package DefaultReturns{
         def_int();
         def_bool();
         def_void();
-        return(true);
+	return(0);
     }
 
     func def_int() int {   

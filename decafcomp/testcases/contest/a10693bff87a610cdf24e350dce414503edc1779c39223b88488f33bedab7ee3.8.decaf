@@ -1,0 +1,23 @@
+extern func print_int(int) void;
+package Test {
+    func main() int
+    {
+        var b bool;
+        b = 13 < 15;
+        b = 13 < 13;
+        b = 15 < 13;
+        if (!b) { print_int(b); }
+        weird();
+    }
+
+	func weird() void
+	{
+		var x, y, z int;
+		for (x = -0X19AF; true; y = '	')
+		{
+			z = '
+';
+			break;
+		}
+	}
+}

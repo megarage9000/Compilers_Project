@@ -1,0 +1,16 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package EvansCompilerShredder {
+    func main() int {
+        if(-1 + cast(true) == 0){
+            print_string("This is how math works");
+        }
+        else {
+            print_string("Or is it?");
+        }
+    }
+    func cast(x int) int {
+        return(x);
+    }
+}

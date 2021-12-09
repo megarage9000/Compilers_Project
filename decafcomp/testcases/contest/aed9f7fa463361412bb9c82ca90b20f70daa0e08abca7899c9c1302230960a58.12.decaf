@@ -1,0 +1,42 @@
+extern func print_int(int) void;
+package Test {
+    var foo [5] int;
+
+    func main() int {
+        var i,y int;
+
+        for (i = 0; i < 10; i = i + 1) {
+            if (i % 5 == 0) {
+                foo[0] = i * 2;
+            } else {
+                if (i % 5 == 1) {
+                    foo[1] = i << 2;
+                } else {
+                    if (i % 5 == 2) {
+                        foo[2] = i >> 4;
+                    } else {
+                        if (i % 5 == 3) {
+                            print_int(42);
+                            foo[3] = i % 5;
+                        } else {
+                            if (i % 5 == 4) {
+                                foo[4] = 10;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            print_int(i);
+        }
+        for (i = 0; i < 5; i = i + 1) {
+            y = foo[4];
+            if (y % 5 == 0) {
+                print_int(5);
+            } else {
+                break;
+            }
+        } 
+        print_int(foo[1]);
+    }
+}

@@ -1,7 +1,0 @@
-extern func foo() int;
-
-
-package Scoping {
-	func foo(x int) void { { var x int; } }
-	func main() int { foo(1);  }
-}

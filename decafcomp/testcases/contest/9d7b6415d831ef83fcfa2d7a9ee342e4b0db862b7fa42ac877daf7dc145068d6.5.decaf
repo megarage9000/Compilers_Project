@@ -1,0 +1,25 @@
+package Test {
+    var list[100] int;
+
+    func init() void {
+        var i int;
+        for (i = 0; i < 100; i = i + 1) {
+			list[i] = i * 23 + 1;
+		}
+        list[99] = 0;
+    }
+
+    func main() int {
+        var count int;
+        count = 0;
+
+        init();
+
+        while (true) {
+            if (list[count] == 0) {
+                break;
+            }
+            count = count + 1;
+        }
+    }
+}

@@ -1,0 +1,18 @@
+
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package Test {
+    func main() int {
+        var x, t int;
+        var y bool;
+        for (x = 0, y = true, t = 057373263598697719204120368688394588461608557858556538289223289852885831197736462977928292731857044075660768979000356036 + 0x61c34282F03CD10702bda0FfC983F752E9F0c785E379Cc0fB7cE3D1cE8684247d108f1139BCFB60e5c32D9BbCa42fF2526B4faFE9a4a2021Fc59C51e; x < 10 && t > 11223344; x = x + 1, y = !y) {
+            print_int(x);
+            print_string(" (");
+            print_int(y);
+            print_string(")\n");
+            continue;
+            print_int(false || true);
+        }
+    }
+}

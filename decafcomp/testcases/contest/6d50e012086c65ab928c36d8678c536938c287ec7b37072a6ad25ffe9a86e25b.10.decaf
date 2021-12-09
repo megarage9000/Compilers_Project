@@ -1,0 +1,39 @@
+extern func print_string(string) void;
+
+package DeepRecursion {
+    func main() int {
+        var depth, result int;
+        depth = 0xFFFF;
+        result = recurse(depth);
+
+        if (result == depth) {
+            print_string("success int\n");
+        }
+        else {
+            print_string("hmm...\n");
+        }
+
+        if (recurseShortCircuit(depth)) {
+            print_string("success bool\n");
+        }
+        else {
+            print_string("hmm...\n");
+        }
+    }
+
+    func recurse(depth int) int {
+        if (depth == 0) {
+            return(0);
+        }
+
+        return(recurse(depth - 1) + 1);
+    }
+
+    func recurseShortCircuit(depth int) bool {
+        if (depth < 0) {
+            return(false);
+        }
+
+        return(depth == 0 || recurseShortCircuit(depth - 1));
+    }
+}

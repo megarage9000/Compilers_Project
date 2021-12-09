@@ -1,7 +1,0 @@
-extern func print_int(int int) void;
-
-package QuickSort {
-	var x int;
-	func main() void {
-	}
-}

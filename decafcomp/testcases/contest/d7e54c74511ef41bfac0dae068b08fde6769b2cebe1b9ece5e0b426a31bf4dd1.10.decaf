@@ -1,0 +1,13 @@
+extern func print_string(string) void;
+package C {
+    func inf() bool {
+        while(true) {}
+        return (false);
+    }
+    func main() int {
+        if (true || inf()) {
+            print_string("survived\n");
+        }
+        return (0);
+    }
+}

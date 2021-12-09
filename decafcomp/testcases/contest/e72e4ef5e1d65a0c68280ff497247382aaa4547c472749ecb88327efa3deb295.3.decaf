@@ -1,0 +1,23 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package EvansCompilerShredder {
+    func main() int {
+        var x int;
+        for(x = 0, x = 69, x = 420; x < 9999; x = x + 1)
+        {
+            //The correct value
+            if(x == 420) 
+            { 
+                print_int(x);
+                return; 
+            }
+            //Make this program never terminate, because I am mean
+            else
+            {
+                 x = x - 1; 
+            }
+            break;
+        }
+    }
+}

@@ -1,0 +1,28 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package thoroughIfTest {
+    func foo() bool {
+        print_string("foo");
+        return(false);
+    }
+
+    func main() int {
+        var flag bool;
+        if(true){
+            flag = true || foo(); //short-circuit
+        }
+        else{
+            //Can be empty!
+        }
+        if(false){
+            //Can be empty!
+        }
+        else{
+            if(false || true){
+                print_int(flag);
+            }
+        }
+        return(0);
+    }
+}

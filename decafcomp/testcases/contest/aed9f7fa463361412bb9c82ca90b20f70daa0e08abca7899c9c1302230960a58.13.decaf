@@ -1,0 +1,28 @@
+extern func print_int(int) void;
+package Test {
+    var i int = 10;
+
+    func foo(n int) int {
+        if (n <= 1) {
+            return(1);
+        } else {
+            return(foo(n-1) + foo(n-2));
+        }
+    }
+
+    func main() int {
+        var y int;
+        print_int(foo(i));
+        y = foo(i);
+        while(y > 0) {
+            y = y >> 2;
+            print_int(y);
+            if (y % 2 == 0) {
+                break;
+            } else {
+                continue;
+            }
+        }
+        print_int(y);
+    }
+}

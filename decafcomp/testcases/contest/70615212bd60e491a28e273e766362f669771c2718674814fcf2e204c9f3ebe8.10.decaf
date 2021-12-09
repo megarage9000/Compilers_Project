@@ -1,0 +1,13 @@
+extern func print_int(int) void;
+
+package C {
+
+    func main() int {
+        var x, y, z int;
+        x = 55;
+        y = 0xBadFace;
+        z = 2147483649;
+
+        print_int(y);
+    }
+}

@@ -1,0 +1,36 @@
+extern func print_int(int) void;
+package Test {
+    func foo() bool {
+        var a int;
+        print_int(42);
+        a = 10;
+        return(true);
+    }
+
+    func main() int {
+        var a int;
+        var b int;
+
+        a = 2;
+        b = 3;
+        while(false) {
+            return(1);
+        }
+
+        if (false) {
+            a = 10;
+            print_int(a);
+        }
+
+        if (true) {
+            b = 2;
+            print_int(b);
+        }
+
+        if (true && foo()) {
+            print_int(21931232);
+        }
+        print_int(a);
+        print_int(b);
+    }
+}

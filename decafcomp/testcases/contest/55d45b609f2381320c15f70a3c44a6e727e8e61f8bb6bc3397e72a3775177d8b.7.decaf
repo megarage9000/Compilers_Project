@@ -1,0 +1,24 @@
+extern func print_int(int) void;
+
+package Test {
+    func main() int {
+        var x int;
+        var i int;
+        var result int;
+        x = 11;
+        i = 1; 
+        result = 1;
+        
+        // square root
+        if (x == 0 || x == 1) {
+            print_int(x);
+        }
+        
+        while (result <= x) {
+            i = i + 1;
+            result = i * i;
+        }
+
+        print_int(i - 1);
+    }
+}

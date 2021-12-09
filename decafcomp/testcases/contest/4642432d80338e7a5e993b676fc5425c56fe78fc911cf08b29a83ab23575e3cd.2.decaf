@@ -1,0 +1,13 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package Pkg {
+	func print_int(x int) void {}
+
+	func main() int {
+		print_int(10);
+
+		print_string("test passed\n");
+		return (0);
+	} 
+}

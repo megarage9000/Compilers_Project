@@ -1,0 +1,25 @@
+extern func print_int(int) void;
+
+package Test {
+    func main() int {
+        if (true) {
+            if (false) {
+                print_int(9);
+            } else {
+                var x, y, i, j int;
+                for (i = 0; i < 10; i = i + 1) {
+                    if (true) {
+                        for (j = 0; j < 10; j = j + 1) {
+                            break;
+                        }
+                    }
+                    else {
+                        continue;
+                    }
+                }
+            }
+        } else {
+            print_int(1);
+        }
+    }
+}

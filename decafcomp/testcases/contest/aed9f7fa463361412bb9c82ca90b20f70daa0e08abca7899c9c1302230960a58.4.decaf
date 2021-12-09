@@ -1,0 +1,22 @@
+extern func print_string(string) void;
+package Test {
+    func foo() bool {
+        print_string("Triggered");
+        return(true);
+    }
+    func main() int {
+        var x, y int;
+        print_string("!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVYXWZabcdefghijklmnopqrstuvwxyz[]^_'{}~");
+        x = 10;
+        y = 20;
+        if (x > y) {
+            print_string("X is bigger");
+        }
+        while (x > y) {
+            if (false && foo()) {
+                x = 0;
+            }
+            x = x >> 2;
+        }
+    }
+}

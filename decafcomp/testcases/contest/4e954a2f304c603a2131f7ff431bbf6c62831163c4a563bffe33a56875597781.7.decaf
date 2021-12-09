@@ -1,0 +1,34 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package arraydef {
+  var size int = 5;
+  var arr [5] int;
+  func main() int {
+    var i int;
+    for (i = 0; i < size; i = i + 1) {
+        arr[i] = i * 100;
+        print_int(arr[i]);
+        print_string("\n");
+    }
+
+    {
+        var arr bool;
+        arr = true;
+        if (true || loopforever(arr)) {
+            print_int(arr);
+        } else {
+            return (1);
+        }
+    }
+
+    return (0);
+  }
+  func loopforever(x bool) bool {
+    while (x) {
+        continue;
+    }
+
+    return (x);
+  }
+}

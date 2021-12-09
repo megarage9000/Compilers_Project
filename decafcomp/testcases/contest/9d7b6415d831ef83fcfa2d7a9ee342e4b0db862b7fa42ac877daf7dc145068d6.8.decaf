@@ -1,0 +1,35 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package Test {
+	var intList [100]int;
+	var boolList [100]bool;
+
+    func main() int {
+        var x, z int;
+        var y, j bool;
+
+        x = intList[10];
+        y = boolList[10];
+
+        {
+            var i int;
+            for (i = 0; i < 10; i = i + 1) {
+                intList[i] = i;
+                if (i % 2 == 0) {
+                    boolList[i] = true;
+                }
+                else {
+                    boolList[i] = false;
+                }
+            }
+        }
+
+        z = intList[0] + intList[1] * intList[2] / intList[3] - intList[4];
+        print_int(z);
+
+        j = boolList[1] && (boolList[0] || boolList[4]) ||boolList[3];
+        print_int(j);
+    }
+
+}

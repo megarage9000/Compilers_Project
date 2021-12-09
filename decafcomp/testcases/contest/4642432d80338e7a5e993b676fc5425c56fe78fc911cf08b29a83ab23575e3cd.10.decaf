@@ -1,0 +1,31 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package Random {
+
+    var x int;
+
+    func main() int {
+        var i int;
+
+        set_seed(9);
+
+        for (i = 0; i < 10; i = i + 1) {
+            print_int(random()); print_string("\n");
+        }
+    }
+
+    func random() int {
+        var M, A int;
+
+        M = 1 << 31 - 1;
+        A = 48271;
+
+        x = (A * x) % M;
+        return (x);
+    }
+
+    func set_seed(seed int) void {
+        x = seed;
+    }
+}

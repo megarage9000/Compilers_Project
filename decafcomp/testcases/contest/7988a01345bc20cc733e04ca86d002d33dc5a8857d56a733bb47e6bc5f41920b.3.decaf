@@ -1,0 +1,16 @@
+extern func print_int(int) void;
+
+package CountDown {
+    func count(current int) bool {
+        print_int(current);
+        if (current > 0) {
+            count(current - 1);
+        }
+    }
+
+    func main() int {
+        count(5);
+        count(0);
+        count(9);
+    }
+}

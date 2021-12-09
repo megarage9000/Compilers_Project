@@ -1,0 +1,18 @@
+extern func print_int(int) void;
+
+package Expr {
+    var a1 int = 3;
+    var a2 int = 9;
+
+    var b1 int = 55098912;
+    var b2 int = 39343933;
+    
+    func main() int {
+        var resultR int;
+        print_int(calc(calc(a1, a2), calc(b1, b2)));
+    }
+
+    func calc(x int, y int) int {
+        return (x * x + y * y);
+    }
+}

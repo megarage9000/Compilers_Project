@@ -1,0 +1,13 @@
+extern func print_int(int) void;
+
+package IfAndCond {
+    var x int = 0;
+
+    func main() int {
+        {
+            if((5<7) && (6>5)){
+                print_int(1);
+            } 
+        }
+    }
+}

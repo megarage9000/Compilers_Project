@@ -1,0 +1,12 @@
+extern func print_int(int) void;
+package Test {
+    func main() int {
+        var x int;
+        var y bool;
+        x = -(99*0-42);
+        x = -x;
+        x = -x;
+        x = x * -1;
+        print_int(-x);
+    }
+}

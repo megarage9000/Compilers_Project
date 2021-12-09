@@ -1,0 +1,11 @@
+extern func print_int(int) void;
+
+package C {
+	var xs[10] int; 
+	func main() int 
+		{ 
+			var x,y int; 
+			x = 3;
+			y = xs[x]; 
+		}
+}

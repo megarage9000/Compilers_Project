@@ -1,0 +1,54 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package MaxArray {
+
+    var arr [10]int;
+
+    func cr() void { print_string("\n"); }
+
+    func displayList(start int, len int) void {
+		var j int;
+		print_string("List:\n");
+		for (j = start; j < start + len; j = j + 1) {
+			print_int(arr[j]);
+			print_string(" ");
+			if ((j - start + 1) % 20 == 0 || j + 1 == start + len) {
+				cr();
+			}
+		}
+	}
+
+    func initList(size int) void {
+		var i int;
+		for (i = 0; i < size; i = i + 1) {
+			arr[i] = (i * 2382983) % 100;
+		}
+	}
+
+    func maxArr(n int) int {
+        var i int;
+        var key int;
+        var max int;
+        for(i = 0; i < n; i = i +1){
+            key = arr[i];
+            if(key > max){
+                max = key;
+            }
+        }
+        return(max);
+    }
+    
+    func main() int {
+        var n int;
+        var max int;
+        n = 10;
+        initList(10);
+        displayList(0,n);
+        print_string("Max of List: ");
+        max = maxArr(n);
+        print_int(max);
+        return(0);
+    }
+
+}

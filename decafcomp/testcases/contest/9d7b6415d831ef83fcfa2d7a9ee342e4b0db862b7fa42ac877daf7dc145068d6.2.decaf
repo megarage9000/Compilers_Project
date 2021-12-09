@@ -1,0 +1,18 @@
+extern func print_int(int) void;
+
+package Test {
+    var x int = 5;
+
+    func foo1() int { return (foo2()); }
+    func foo2() int { return (foo3()); }
+    func foo3() int { return (foo4()); }
+    func foo4() int { return (4); }
+
+    func main() int {
+        var x int;
+
+        x = foo1();
+
+        print_int(x);
+    }
+}

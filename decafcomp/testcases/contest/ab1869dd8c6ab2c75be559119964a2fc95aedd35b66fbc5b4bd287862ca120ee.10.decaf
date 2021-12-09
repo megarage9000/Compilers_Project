@@ -1,0 +1,13 @@
+extern func print_int(int) void;
+
+package four {
+    func calling() int {
+        return(calling2());
+    }
+    func calling2() int {
+        return(1314);
+    }
+    func main() int {
+        print_int(calling());
+    }
+}

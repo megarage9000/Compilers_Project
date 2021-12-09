@@ -1,0 +1,40 @@
+extern func print_int(int) void;
+
+package search {
+  var arr [10] int;
+  func main() int {
+    arr[0] = 10;
+    arr[1] = 20;
+    arr[2] = 30;
+    arr[3] = 40;
+    arr[4+0] = 50;
+    arr[4+1] = 60;
+    arr[4+2] = 70;
+    arr[4+3] = 80;
+    arr[4+4] = 90;
+    arr[4+5] = 100;
+    
+    while (true) {
+        if (search(50)) {
+            print_int(111);
+            break;
+        }
+    }
+
+    if (search(55)) {
+        print_int(222);
+    }
+
+    return (0);
+  }
+  func search(target int) bool {
+    var i int;
+    for (i = 0; i < 10; i = i + 1) {
+        if (arr[i] == target) {
+            return (true);
+        }
+    }
+
+    return (false);
+  }
+}

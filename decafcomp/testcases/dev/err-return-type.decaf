@@ -1,8 +1,0 @@
-
-package returnvalue {
-
-	func foo() bool { return(10); }
-	func main() int { }
-
-  
-}

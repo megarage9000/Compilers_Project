@@ -1,0 +1,24 @@
+extern func print_int(int) void;
+
+package calculate
+{
+    var a int = 20;
+    var b int = 30;
+
+    func num(x int, y int) int
+    {
+        if (x % 2 == 0)
+        {
+            return (x*y);
+        }
+        if (x % 2 != 0)
+        {
+            return (x+y);
+        }
+    }
+
+    func main() int
+    {
+        print_int(num(a, b));
+    }
+}

@@ -1,5 +1,0 @@
-
-package retvalue {
-	func foo() void {} 
-	func main() int { if (foo()) {} }
-}

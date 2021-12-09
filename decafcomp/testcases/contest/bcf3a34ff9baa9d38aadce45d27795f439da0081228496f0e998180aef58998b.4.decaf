@@ -1,0 +1,16 @@
+extern func print_int(int) void;
+
+package foo {
+    func main() int {
+        var i int;
+        i = 0;
+        while (i < 10) {
+          i = i + 10;
+          if (i > -1) {
+            print_int(i);
+            break;
+          }
+        }
+        print_int(i);
+    }
+}

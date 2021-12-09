@@ -1,0 +1,37 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package EvansCompilerShredder {
+    
+    func foo(x int, y int, z int) void {
+        
+        print_int(x);
+        print_int(y);
+        print_int(z);
+
+        if(x > 0){
+            x = x - 1;
+        }
+        else {
+            if(y > 0){
+                y = y - 1;
+            }
+            else {
+                if(z > 0){
+                    z = z - 1;
+                }
+            }
+        }
+        if(x > 0 || y > 0 || z > 0){
+            print_string(".");
+            foo(x, y, z);
+        }
+        else {
+            return;
+        }
+    }
+    
+    func main() int { 
+        foo(3, 3, 3);
+    }
+}

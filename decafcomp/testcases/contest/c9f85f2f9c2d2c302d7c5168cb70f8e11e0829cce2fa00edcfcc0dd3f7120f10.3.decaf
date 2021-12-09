@@ -1,0 +1,12 @@
+extern func print_int(int) void;
+
+package foo {
+    func main() int { 
+      var i, j int;
+      i = 5;
+      j = 10;
+      if(i <= 5 && j >= 10){
+        print_int(i * j);
+      }
+    }
+}

@@ -1,0 +1,40 @@
+extern func print_int(int) void;
+
+package hello {
+    func main() int {
+        while(true) {
+            while(true) {
+                while(true) {
+                    var x int;
+                    for (x = 0; x < 50; x = x + 0) {
+                        for (x = 0; x < 50; x = x + 0) {
+                            if (check(true) || (check(false) && check(false))) {
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                    break;
+                }
+                break;
+            }
+            break;
+        }
+        
+        print_int(5);
+    }
+    
+    func check(x bool) bool {
+        if (x) {
+            return(true);
+        } else {
+            inf_loop();
+            return(false);
+        }
+    }
+    
+    func inf_loop() void {
+        inf_loop();
+    }
+    
+}

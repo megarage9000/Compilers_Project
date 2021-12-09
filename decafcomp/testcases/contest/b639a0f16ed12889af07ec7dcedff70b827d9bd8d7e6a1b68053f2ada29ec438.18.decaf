@@ -1,0 +1,62 @@
+extern func read_int() int;
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package test{
+
+	var arr[3] bool;
+	var int_arr[5] int;
+
+	func foo(a int) void{
+		{ print_int(2);}
+		
+		while(true){
+			break;
+		}
+
+		for(a =0; a< 2; a = a+1){
+			print_int(1);
+		}
+
+		{  var a int;
+			print_int(3);
+		}
+		a = 10;
+	}
+
+	func fillIntArr(size int) void{
+		var i int;
+		for(i = 0; i<size; i= i+1){
+			int_arr[i] = read_int();
+		}
+	}
+
+	func fillBoolArr()void{
+		arr[0]= true;
+		arr[1] = false;
+		arr[2] = true;
+	}
+	func main() int{
+		var a int;
+		var i,j,k int;
+		foo(a);
+		print_string("\n");
+		fillIntArr(5);
+		fillBoolArr();
+		for(i =0; i<5; i = i+1 ){
+			print_int(int_arr[i]);
+			for(j= i; j<4; j= j+1){
+				print_string("!!!");
+				for(k = 0; k< 3; k= k+1){
+					if(arr[k]&& k==0){
+						print_string("Hello!! ");
+					}
+					if(arr[k] && k!= 0){
+					 print_string(":) have a nice day\n");
+					}
+				}
+			}
+		}
+		return(0);
+	}
+}

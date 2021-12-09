@@ -1,0 +1,33 @@
+//import print method
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+//package test
+package Test {
+
+var count int = 0;
+//method block
+//main block
+    func main() int {
+        test(10, 7);
+        //calling print method
+        print_int(count); 
+        return (0);
+    }
+
+//tester method to sum two numbers
+    func test(a int, b int) void {     
+        print_int(a); //prints a 
+        loop(a);
+        print_int(b); //prints b
+        loop(b);
+    }
+
+    func loop(a int) void{
+        var i int;
+        for(i = a; i>0; i = i-1) {
+            count = count + 1;
+        }
+    }
+}
+

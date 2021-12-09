@@ -1,0 +1,15 @@
+extern func print_string(string) void;
+
+package Test {
+    var x bool = true;
+    var y int = 3;
+    var z bool = false;
+    var m int = 0;
+    var i int = 20;
+    var u bool = true;
+    func main() int {
+        if (x && (y != (50 - 2000)) && !z && ((i == 5) || (u)) && ((i * m + y) == 3) ) {
+            print_string("That's a long conditional.\n");
+        }
+    }
+}

@@ -1,0 +1,21 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package QuickSort {
+	var a, b, c [100]int;
+
+	func main() int {
+        print_int(a[0]);
+		print_int(b[0]);
+		print_int(c[0]);
+		a[5] = 2 << 1;
+		b[5] = 8 % (2 + 1);
+		c[5] = 10 * a[5] + (b[5] % 2);
+		print_string("\n");
+		print_int(a[5]);
+		print_string("\n");
+		print_int(b[5]);
+		print_string("\n");
+		print_int(c[5]);
+	}
+}

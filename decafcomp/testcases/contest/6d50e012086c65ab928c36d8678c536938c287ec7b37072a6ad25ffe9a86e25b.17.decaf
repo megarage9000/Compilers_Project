@@ -1,0 +1,15 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package ShadowExtern {
+    func main() int {
+        print_string("calling print_int\n");
+        if (print_int() == false) {
+            print_string("oops\n");
+        }
+    }
+
+    func print_int() bool {
+        print_string("print_int has been redefined\n");
+    }
+}

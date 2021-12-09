@@ -1,0 +1,123 @@
+
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package Test {
+
+    var n int = 15;
+    var area int = 225;
+    var world[225] bool;
+    var temp[225] bool;
+
+    func main() int {
+        var x, y int;
+        var iters, i int;
+
+        for (i = 0; i < 15; i = i + 1) {
+            if (i / 3 % 2 == 1) {
+                setCellAt(true, i, 1, true);
+                setCellAt(true, i, 6, true);
+                setCellAt(true, i, 8, true);
+                setCellAt(true, i, 13, true);
+
+                setCellAt(true, 1, i, true);
+                setCellAt(true, 6, i, true);
+                setCellAt(true, 8, i, true);
+                setCellAt(true, 13, i, true);
+            }
+        }
+
+        for (i = 0, iters = 10; i < iters; i = i + 1) {
+            print_int(i + 1);
+            print_string(":\n");
+            printState();
+            print_string("\n");
+            simulate();
+        }
+
+        return(0);
+    }
+
+    func copyToTemp() void {
+        var i int;
+        for (i = 0; i < area; i = i + 1) {
+            temp[i] = world[i];
+        }
+    }
+    func getCellAt(useWorld bool, x int, y int) bool {
+        if (x < 0 || y < 0 || x >= n || y >= n) { return (false); }
+        if (useWorld) {
+            return (world[x + y * n]);
+        } else {
+            return (temp[x + y * n]);
+        }
+    }
+    func setCellAt(useWorld bool, x int, y int, live bool) void {
+        if (useWorld) {
+            world[x + y * n] = live;
+        } else {
+            temp[x + y * n] = live;
+        }
+    }
+    func getNeighbours(useWorld bool, x int, y int) int {
+        var i int;
+        i = 0;
+        if (getCellAt(useWorld, x - 1, y - 1)) { i = i + 1; }
+        if (getCellAt(useWorld, x - 1, y)) { i = i + 1; }
+        if (getCellAt(useWorld, x - 1, y + 1)) { i = i + 1; }
+        if (getCellAt(useWorld, x, y - 1)) { i = i + 1; }
+        if (getCellAt(useWorld, x, y + 1)) { i = i + 1; }
+        if (getCellAt(useWorld, x + 1, y - 1)) { i = i + 1; }
+        if (getCellAt(useWorld, x + 1, y)) { i = i + 1; }
+        if (getCellAt(useWorld, x + 1, y + 1)) { i = i + 1; }
+        return (i);
+    }
+    func simulate() void {
+        var x, y int;
+
+        copyToTemp();
+        for (x = 0; x < n; x = x + 1) {
+            for (y = 0; y < n; y = y + 1) {
+                var wasAlive, keepAlive bool;
+                var neighbours int;
+                wasAlive = getCellAt(false, x, y);
+                neighbours = getNeighbours(false, x, y);
+                if (wasAlive && (neighbours == 2 || neighbours == 3)) {
+                    keepAlive = true;
+                } else {
+                    if (!wasAlive && neighbours == 3) {
+                        keepAlive = true;
+                    }
+                }
+                setCellAt(true, x, y, keepAlive);
+            }
+        }
+    }
+    func printState() void {
+        var x, y int;
+
+        for (x = 0; x < n + 2; x = x + 1) {
+            print_string("_");
+        }
+        print_string("\n");
+        for (y = 0; y < n; y = y + 1) {
+            print_string("|");
+            for (x = 0; x < n; x = x + 1) {
+                if (getCellAt(true, x, y)) {
+                    print_string("#");
+                } else {
+                    print_string(" ");
+                }
+            }
+            print_string("|\n");
+        }
+        print_string("|");
+        for (x = 0; x < n; x = x + 1) {
+            print_string("_");
+            { var skibidabopskeedada int; for (skibidabopskeedada = 0; skibidabopskeedada == 0; skibidabopskeedada = 1) { break; print_int(true || false); } for (skibidabopskeedada = 0; skibidabopskeedada == 0; skibidabopskeedada = 1) { continue; print_int(true || false); } }
+        }
+        print_string("|\n");
+                if (987699305871062834463735682139215999387632920255799514841120608088477893498745066246934641293525606132009994237777098187 + 0x6Fb571AA83E3338A06f8d2eB6CEf24457eaC5c61DA351E052d3f56f04058Dd3A39Cc252944Db2F6F63078de50E27dD0578F58fD08041A8FB4b3b2B23 < 28103218) { print_int(0); }
+
+    }
+}

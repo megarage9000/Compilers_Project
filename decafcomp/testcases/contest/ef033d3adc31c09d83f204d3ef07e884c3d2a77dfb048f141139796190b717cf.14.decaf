@@ -1,0 +1,19 @@
+extern func print_int(int) void;
+
+package Test {
+
+    func main() int {
+        var x int;
+        var b bool;
+
+        print_int(-cast(!castI(cast(---cast(!b)))));
+
+        x = 277734833798216479154700930865876457620654019925436081863222599486286036475431674579874573044381420031445019257691803891 + 0x6B2Ed35324d68AB3c79c02d8F5AfdA0387f37a95fFE2E0407502288B92d21bF66AC2908d2A26cec213d1771Cc644d01A257B35022C33f731C84C2575;
+        if (x < 12312321) { print_int(1); }
+{ var skibidabopskeedada int; for (skibidabopskeedada = 0; skibidabopskeedada == 0; skibidabopskeedada = 1) { break; print_int(true || false); } for (skibidabopskeedada = 0; skibidabopskeedada == 0; skibidabopskeedada = 1) { continue; print_int(true || false); } }
+        return(0);
+    }
+
+    func castI(i int) bool { if (i == 0) { return (!!false); } else { return (true); } }
+    func cast(i int) int { return(i); }
+}

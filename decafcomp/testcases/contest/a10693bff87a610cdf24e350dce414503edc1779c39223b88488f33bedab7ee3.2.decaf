@@ -1,0 +1,24 @@
+extern func print_int(int) void;
+
+package Test {
+
+	func main() int
+	{
+		var x int;
+		x = '
+';
+		print_int(x);
+		weird();
+	}
+
+	func weird() void
+	{
+		var x, y, z int;
+		for (x = -0X19AF; true; y = '	')
+		{
+			z = '
+';
+			break;
+		}
+	}
+}

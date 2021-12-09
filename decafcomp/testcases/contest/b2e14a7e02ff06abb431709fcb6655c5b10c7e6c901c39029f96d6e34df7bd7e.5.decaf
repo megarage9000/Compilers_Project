@@ -1,0 +1,8 @@
+extern func print_int(int) void;
+
+package Scoping {
+    
+    func main() int {
+        print_int('a'+ 33 + 0xf);
+    }
+}

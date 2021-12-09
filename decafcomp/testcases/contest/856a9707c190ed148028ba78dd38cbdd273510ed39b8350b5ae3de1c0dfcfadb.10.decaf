@@ -1,0 +1,28 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package simple {
+
+    func main() int {
+        
+
+        var value int;
+        value = 0;
+        while (value < 10000000*10000000000) {
+
+          print_string("current value:");
+          print_int(value);
+          print_string("\n");
+
+
+          if (value == 500) {
+            print_string("stopping loop!");
+            break;
+          }
+
+
+          value = value + 50;
+        }
+
+    }
+}

@@ -1,0 +1,27 @@
+extern func read_int() int;
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package test{
+	func main() int{
+		var i int;
+		i = read_int();
+		if(print_int(i)){
+			print_string("Print Successfull!!\n");
+		}
+	}
+
+	func read_int() int{
+		print_string("Reading through new read_int method!!\n");
+	}
+
+	func print_int(i int) bool{
+		if(i< 0 ){
+			print_string("Cannot show the negative number!\n");
+			return (false);
+		}
+		else{
+			print_string("Printing through new print_int method!!\n");
+		}
+	}
+}

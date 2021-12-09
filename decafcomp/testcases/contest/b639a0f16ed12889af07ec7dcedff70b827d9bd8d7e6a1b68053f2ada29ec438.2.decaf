@@ -1,0 +1,61 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package Test{
+	var arr[6] int;
+
+	func pairInSortedRotated( n int, x int) bool {
+		var i int;
+		var l int;
+		var r int;
+		for( i =0; i< n-1; i= i+1) {
+			if(arr[i] > arr[i+1]){
+				break;
+			}
+		}
+		l = (i+1)% n;
+		r = i;
+
+		while(l != r){
+			if(arr[l] + arr[r] == x){
+				return (true);
+			}
+
+			if(arr[l] + arr[r] < x) {
+				l = (l+ 1)%n;
+			}
+			else {
+				r = (n+ r - 1) % n;
+			}
+			continue;
+			print_string("Hi! You shouldn't be here\n");
+		}
+		return (false);
+	}
+
+	func main() int {
+		var sum int;
+		var n int;
+		arr[0] = 11;
+		arr[1] = 16;
+		arr[2] = 1;
+		arr[3] = 2;
+		arr[4] = 5;
+		arr[5] = 10;
+
+		sum = 17;
+		n = 6;
+
+		if(pairInSortedRotated(n, sum)){
+			print_string("Array has two elements with sum 17");
+		}
+		else{
+			print_string("Array has two elements with sum 17");
+		}
+
+		return(0);
+	}
+
+
+
+}

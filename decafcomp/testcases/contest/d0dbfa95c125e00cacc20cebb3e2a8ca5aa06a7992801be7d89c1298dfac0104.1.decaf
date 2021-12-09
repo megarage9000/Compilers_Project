@@ -1,0 +1,68 @@
+extern func print_int(int) void;
+
+package WhileContinue {
+
+    var size int = 100;
+    var list[100] int;
+
+    func main() int {
+        populate();
+        bubblesort();
+        print_int(1);   
+    }
+
+    func populate() void {
+        var i int;
+        i = 0;
+
+        // Set base value to unary -9
+        while(i < size){
+            list[i] = -9;
+            i = i + 1;
+        }
+
+        while(i > 0){
+            if ((i%2 )!= 0){
+                i = i - 1;
+                continue;
+            }
+            list[i] = 200-i;
+            i = i - 1;
+        }
+    }
+
+    func bubblesort() void {
+        {
+            var i int;
+            var j int;
+            var temp int;
+
+            for (i = 0; i < size; i = i + 1){
+                for(j = 0; j < (size - (i - 1)); j = j + 1){
+                    if(list[j] > list[j+1]) {
+                        temp = list[j];
+                        list[j] = list[j+1];
+                        list[j+1] = temp;
+                    }
+                }
+            }
+        }
+    }
+
+    func verifysort() bool {
+        {
+            var i int;
+            var j int;
+            var temp int;
+
+            for (i = 0; i < size; i = i + 1){
+                for(j = 0; j < (size - (i - 1)); j = j + 1){
+                    if(list[j] > list[j+1]) {
+                        return(false);
+                    }
+                }
+            }
+            return(true);
+        }
+    }
+}

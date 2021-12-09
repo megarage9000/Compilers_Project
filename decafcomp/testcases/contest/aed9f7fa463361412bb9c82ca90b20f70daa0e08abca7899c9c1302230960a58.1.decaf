@@ -1,0 +1,45 @@
+extern func print_int(int) void;
+package Test {
+    func main() int
+    {
+        var x,i int;
+        if (true) {
+            print_int(13 >= 15);
+            print_int(13 >= 13);
+            print_int(15 >= 13);
+        }
+        if (!true && true) {
+            print_int(20>>2);
+        }
+        x = x + 2;
+        while (x < 10) {
+            if (x % 2 == 0) {
+                x = x + 3;
+            } else {
+                x = x - 1;
+                if (x % 2 == 1) {
+                    x = x + 10;
+                } else {
+                    x = x + 2;
+                }
+            }
+            print_int(x);
+            while (x < 5) {
+                if (x % 2 == 0) {
+                    print_int(49);
+                    continue;
+                } else {
+                    break;
+                }
+                for (i = 0; i < 32; i = i * 3) {
+                    if (i % 2 == 0) {
+                        print_int(x);
+                    }
+                }
+                x = x + 1;
+            }
+            x = x + 1;
+            continue;
+        }
+    }
+}

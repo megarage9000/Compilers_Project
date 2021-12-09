@@ -1,0 +1,50 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package NestedLoops {
+    func main() int {
+        while(true) {
+            var i, j, a int;
+            a = 0x1;
+
+            for (i = 0, j = 0; i < 10 || j < 10; i = i + 2, j = j + 1) {
+                var a int;
+                a = 0XA;
+
+                print_int(i);
+                print_string(" ");
+                print_int(j);
+                print_string("\n");
+
+                while(true) { break; }
+
+                while(true) {
+                    for (i = i, j = j; true; i = i + 10, j = j + 10) {
+                        print_string("here\n");
+                        while(true && false) {}
+                        break;
+                        while(true || false) {}
+                    }
+
+                    while(true && false) {}
+                    break;
+                    while(true || false) {}
+                }
+
+                while(true && false) {}
+                continue;
+                while(true || false) {}
+            }
+
+            print_int(a);
+            print_string("\n");
+            while(true && false) {}
+            break;
+            while(true || false) {}
+        }
+
+        while(true && false) {}
+        return;
+        while(true || false) {}
+    }
+}

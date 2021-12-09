@@ -1,0 +1,18 @@
+extern func print_int(int) void;
+package Test {
+    func sum(x int, n int) int {
+        var c int;
+        if (n == 0) {
+            return(0);
+        } else {
+            c = x + sum(x, n - 1);
+            print_int(c);
+            return(c);
+        }
+    }
+    func main() int {
+        sum(10, 5);
+        sum(2, 3);
+        sum(1, 0);
+    }
+}

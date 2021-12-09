@@ -1,0 +1,17 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package CharLitNewLine {
+    func main() int {
+        var c int;
+
+        // this is a valid char lit according to https://coursys.sfu.ca/2021fa-cmpt-379-d1/forum/133
+        c = '
+';
+        print_int(c);
+        print_string("\n");
+        print_int('
+');
+        print_string("\n");
+    }
+}

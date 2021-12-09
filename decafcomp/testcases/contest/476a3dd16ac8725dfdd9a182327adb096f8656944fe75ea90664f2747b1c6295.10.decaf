@@ -1,0 +1,12 @@
+extern func print_int(int) void;
+
+package LoopTest {
+    func main() int {
+        var i int;
+        for (i = 0; i < 25; i = i + 1) {
+            if (i % 5 == 0) {
+                print_int(i);
+            }
+        }
+    }
+}

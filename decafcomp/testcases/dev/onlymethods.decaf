@@ -1,5 +1,0 @@
-package QuickSort {
-	func main() void
-	{
-	}
-}

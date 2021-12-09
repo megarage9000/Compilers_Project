@@ -1,0 +1,41 @@
+// binary search
+extern func print_int(int) void;
+
+package BinarySearch {
+	var vec [1000]int;
+	
+	func search(q int) int {
+		var a, b, mid int;
+		a = 1000;
+		b = 0;
+
+		while (a > b) {
+			mid = (a + b) / 2;
+
+			if (vec[mid] == q) {
+				return (mid);
+			}
+			
+			if (vec[mid] < q) {
+				b = mid + 1;
+				continue;
+			} else {
+				a = mid - 1;
+				continue;
+			}
+		}
+
+		return (-1);
+	}
+
+	func main() int {
+		var i int;
+		// initialize the array
+		for (i = 0; i < 1000; i = i + 1) {
+			vec[i] = i;
+		}
+
+		// search
+		print_int(search(364));
+	}
+}

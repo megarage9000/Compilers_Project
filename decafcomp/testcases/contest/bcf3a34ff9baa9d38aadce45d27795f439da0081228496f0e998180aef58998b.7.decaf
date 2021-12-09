@@ -1,0 +1,13 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package foo {
+    func main() int {
+      var x, y int;
+      var b bool;
+      x = 100;
+      y = 379;
+      b = x == 100 || y == 379 || x > 2 || y < 3; 
+      print_int(b); 
+    }
+}

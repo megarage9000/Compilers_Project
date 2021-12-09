@@ -1,0 +1,24 @@
+extern func print_int(int) void;
+
+package Test {
+    func one() int {
+        return(1);
+    }
+    func seven() int {
+        return(7);
+    }
+    func mult(a int, b int) int {
+        return(a * b);
+    }
+    func add(a int, b int) int {
+        return(a + b);
+    }
+    func two() int {
+        return(2);
+    }
+    func main() int {
+        var x int;
+        x = seven() + one() + mult(two(), two());
+        print_int(x);
+    }
+}

@@ -1,0 +1,15 @@
+extern func print_int(int) void;
+
+package Charmath {
+
+    func foo() int {
+        return(0x1b);
+    }
+
+    func main() int {
+        var entry int;
+        entry = 10;
+        print_int('Z' - 'B' + 2 * (0xaA) - 145 - foo() + entry);
+        return;
+    }
+}

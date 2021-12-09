@@ -1,0 +1,12 @@
+extern func multi(int, int) void;
+extern func print_int(int) void;
+
+package C {
+    func main() int {
+      var i int;
+      i = 94;
+
+      print_int(i);      
+    }
+
+}

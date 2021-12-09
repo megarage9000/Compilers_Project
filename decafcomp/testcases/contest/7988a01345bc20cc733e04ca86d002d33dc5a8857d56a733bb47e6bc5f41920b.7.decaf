@@ -1,0 +1,33 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package ShortCircuit {
+    func checkWithMom() bool {
+        print_string("Checking with Mom");
+        // should return true
+    }
+
+    func main() int {
+        var isDinnerReady bool;
+        var isDadHome bool;
+        var areWeEating bool;
+        var isTacoNight bool;
+        
+        isDinnerReady = checkWithMom();
+        isDadHome = checkWithDad(isDinnerReady);
+
+        {
+            isTacoNight = true;
+        }
+
+        areWeEating = isDinnerReady && !isTacoNight || isDadHome;
+        print_int(areWeEating);
+    }
+
+    func checkWithDad(mom bool) bool {
+        print_string("Checking with Dad");
+        if (mom) {
+            return (false);
+        }
+    }
+}

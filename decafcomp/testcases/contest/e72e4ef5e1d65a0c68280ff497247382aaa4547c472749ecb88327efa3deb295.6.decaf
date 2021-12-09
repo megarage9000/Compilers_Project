@@ -1,0 +1,20 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package EvansCompilerShredder {
+    
+    var ints [100]int;
+    var bools [100]bool;
+
+    func main() int {
+        print_int(ints[0]);
+        print_int(bools[0]);
+
+        ints[69] = 69;
+        bools[69] = true;
+
+        print_int(ints[69]);
+        print_int(bools[69]);
+
+    }
+}

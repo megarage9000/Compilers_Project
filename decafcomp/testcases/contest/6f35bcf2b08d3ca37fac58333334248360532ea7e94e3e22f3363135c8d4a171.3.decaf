@@ -1,0 +1,8 @@
+extern func print_int(int) void;
+
+package packagename {
+	func main() int {
+		var x bool;
+		print_int(x); // Should print 0
+	}
+}

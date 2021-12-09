@@ -1,0 +1,36 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package HexMath {
+
+    var a, b [10] int;
+    var size int = 10;
+
+    func initialize_arrays(a_val int, b_val int) void{
+        var i, j int;
+        if (i != 0) {
+            return;
+        }
+
+        for (i = 0; i < 10; i = i + 1) {
+            a[i] = a_val + 0XF + i;
+            b[i] = b_val + 0x2a + 10 * i;
+        }
+    }
+
+    func main() int {
+        var i, j int;
+        j = size;
+        initialize_arrays(0x2a, true && !false && true);
+        for (i = 0; i < j; i = i + 1) {
+            print_int(a[i]);
+            print_string(" ");
+        }
+        print_string("\n");
+        for (i = 0; i < j; i = i + 1) {
+            print_int(b[i]);
+            print_string(" ");
+        }
+        return(0);
+    }
+}

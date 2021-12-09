@@ -1,0 +1,23 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package EvansCompilerShredder {
+    
+    var x bool;
+
+    func main() int {
+
+        var y int;
+        var z int;
+
+        y = cast(((((!!!!!!!!!!!!!!!!x)))));  //16 nots
+        z = cast(((((!!!!!!!!!!!!!!!!!x))))); //17 nots
+
+        print_int(y);
+        print_int(z);
+    }
+
+    func cast(x int) int {
+        return(x);
+    }
+}

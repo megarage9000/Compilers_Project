@@ -1,0 +1,16 @@
+//extern func print_int(int) void;
+extern func print_string(string) void;
+
+package DecafDestroyer {
+    func main() int {
+        print_int(42);
+    }
+
+    // This test case defines the following method that shadows the 
+    // extern function from the stdlib. Compilers that do not
+    // correctly handle method linkage will have issues.
+
+    func print_int(x int) void {
+        print_string("5: method_shadow_stdlib\n");
+    }
+}

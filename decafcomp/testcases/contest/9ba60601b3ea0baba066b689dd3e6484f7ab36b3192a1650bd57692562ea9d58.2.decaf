@@ -1,0 +1,14 @@
+extern func print_string(string) void;
+
+package skct {
+    func main() int {
+        x();
+        print_string("ok\n");
+    }
+
+    func x() bool {
+        var b bool;
+        return();
+        b = true || false;
+    }
+}

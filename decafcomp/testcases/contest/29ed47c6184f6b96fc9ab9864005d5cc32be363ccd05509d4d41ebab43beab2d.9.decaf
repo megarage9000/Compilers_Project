@@ -1,0 +1,13 @@
+extern func print_int(int) void;
+
+package Test8 {
+    func loop(a int) int {
+        return(0);
+    }
+    func main() int {
+        var number int;
+        number = 121;
+        number = loop(number);
+        print_int(number);
+    }
+}

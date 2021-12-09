@@ -1,0 +1,56 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package EvansCompilerShredder {
+    func main() int {
+        var x int;
+
+        x
+
+
+        //This is an effort to make my code more readable
+
+
+                        =
+
+
+
+
+        420
+        
+        
+        
+                        ;
+
+
+
+        //I hope it's working!!!!
+
+
+
+        print_int
+        
+        
+        
+                        (
+
+
+
+        x
+
+
+
+                            
+                        )
+
+
+        //It should be obvious what this code is doing thanks to my...
+        // ADVANCED
+        // FORMATTING
+        // STRUCTURE
+        // .
+
+
+        ;
+    }
+}

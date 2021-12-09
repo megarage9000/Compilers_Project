@@ -1,0 +1,26 @@
+package Test {
+    var list[100] int;
+
+    func init() void {
+        var i int;
+        for (i = 0; i < 100; i = i + 1) {
+			list[i] = i * 23 + 1;
+		}
+    }
+
+    func main() int {
+        init();
+
+        {
+            var j int;
+            for (j = 0; j < 100; j = j + 1) {
+                if (list[j] % 3 >= 4) {
+                    list[j] = 0;
+                }
+                else {
+                    list[j] = 1;
+                }
+            }
+        }
+    }
+}

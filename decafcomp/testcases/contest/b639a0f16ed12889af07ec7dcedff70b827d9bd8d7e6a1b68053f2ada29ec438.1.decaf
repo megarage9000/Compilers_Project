@@ -1,0 +1,36 @@
+extern func read_int() int;
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package test{
+	func main() int {
+		var base, pow_raised, result int;
+		print_string("The base number is: ");
+		base = read_int();
+		print_int(base);
+		if( base != 0){
+			print_string("\nThe power number is ");
+			pow_raised = read_int();
+			print_int(pow_raised);
+		}
+
+		result = calculatePower(base, pow_raised);
+		print_string("\n The result of power is: ");
+		print_int(result);
+
+		return(0);
+	}
+
+	func calculatePower(base int, power int)int{
+		if(isValidPower(power)){
+			return(base * calculatePower(base, power -1));
+		}
+		return(1);
+	}
+
+	func isValidPower(power int) bool{
+		if(power == 0){
+			return(false);
+		}
+	}
+}

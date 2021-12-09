@@ -1,0 +1,35 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package Pow {
+
+	func pow(n int, m int) void {
+    var i int;
+    var res int;
+    res = 1;
+
+    for (i = 0; i < m; i = i + 1) {
+      res = res *  n;
+    }
+
+    print_int(n);
+    print_string(" to the power of ");
+    print_int(m);
+    print_string(" is ");
+    print_int(res);
+    print_string("\n");
+	}
+
+	func main() int {
+    var a int;
+    var b int;
+
+    a = 5;
+    b = 10;
+
+		pow(a, b);
+    pow(b, a);
+
+		return(0);
+	}
+}

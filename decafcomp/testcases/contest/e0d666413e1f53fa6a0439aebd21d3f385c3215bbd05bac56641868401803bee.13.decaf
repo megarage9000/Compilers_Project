@@ -1,0 +1,13 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package Test {
+    func main() int {
+        var x int;
+        x = 2;
+        print_int_fun(x);
+    }
+    func print_int_fun(a int) void {
+        print_string("This is the package definition for print_int\n");
+    }
+}

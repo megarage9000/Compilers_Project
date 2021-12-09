@@ -1,0 +1,18 @@
+extern func print_int(int) void;
+
+
+package Scoping {
+
+  func main() int {
+        var x int;
+        x = 10; 
+        {
+            var x int;
+            x = 100; 
+        }
+        if (x  == 100) {
+            print_int(100);
+        }
+        print_int(x); 
+    }
+}

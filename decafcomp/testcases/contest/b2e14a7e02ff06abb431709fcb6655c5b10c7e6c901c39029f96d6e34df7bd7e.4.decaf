@@ -1,0 +1,7 @@
+extern func print_string(string) void;
+
+package C {
+    func main() int {
+      print_string(";befaubsef;iaerq2938r2038hr3o1`19");
+    }
+}

@@ -1,0 +1,26 @@
+extern func print_int(int) void;
+
+package Test {
+    func main() int {
+        var x, y int;
+
+        print_int(2147483648);
+        print_int(-2147483649);
+
+        x = 2147483648;
+        y = -2147483649;
+
+        foo(x, y);
+
+        return;
+    }
+
+    func foo(a int, b int) void {
+        var x int;
+        x = a + b;
+
+        print_int(x);
+
+        return;
+    }
+}

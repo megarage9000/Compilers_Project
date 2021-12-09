@@ -1,0 +1,32 @@
+extern func print_string(string) void;
+
+package circle
+{
+    var width int = 30;
+    var height int = 30;
+    var i, j int;
+
+    func in_circ(x int, y int, cx int, cy int, r int) bool
+    {
+        return((x-cx)*(x-cx) + (y-cy)*(y-cy) <= r*r);
+    }
+
+    func main() int
+    {
+        for (i = 0; i < width; i = i + 1)
+        {
+            for (j = 0; j < height; j = j + 1)
+            {
+                if (in_circ(i, j, 15, 15, 10))
+                {
+                    print_string("#");
+                }
+                else
+                {
+                    print_string(".");
+                }
+            }
+            print_string("\n");
+        }
+    }
+}

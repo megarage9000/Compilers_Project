@@ -1,0 +1,41 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+package Test {
+
+    func short() bool {
+        print_int(7);
+        return(true);
+    }
+
+    func foo(n int) int {
+        while (n > 0) {
+            n = n - 3;
+        }
+        return(n);
+    }
+
+    func main() int {
+        var i, x int;
+        print_string("!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVYXWZabcdefghijklmnopqrstuvwxyz[]^_'{}~");
+
+        x = 10;
+        while (x > 0) {
+            i = x >> 2;
+            if ((i % x) == 0) {
+                print_string("Yes!");
+            } else {
+                print_int(foo(i));
+            }
+
+            if (false && short()) {
+                i = 0;
+            } else {
+                if (false || short()) {
+                    x = x - 1;
+                }
+            }
+            print_int(i);
+            x = x - 1;
+        }
+    }
+}

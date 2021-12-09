@@ -1,0 +1,60 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package ShortCircuitLoop {
+    var a, b, c, d, temp bool;
+
+    func main() int {
+        var i int;
+        while(A() && Aset() || B() && Bset() || C() && Cset() || D() && Dset()) {
+            if (i == 10) {
+                // prevent an actual inf loop
+                return;
+            }
+
+            print_int(i);
+            print_string("\n");
+            i = i + 1;
+
+            // inf loop if it doesn't short circuit
+            temp = false && Aset() && Bset() && Cset() && Dset();
+
+            continue;
+
+            // inf loop if we get here
+            temp = Aset() && Bset() && Cset() && Dset();
+        }
+    }
+
+    func A() bool {
+        return(!a);
+    }
+
+    func Aset() bool {
+        a = !a;
+    }
+
+    func B() bool {
+        return(!b);
+    }
+
+    func Bset() bool {
+        b = !b;
+    }
+
+    func C() bool {
+        return(!c);
+    }
+
+    func Cset() bool {
+        c = !c;
+    }
+
+    func D() bool {
+        return(!d);
+    }
+
+    func Dset() bool {
+        d = !d;
+    }
+}

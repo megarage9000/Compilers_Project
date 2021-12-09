@@ -1,0 +1,44 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package SubFromEachElem {
+
+	var list [100]int;
+
+	func displayList(start int, len int) void {
+		var j int;
+		print_string("List:\n");
+		for (j = start; j < start + len; j = j + 1) {
+			print_int(list[j]);
+			print_string(" ");
+			if ((j - start + 1) % 20 == 0 || j + 1 == start + len) {
+				print_string("\n");
+			}
+		}
+	}
+
+	func initList(size int) void {
+		var i int;
+		for (i = 0; i < size; i = i + 1) {
+			list[i] = (i * 2382983) % 100;
+		}
+	}
+
+	func subFromEachElem(decrement int, size int) void {
+    var i int;
+    for (i = 0; i < size; i = i + 1) {
+      list[i] = list[i] - decrement;
+    }
+	}
+
+	func main() int {
+		var size int;
+		size = 100;
+		initList(size);
+		displayList(0,size);
+
+		subFromEachElem(10, size);
+		displayList(0,size);
+		return(0);
+	}
+}

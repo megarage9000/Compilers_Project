@@ -1,0 +1,80 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package Test {
+    func recurse(a int) int {
+        if (a == 0) {
+            return(0);
+        }
+        print_int(a % 5);
+        return(recurse(a-1));
+    }
+
+    func sample(b bool) bool {
+        if (b == true) {
+            return(!b);
+        } else {
+            return(b);
+        }
+    }
+
+    func main() int {
+        var x,i int;
+        print_string("!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVYXWZabcdefghijklmnopqrstuvwxyz[]^_'{}~");
+
+        if (true) {
+            print_int(13 >= 15);
+            if (sample(false)) {
+                print_int(52);
+            } else {
+                print_int(42);
+            }
+            while(true) {
+                while(false) {
+                    break;
+                }
+                break;
+            }
+        }
+        if (!true && true) {
+            print_int(20>>2);
+        } else {
+            print_int(20>>2);
+        }
+        x = 2;
+        x = x + 2;
+        while (x < 10) {
+            if (x % 2 == 0) {
+                x = x + 5;
+                if (x == 25) {
+                    recurse(2);
+                }
+            } else {
+                x = x - 1;
+                if (x % 2 == 1) {
+                    x = x + 10;
+                } else {
+                    x = x + 2;
+                }
+            }
+            print_int(x);
+            while (x < 5) {
+                if (x % 2 == 0) {
+                    print_int(49);
+                    continue;
+                } else {
+                    break;
+                }
+                for (i = 0; i < 32; i = i * 3) {
+                    if (i % 2 == 0) {
+                        print_int(x);
+                    }
+                }
+                x = x + 1;
+            }
+            x = x + 1;
+            continue;
+        }
+        recurse(20);
+    }
+}

@@ -1,0 +1,64 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package QuickSort {
+	var array [10]int;
+
+	func partition(a int, b int) int {
+		var pivot, base int;
+		pivot = array[a];
+		base = a - 1;
+	
+		while (a <= b) {
+			if (array[a] < pivot) {
+				base = base + 1;
+				swap(base, a);	
+			}
+			a = a + 1;
+		}
+		base = base + 1;
+		array[base] = pivot;
+		return (base);
+	}
+
+	func swap(a int, b int) void {
+		var tmp int;
+		tmp = array[a];
+		array[a] = array[b];
+		array[b] = tmp;
+	}
+
+	func sort(a int, b int) void {
+		var pivot int;
+
+		if (a >= b) {
+			return; // base case
+		}
+
+		pivot = partition(a, b);
+
+		sort(a, pivot - 1);	
+		sort(pivot + 1, b);
+	}
+
+	func main() int {
+		var i int;
+
+		// array[0] = 0
+		array[1] = 349;
+		array[2] = 0x8;
+		array[3] = 'd';
+		array[4] = 5 * 'r';
+		array[5] = 23;
+		array[6] = -248;
+		array[7] = 255;
+		array[8] = -3;
+		array[9] = 100;
+
+		sort(0, 9);
+		
+		for (i = 0; i < 10; i = i + 1) {
+			print_int(array[i]); print_string("\n");
+		}		
+	}
+}

@@ -1,0 +1,16 @@
+extern func print_string(string) void;
+
+package badname {
+  func main() int {
+    var j int;
+    for (j = 0; j < 10; j = j + 1) {
+        var end int;
+        end = 0;
+        break;
+    }
+
+    print_string("Avoided bad name!");
+
+    return (0);
+  }
+}

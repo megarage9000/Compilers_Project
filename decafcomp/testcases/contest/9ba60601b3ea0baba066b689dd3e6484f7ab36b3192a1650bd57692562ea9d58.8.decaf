@@ -1,0 +1,19 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package lshift {
+    func main() int {
+        var a,b int;
+        a = 3;
+        b = 30;
+        print_int(a << b);
+        print_string("\n");
+        b = 31;
+        print_int(a << b);
+        print_string("\n");
+
+        a = a << b;
+        print_int(a << 1);
+        print_string("\n");
+    }
+}

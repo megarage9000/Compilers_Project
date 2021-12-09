@@ -1,0 +1,29 @@
+extern func print_int(int) void; extern func _f_(string, string, int, string) void; extern func print_string(string) void;
+
+package _f_ {
+  var a, b, c, d bool;
+  var e, f, g, h int;
+
+  func main() int {
+    g = 1;
+
+    if (a || b || c || d) {
+      return();
+      return(-11);
+    }
+
+    a = g == f && WHILE();
+
+    return(print_int(a));
+  }
+
+  func print_int(x int) int {
+    print_string("e");
+    return(x);
+    return(1000);
+  }
+
+  func WHILE() bool {
+    while(true) {}
+  }
+}

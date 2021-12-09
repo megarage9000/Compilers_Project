@@ -1,0 +1,29 @@
+extern func print_int(int) void;
+
+package Test {
+    func isLessThanOneThousand(x int) bool {
+        if (!(x < 1000)) {
+            return(false);
+        }
+        // Default return for bool funcs is true
+    }
+    func A(x int) int {
+        var y int;
+        y = x << 1;
+        return(y);
+    }
+    func B(x int) int {
+        return(A(x));
+    }
+    func C(x int) int {
+        return(B(x));
+    }
+    func main() int {
+        var i int;
+        i = 1;
+        while(isLessThanOneThousand(C(i))) {
+            print_int(i);
+            i = i + 1;
+        }
+    }
+}

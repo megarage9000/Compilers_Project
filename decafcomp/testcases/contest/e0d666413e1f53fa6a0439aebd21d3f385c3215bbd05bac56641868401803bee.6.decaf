@@ -1,0 +1,23 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package Test {
+    func main() int {
+        var a int;
+        var x int;
+        var b int;
+        var y int;
+        a = -1 + 7 * -3 / 2 + 8 % 2 - 1; // -12
+        b = 8 * 2 - 1; // 15
+        x = 2 * 2 / 2; // 2
+        y = a - 3; // -15
+        print_int(a);
+        print_string("\n");
+        print_int(b);
+        print_string("\n");
+        print_int(x);
+        print_string("\n");
+        print_int(y);
+        print_string("\n");
+    }
+}

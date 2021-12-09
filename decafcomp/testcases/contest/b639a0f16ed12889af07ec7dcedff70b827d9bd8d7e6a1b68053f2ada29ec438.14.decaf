@@ -1,0 +1,68 @@
+extern func read_int() int;
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package test{
+
+	var arr[10] int;
+	var ans[10] int;
+	var size int = 10;
+
+	func assign() void{
+		var p,q,i int;
+		p =0;
+		q = size -1;
+		sortArr(size);
+		for(i=0; i<size; i = i+1){
+			if((i+1)%2 ==0){
+				ans[i] = arr[q];
+				q = q-1;
+			}
+			else{
+				ans[i] = arr[p];
+				p =p+1;
+			}
+		}
+
+		for(i =0; i<size; i= i+1){
+			print_int(ans[i]);
+			print_string(", ");
+		}
+
+	}
+
+	func main () int{
+		fillArray();
+		assign();
+		return(0);
+	}
+
+	func fillArray() void{
+		var i int;
+		for(i = 0; i<size; i= i+1){
+			arr[i] = read_int();
+		}
+	}
+
+	func sortArr(n int) void{
+    var swap bool;
+    var j int;
+    var temp int;
+    swap = true;
+    while(swap) {
+      var i int;
+
+      swap = false;
+      j = j+ 1;
+      
+      for(i = 0; i< n-j; i = i+ 1){
+        if(arr[i] > arr[i+ 1]){
+          temp = arr[i];
+          arr[i] = arr[i+1];
+          arr[i+1] = temp;
+          swap = true;
+        }
+      }
+    }
+  }
+}

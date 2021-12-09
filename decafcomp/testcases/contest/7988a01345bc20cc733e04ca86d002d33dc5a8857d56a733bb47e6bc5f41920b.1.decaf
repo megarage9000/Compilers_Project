@@ -1,0 +1,12 @@
+extern func print_int(int) void;
+
+package EvenNumber {
+    var j int = 10;
+    func main() int {
+        for (j=0; j<101; j = j + 1) {
+            if(j % 2 == 0) {
+                print_int(j);
+            }
+        }
+    }
+}

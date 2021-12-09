@@ -1,0 +1,39 @@
+extern func print_string(string) void;
+
+package three {
+    func free() bool {
+        var a int;
+        var b int;
+        a = 0;
+        b = 0;
+        if(a == b){
+            var a int;
+            var b int;
+            a = 1;
+            b = 1;
+            if(a == b){
+                var a int;
+                var b int;
+                a = 2;
+                b = 2;
+                if(a == b){
+                    var a int;
+                    var b int;
+                    a = 3;  
+                    b = 2;
+                    if(a == 3 && b == 2){
+                        return(true);
+                    }
+                    else{
+                        return(false);
+                    }
+                }
+            }
+        }
+    }
+    func main() int{
+        if(free()){
+            print_string("IT WORKS!");
+        }
+    }
+}

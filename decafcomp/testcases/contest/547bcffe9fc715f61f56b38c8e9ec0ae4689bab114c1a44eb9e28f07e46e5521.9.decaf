@@ -1,0 +1,10 @@
+extern func print_int(int) void; extern func c______(int, int, int, int, int, string) void; extern func print_string(string) void;
+
+package a {
+  var i int = '
+';
+  func main() int {
+    print_int('\n' == i);
+    print_int(i + 0x17 + 1);
+  }
+}

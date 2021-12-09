@@ -1,0 +1,10 @@
+extern func print_int(int) void;
+extern func foo() int;
+
+package Scoping {
+    func foo(x int) void { 
+      print_int(x);
+      { var x int; } 
+    }
+    func main() int { foo(1);  }
+}

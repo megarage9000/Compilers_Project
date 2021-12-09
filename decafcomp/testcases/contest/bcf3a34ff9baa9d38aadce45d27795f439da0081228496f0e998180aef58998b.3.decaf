@@ -1,0 +1,15 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package foo {
+    func main() int {
+        var i int;
+        for (i = 0; i < 10; i = i + 1) {
+          print_int(i); print_string(" ");
+          if (i > -1) {
+            continue;
+          }
+          print_int(i);
+        }
+    }
+}

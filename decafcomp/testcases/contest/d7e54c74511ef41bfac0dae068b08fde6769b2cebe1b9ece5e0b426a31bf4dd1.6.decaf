@@ -1,0 +1,18 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package Hex {
+    func main() int {
+        if (0x00 == 0) {
+            print_int(0x0A);
+            print_string("---");
+            print_int(0x00 + 5 - 0x05);
+            print_int(0x01);
+            print_string("\n");
+            print_string("\\n is ");
+            print_int('\n');
+        } else {
+            print_int(1);
+        }
+    }
+}

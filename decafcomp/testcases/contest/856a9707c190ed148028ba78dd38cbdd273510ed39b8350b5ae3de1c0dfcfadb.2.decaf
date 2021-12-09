@@ -1,0 +1,22 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package foo {
+
+  var intArr [100] int;
+
+    func main() int {
+        var foo int;
+        var i int;
+
+        for (i = 0; i < 100; i = i + 3) {
+          intArr[i] = i;
+        }
+
+        for (i = 0; i < 100; i = i + 1) {
+          print_int(intArr[i]);
+          print_string("\n");
+        }
+        
+    }
+}

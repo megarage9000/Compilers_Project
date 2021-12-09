@@ -1,0 +1,11 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package foo {
+    func main() int {
+      print_int( true != true );
+      print_int( false != false );
+      print_int( true == true );
+      print_int( false == false );
+    }
+}

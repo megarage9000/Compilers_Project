@@ -1,0 +1,21 @@
+extern func print_string(string) void;
+
+package Collatz {
+
+    func collatz(n int) void {
+        if (n == 1) {
+            return;
+        }
+
+        if (n % 2 == 0) {
+            collatz(n / 2);
+        } else {
+            collatz((3 * n + 1) / 2);
+        }
+    }
+
+    func main() int {
+        collatz(2958);
+        print_string("Collatz sequence reached 1\n");
+    }
+}

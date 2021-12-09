@@ -1,0 +1,12 @@
+extern func x(string) void;
+extern func print_string(string) void;
+
+package shadow {
+    func main() int {
+        x(3);
+    }
+
+    func x(a int) int {
+        print_string("x called\n");
+    }
+}

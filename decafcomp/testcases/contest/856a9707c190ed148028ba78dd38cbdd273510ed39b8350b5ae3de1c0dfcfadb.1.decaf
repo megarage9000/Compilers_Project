@@ -1,0 +1,17 @@
+extern func print_int(int) void;
+
+package simple {
+
+
+    func function1(toBeCasted bool, regularInt int) void {
+        print_int(toBeCasted);
+        print_int(regularInt);
+    }
+    func function2(boolValue bool, intValue int) void {
+        function1(boolValue, intValue);
+    }
+
+    func main() int {
+        function2(false, 34531);
+    }
+}

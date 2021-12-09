@@ -1,0 +1,19 @@
+extern func print_int(int) void;
+
+package nine{
+    func main() int{
+        var outofscope int;
+        outofscope = 4;
+        print_int(isthisit(4));
+
+    }
+
+    func isthisit(input int) int{
+        if(input == 1){
+            return(1);
+        }
+        else{
+            return(input-1);
+        }
+    }
+}

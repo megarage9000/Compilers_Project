@@ -1,0 +1,12 @@
+package zero {
+    func loops(start int, end int) void {
+        var j int;
+        for(j = start; j < (end + start)/2; j=j+start){
+            return;
+        }
+        return;
+    }
+    func main() int {
+        loops(-1, 5);
+    }
+}

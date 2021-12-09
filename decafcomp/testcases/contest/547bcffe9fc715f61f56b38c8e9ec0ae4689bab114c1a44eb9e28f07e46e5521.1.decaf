@@ -1,0 +1,12 @@
+extern func main() int;
+extern func v_o_i_d() void;
+extern func print_int(int) void; extern func ____(int, int, int, int, int, string) void; extern func print_string(string) void;
+
+package a {
+  func main() int {
+    var main int;
+    main = 0x9;
+
+    print_int(main - 10 == -1);
+  }
+}

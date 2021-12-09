@@ -1,0 +1,9 @@
+extern func print_int(int) void;
+
+package C {
+    func main() int {
+        var x int;
+        x = 2149999999990999999;
+        print_int(x);
+    }
+}

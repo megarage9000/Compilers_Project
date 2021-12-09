@@ -1,0 +1,21 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package PrintReturn2 {
+    var x int = 0;
+
+    func main() int {
+        {
+            x = returnFive();  
+            {
+                print_int(x/5);
+            }
+        }
+    }
+
+    func returnFive() int {
+        {
+            return(5);
+        }
+    }
+}

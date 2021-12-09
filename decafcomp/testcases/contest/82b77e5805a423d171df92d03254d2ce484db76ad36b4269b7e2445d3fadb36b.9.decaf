@@ -1,0 +1,14 @@
+extern func print_int(int) void;
+package Test {
+    func main() int
+    {
+        print_int(fact(5));
+    }
+    func fact(x int) int
+    {
+        if (x <= 1){
+            return(1);
+        }
+        return(x * fact(x - 1));
+    }
+}

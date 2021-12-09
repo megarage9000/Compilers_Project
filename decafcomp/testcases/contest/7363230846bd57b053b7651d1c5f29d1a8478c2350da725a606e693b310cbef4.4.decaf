@@ -1,0 +1,169 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+// Attempts to break the compilers of people who did not
+// mangle the names of their blocks when they put them in
+// the symbol table
+
+package DecafDestroyer {
+    func main() int {
+        break_unmangled_entry_end_1();
+        break_unmangled_entry_end_2(5, 10);
+        break_unmangled_block_names_if();
+        break_unmangled_short_circuit_blocks();
+
+        // Time for evil stuff...
+        evil_break_unmangled_coursys_blocks();
+
+        print_string("3: break_unmangled_blocks\n");
+    }
+
+    // First attempt to break unmangled entry/end block names
+    func break_unmangled_entry_end_1() void {
+        var entry int;
+        var end int;
+
+        entry = 1;
+        end = 1;
+
+        if (true) {
+            entry = 2;
+            end = 2;
+        } else {
+            entry = 3;
+            end = 3;
+        }
+
+        print_string("-- 3: break_unmangled_entry_end_1\n");
+    }
+
+    // Second attempt to break unmangled entry/end block names
+    func break_unmangled_entry_end_2(entry int, end int) void {
+        entry = 1;
+        end = 1;
+
+        if (true) {
+            entry = 2;
+            end = 2;
+        } else {
+            entry = 3;
+            end = 3;
+        }
+
+        print_string("-- 3: break_unmangled_entry_end_2\n");
+    }
+
+    // Attempts to break unmangled if block names
+    func break_unmangled_block_names_if() void {
+        var ifstart int;
+        var iftrue int;
+        var iffalse int;
+
+        ifstart = 1;
+        iftrue = 1;
+        iffalse = 1;
+
+        if (true) {
+            ifstart = 2;
+            iftrue = 2;
+            iffalse = 2;
+        } else {
+            ifstart = 3;
+            iftrue = 3;
+            iffalse = 3;
+        }
+
+        print_string("-- 3: break_unmangled_blocks_if\n");
+    }
+
+    // Attempts to break unmangled short circuiting block names
+    func break_unmangled_short_circuit_blocks() void {
+        var noskct int;
+        var skctend int;
+        var out bool;
+
+        noskct = 1;
+        skctend = 1;
+
+        if (true) {
+            noskct = 2;
+            skctend = 2;
+
+            out = true && false;
+            out = false && true;
+
+            out = true || false;
+            out = false || true;
+        } else {
+            noskct = 3;
+            skctend = 3;
+
+            out = true && false;
+            out = false && true;
+
+            out = true || false;
+            out = false || true;
+        }
+
+        out = true && false;
+        out = false && true;
+
+        out = true || false;
+        out = false || true;
+
+        print_string("-- 3: break_unmangled_short_circuit_blocks\n");
+    }
+
+    // Yes, these are the _evil_ test cases...
+
+    // Try to break loops using block names from: https://coursys.sfu.ca/2021fa-cmpt-379-d1/forum/634
+    func evil_break_unmangled_coursys_blocks() void {
+        // Start with for loop names directly from the post
+        var for_condbr int;
+        var for_body int;
+        var for_postbr int;
+        var for_merge int;
+
+        // Loop iterator
+        var i int;
+
+        // Now try with while loops using adapted names
+        var while_condbr int;
+        var while_body int;
+        var while_postbr int;
+        var while_merge int;
+
+        // Actually start stuff:
+
+        for_condbr = 1;
+        for_body = 1;
+        for_postbr = 1;
+        for_merge = 1;
+
+        for (i = 0; i < 10; i = i + 1) {
+            for_condbr = i;
+            for_body = i;
+            for_postbr = i;
+            for_merge = i;
+            continue;
+        }
+
+        while_condbr = 1;
+        while_body = 1;
+        while_postbr = 1;
+        while_merge = 1;
+
+        i = 0;
+        while (i < 10) {
+            while_condbr = i;
+            while_body = i;
+            while_postbr = i;
+            while_merge = i;
+
+            i = i + 1;
+            continue;
+        }
+
+        print_string("-- 3: evil_break_unmangled_coursys_blocks\n");
+    }
+}

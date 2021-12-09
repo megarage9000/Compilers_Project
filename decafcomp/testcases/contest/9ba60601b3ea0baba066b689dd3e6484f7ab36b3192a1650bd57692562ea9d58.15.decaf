@@ -1,0 +1,15 @@
+extern func print_int(int) void;
+
+package multi {
+    func main() int {
+        print_int(m());
+    }
+
+    func m() int {
+        return(5);
+        return(4);
+        return(3);
+        return(2);
+        return(1);
+    }
+}

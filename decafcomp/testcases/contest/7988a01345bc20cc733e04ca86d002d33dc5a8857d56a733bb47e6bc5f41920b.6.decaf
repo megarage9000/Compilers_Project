@@ -1,0 +1,29 @@
+extern func print_int(int) void;
+
+package Array1 {
+    var array1 [3]int;
+    var array2 [6]int;
+    func main() int {
+        var i int;
+        i = 0;
+        
+        array1[0] = 3;
+        array1[1] = 2;
+        array1[2] = 5;
+        
+        array2[0] = 34;
+        array2[1] = 11;
+        array2[2] = 8;
+        array2[3] = 3;
+        array2[4] = 17;
+        array2[5] = 15;
+
+        while(i < 6) {
+            if(i < 3) {
+                array2[i] = array2[array1[i]] + 1;
+            }
+            print_int(array2[i]);
+            i = i + 1;
+        }
+    }
+}

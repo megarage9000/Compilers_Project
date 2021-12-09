@@ -1,0 +1,12 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package comments {
+    func main() int {
+        var a int;
+        a = // 3;
+        6;
+        print_int(// a);
+        a);
+    }
+}

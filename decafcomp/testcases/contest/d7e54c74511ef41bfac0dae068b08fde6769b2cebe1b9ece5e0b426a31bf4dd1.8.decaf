@@ -1,0 +1,27 @@
+extern func print_string(string) void;
+package done {
+    func main() int {
+        var flag bool;
+        flag = true;
+
+        while (flag) {
+            var i int;
+            for (i = 0; i < 2; i = i + 1) {
+                var scoped int;
+                scoped = 2;
+                if (i - scoped % 2 <= 0 && i == 0) {
+                    var scoped int;
+                    scoped = 1;
+                    if (scoped == 1) {
+                        print_string("we are ");
+                    } else {
+                        print_string("I\'m not");
+                    }
+                } else {
+                    print_string("done!\n");
+                }
+            }
+            break;
+        }
+    }
+}

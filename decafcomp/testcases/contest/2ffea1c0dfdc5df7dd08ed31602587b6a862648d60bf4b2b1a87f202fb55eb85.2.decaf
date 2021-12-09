@@ -1,0 +1,38 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package ArrayHex {
+	var list [0x64]int; //declare array with hex array size
+
+	func cr() void { print_string("\n"); }
+
+	func displayList(start int, len int) void {
+		var j int;
+		print_string("List:\n");
+		for (j = start; j < start + len; j = j + 1) {
+			print_int(list[j]);
+			print_string(" ");
+			if ((j - start + 1) % 20 == 0 || j + 1 == start + len) {
+				cr();
+			}
+		}
+	}
+
+	func initList(size int) void {
+		var i int;
+		for (i = 0; i < size; i = i + 1) {
+			list[i] = i;
+		}
+	}
+	func main() int {
+		var size int;
+		size = 100;
+		initList(size);
+
+		displayList(0,size);
+		print_int(list[0x1]); //Access array index using hexa number
+
+        return(0);
+	}
+
+}

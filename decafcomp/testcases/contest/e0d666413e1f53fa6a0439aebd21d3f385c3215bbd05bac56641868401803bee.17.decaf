@@ -1,0 +1,15 @@
+extern func print_int(int) void;
+
+package Test {
+    func fibonacci(i int) int {
+        if (i <= 1) {
+            return(i);
+        }
+        return (fibonacci(i - 1) + fibonacci(i - 2));
+    }
+    func main() int {
+        var x int;
+        x = 23;
+        print_int(fibonacci(x));
+    }
+}

@@ -1,0 +1,16 @@
+extern func print_int(int) void;
+
+package Test {
+    func foo1() bool {
+        return (true || (!false && false) || false || ((true && false) || false));
+    }
+
+    func foo2() bool {
+        return (false || ((true && !false) && (true || !true || false)));
+    }
+
+    func main() int {
+        var x bool;
+        x = foo1() || foo2();
+    }
+}

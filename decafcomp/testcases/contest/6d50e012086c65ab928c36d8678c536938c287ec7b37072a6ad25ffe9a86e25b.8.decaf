@@ -1,0 +1,159 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package ReturnEverywhere {
+    func main() int {
+        print_int(orig());
+        print_int(A());
+        print_int(B());
+        print_int(C());
+        print_int(D());
+        print_int(E());
+        print_int(F());
+        print_int(G());
+        print_int(While());
+        print_int(For());
+    }
+
+    func orig() bool {
+        var a, b, c int;
+        a = 1; b = 2; c = a + b;
+        print_string("a + b = "); print_int(c); print_string("\n");
+
+        {
+            var a, b, c bool;
+            a = true; b = false; c = a && !b;
+            print_string("a && !b = "); print_int(c); print_string("\n");
+        }
+
+        return;
+    }
+
+    func A() bool {
+        var a, b, c int;
+        return;
+        a = 1; b = 2; c = a + b;
+        print_string("a + b = "); print_int(c); print_string("\n");
+
+        {
+            var a, b, c bool;
+            a = true; b = false; c = a && !b;
+            print_string("a && !b = "); print_int(c); print_string("\n");
+        }
+
+        return(false);
+    }
+
+    func B() bool {
+        var a, b, c int;
+        a = 1; b = 2; c = a + b;
+        return;
+        print_string("a + b = "); print_int(c); print_string("\n");
+
+        {
+            var a, b, c bool;
+            a = true; b = false; c = a && !b;
+            print_string("a && !b = "); print_int(c); print_string("\n");
+        }
+
+        return(false);
+    }
+
+    func C() bool {
+        var a, b, c int;
+        a = 1; b = 2; c = a + b;
+        print_string("a + b = "); print_int(c); print_string("\n");
+        return;
+
+        {
+            var a, b, c bool;
+            a = true; b = false; c = a && !b;
+            print_string("a && !b = "); print_int(c); print_string("\n");
+        }
+
+        return(false);
+    }
+
+    func D() bool {
+        var a, b, c int;
+        a = 1; b = 2; c = a + b;
+        print_string("a + b = "); print_int(c); print_string("\n");
+
+        {
+            var a, b, c bool;
+            return;
+            a = true; b = false; c = a && !b;
+            print_string("a && !b = "); print_int(c); print_string("\n");
+        }
+
+        return(false);
+    }
+
+    func E() bool {
+        var a, b, c int;
+        a = 1; b = 2; c = a + b;
+        print_string("a + b = "); print_int(c); print_string("\n");
+
+        {
+            var a, b, c bool;
+            a = true; b = false; c = a && !b;
+            return;
+            print_string("a && !b = "); print_int(c); print_string("\n");
+        }
+
+        return(false);
+    }
+
+    func F() bool {
+        var a, b, c int;
+        a = 1; b = 2; c = a + b;
+        print_string("a + b = "); print_int(c); print_string("\n");
+
+        {
+            var a, b, c bool;
+            a = true; b = false; c = a && !b;
+            print_string("a && !b = "); print_int(c); print_string("\n");
+            return;
+        }
+
+        return(false);
+    }
+
+    func G() bool {
+        var a, b, c int;
+        a = 1; b = 2; c = a + b;
+        print_string("a + b = "); print_int(c); print_string("\n");
+
+        {
+            var a, b, c bool;
+            a = true; b = false; c = a && !b;
+            print_string("a && !b = "); print_int(c); print_string("\n");
+        }
+        return;
+        
+        return(false);
+    }
+
+    func While() bool {
+        while(true) {
+            var a, b, c bool;
+            return;
+            print_string("return didn't work..try breaking\n");
+            break;
+            a = true; b = false; c = a && !b;
+            print_string("a && !b = "); print_int(c); print_string("\n");
+        }
+    }
+
+    func For() bool {
+        var i int;
+        for(i = 0; true; i = i + 1) {
+            var a, b, c bool;
+            return;
+            print_string("return didn't work..try breaking\n");
+            break;
+            a = true; b = false; c = a && !b;
+            print_string("a && !b = "); print_int(c); print_string("\n");
+        }
+    }
+}

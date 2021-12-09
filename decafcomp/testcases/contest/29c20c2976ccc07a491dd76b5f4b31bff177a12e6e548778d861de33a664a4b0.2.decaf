@@ -1,0 +1,28 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package Test {
+    func main() int {
+        var x, y, z, after int;
+        x = 1000;
+        y = 1;
+        z = 0;
+
+        while (y <= x) {
+            var a int;
+            a = 1;
+            while (a <= x) {
+                var l int;
+                l = z + 1;
+                z = l;
+                a = a + 1;
+                after = l;
+            }
+            y = y + 1;
+        }
+        print_string("This is the variable after the loop: ");
+        print_int(after);
+        print_string("\n");
+        return (0);
+    }
+}

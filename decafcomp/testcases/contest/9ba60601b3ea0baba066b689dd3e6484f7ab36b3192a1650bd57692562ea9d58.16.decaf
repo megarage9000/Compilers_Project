@@ -1,0 +1,13 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+package bigint {
+    func main() int {
+        var a,b int;
+        a = 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0BadFace;
+        b = 92394823748921748329147238045425894353958234718242312348324892374892317489237489;
+        print_int(a);
+        print_string("\n");
+        print_int(b);
+        print_string("\n");
+    }
+}

@@ -1,0 +1,121 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package CrashTime {
+    func main() int {
+        var ifstmt, whilestmt, forstmt, continuestmt, breakstmt, returnstmt,
+            ifbb, whilebb, forbb, continuebb, breakbb, returnbb,
+            ifstart, whilestart, forstart, ifstartbb, whilestartbb, forstartbb, start, startbb,
+            ifbody, whilebody, forbody, ifbodybb, whilebodybb, forbodybb, body, bodybb,
+            ifnext, whilenext, fornext, ifnextbb, whilenextbb, fornextbb, next, nextbb,
+            iftrue, whiletrue, fortrue, iftruebb, whiletruebb, fortruebb, truebb,
+            iffalse, whilefalse, forfalse, iffalsebb, whilefalsebb, forfalsebb, falsebb,
+            ifend, whileend, forend, ifendbb, whileendbb, forendbb, end, endbb,
+            main, entry, mainbb, entrybb, i int;
+
+        for (i = 0; i < 1 || i > 2; i = i + 1) {
+            var j int;
+
+            while(j < 5) {                
+                var ifstmt, whilestmt, forstmt, continuestmt, breakstmt, returnstmt,
+                    ifbb, whilebb, forbb, continuebb, breakbb, returnbb,
+                    ifstart, whilestart, forstart, ifstartbb, whilestartbb, forstartbb, start, startbb,
+                    ifbody, whilebody, forbody, ifbodybb, whilebodybb, forbodybb, body, bodybb,
+                    ifnext, whilenext, fornext, ifnextbb, whilenextbb, fornextbb, next, nextbb,
+                    iftrue, whiletrue, fortrue, iftruebb, whiletruebb, fortruebb, truebb,
+                    iffalse, whilefalse, forfalse, iffalsebb, whilefalsebb, forfalsebb, falsebb,
+                    ifend, whileend, forend, ifendbb, whileendbb, forendbb, end, endbb,
+                    main, entry, mainbb, entrybb, i int;
+
+                j = j + 1;
+
+                for (i = 0; i < 5; i = i + 1) {
+                    var ifstmt, whilestmt, forstmt, continuestmt, breakstmt, returnstmt,
+                        ifbb, whilebb, forbb, continuebb, breakbb, returnbb,
+                        ifstart, whilestart, forstart, ifstartbb, whilestartbb, forstartbb, start, startbb,
+                        ifbody, whilebody, forbody, ifbodybb, whilebodybb, forbodybb, body, bodybb,
+                        ifnext, whilenext, fornext, ifnextbb, whilenextbb, fornextbb, next, nextbb,
+                        iftrue, whiletrue, fortrue, iftruebb, whiletruebb, fortruebb, truebb,
+                        iffalse, whilefalse, forfalse, iffalsebb, whilefalsebb, forfalsebb, falsebb,
+                        ifend, whileend, forend, ifendbb, whileendbb, forendbb, end, endbb,
+                        main, entry, mainbb, entrybb int;
+                    
+                    print_string("for:");
+                    print_int(i);
+                    print_string("\n");
+
+                    if (i%2 == 0) {
+                        var ifstmt, whilestmt, forstmt, continuestmt, breakstmt, returnstmt,
+                            ifbb, whilebb, forbb, continuebb, breakbb, returnbb,
+                            ifstart, whilestart, forstart, ifstartbb, whilestartbb, forstartbb, start, startbb,
+                            ifbody, whilebody, forbody, ifbodybb, whilebodybb, forbodybb, body, bodybb,
+                            ifnext, whilenext, fornext, ifnextbb, whilenextbb, fornextbb, next, nextbb,
+                            iftrue, whiletrue, fortrue, iftruebb, whiletruebb, fortruebb, truebb,
+                            iffalse, whilefalse, forfalse, iffalsebb, whilefalsebb, forfalsebb, falsebb,
+                            ifend, whileend, forend, ifendbb, whileendbb, forendbb, end, endbb,
+                            main, entry, mainbb, entrybb int;
+
+                        print_string("if:true\n");
+                    } else {
+                        var ifstmt, whilestmt, forstmt, continuestmt, breakstmt, returnstmt,
+                            ifbb, whilebb, forbb, continuebb, breakbb, returnbb,
+                            ifstart, whilestart, forstart, ifstartbb, whilestartbb, forstartbb, start, startbb,
+                            ifbody, whilebody, forbody, ifbodybb, whilebodybb, forbodybb, body, bodybb,
+                            ifnext, whilenext, fornext, ifnextbb, whilenextbb, fornextbb, next, nextbb,
+                            iftrue, whiletrue, fortrue, iftruebb, whiletruebb, fortruebb, truebb,
+                            iffalse, whilefalse, forfalse, iffalsebb, whilefalsebb, forfalsebb, falsebb,
+                            ifend, whileend, forend, ifendbb, whileendbb, forendbb, end, endbb,
+                            main, entry, mainbb, entrybb int;
+
+                        print_string("if:false\n");
+                    }
+
+                    if (i == 1) {
+                        var ifstmt, whilestmt, forstmt, continuestmt, breakstmt, returnstmt,
+                            ifbb, whilebb, forbb, continuebb, breakbb, returnbb,
+                            ifstart, whilestart, forstart, ifstartbb, whilestartbb, forstartbb, start, startbb,
+                            ifbody, whilebody, forbody, ifbodybb, whilebodybb, forbodybb, body, bodybb,
+                            ifnext, whilenext, fornext, ifnextbb, whilenextbb, fornextbb, next, nextbb,
+                            iftrue, whiletrue, fortrue, iftruebb, whiletruebb, fortruebb, truebb,
+                            iffalse, whilefalse, forfalse, iffalsebb, whilefalsebb, forfalsebb, falsebb,
+                            ifend, whileend, forend, ifendbb, whileendbb, forendbb, end, endbb,
+                            main, entry, mainbb, entrybb int;
+
+                        continue;
+                        print_string("oops\n");
+                    }
+
+                    if (i == 2) {
+                        continue;
+                        print_string("oops\n");
+                    }
+
+                    if (i == 3) {
+                        var ifstmt, whilestmt, forstmt, continuestmt, breakstmt, returnstmt,
+                            ifbb, whilebb, forbb, continuebb, breakbb, returnbb,
+                            ifstart, whilestart, forstart, ifstartbb, whilestartbb, forstartbb, start, startbb,
+                            ifbody, whilebody, forbody, ifbodybb, whilebodybb, forbodybb, body, bodybb,
+                            ifnext, whilenext, fornext, ifnextbb, whilenextbb, fornextbb, next, nextbb,
+                            iftrue, whiletrue, fortrue, iftruebb, whiletruebb, fortruebb, truebb,
+                            iffalse, whilefalse, forfalse, iffalsebb, whilefalsebb, forfalsebb, falsebb,
+                            ifend, whileend, forend, ifendbb, whileendbb, forendbb, end, endbb,
+                            main, entry, mainbb, entrybb int;
+
+                        break;
+                        print_string("oops\n");
+                    }
+
+                    print_string("for:end\n");
+                }
+
+                print_string("while:end\n");
+                break;
+                print_string("oops\n");
+            }
+            print_string("fini");
+        }
+        print_string("shed\n");
+        return;
+        print_string("oops\n");
+    }
+}

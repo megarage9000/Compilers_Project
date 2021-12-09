@@ -1,0 +1,13 @@
+extern func print_string(string) void;
+
+package skct {
+   func main() int {
+      var i int;
+      var b bool;
+      for (i = 0; i < 10; i = i + 1) {
+         continue;
+         b = true || false;
+      }
+      print_string("ok\n");
+   }
+}

@@ -1,0 +1,19 @@
+package six{
+    func main() int{
+        var i int; 
+        i = 1000;
+        while(i != 0){
+            var i int; 
+            i = 1000;
+            while(i != 0){
+                var i int; 
+                i = 1000;
+                while(i != 0){
+                    break;
+                }
+                break;
+            }
+            break;
+        }
+    }
+}

@@ -1,0 +1,28 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package ForCollatz {
+
+    var starting_num int = 12;
+
+    func foo(curr_number int) int {
+        if (curr_number % 2 == 0) {
+            return (curr_number / 2);
+        }
+        else {
+            return ((3*curr_number) + 1);
+        }
+    }
+
+    func main() int {
+        
+        var curr_number int;
+        
+        for (curr_number = 12; curr_number != 1; curr_number = foo(curr_number)) {
+            print_int(curr_number);
+            print_string("\n");
+        }
+        print_int(curr_number);
+    }
+
+}

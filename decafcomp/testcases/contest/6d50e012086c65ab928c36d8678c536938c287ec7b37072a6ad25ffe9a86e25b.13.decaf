@@ -1,0 +1,315 @@
+// this program aims to test "everything" in the spec... well, most of it
+// achieves 100% code coverage on my compiler, with the exception of runtime errors
+
+extern func print_int(int) void;
+extern func print_string(string) void;
+extern func read_int() int;
+
+package EntireSpec {
+    var intNoValue int;
+    var intWithValue int = 100;
+    var ARRAY_LEN int = 100;
+
+    var boolNoValue bool;
+    var boolWithValue bool = true;
+
+    var intArray [100] int;
+    var boolArray [100] bool;
+
+    func main() int {
+        voidFunc();
+        printBoolAsInt(true);
+        testEscapeChars();
+        testFieldVars();
+        testArrays();
+        testBoolDefaultReturn();
+        testSimple();
+        testBlocks();
+        testLoops();
+        testRecursion();
+        testUnaryOperators();
+        testBinaryArithmeticOperators();
+        testBinaryBooleanOperators();
+    }
+    
+    func voidFunc() void {
+        print_string("voidFunc\n");
+        return();
+    }
+
+    func printBoolAsInt(a int) void {
+        print_int(a);
+        print_string("\n");
+    }
+
+    func testEscapeChars() void {
+        if ('\n' != 10) { oops(); }
+        if ('\r' != 13) { oops(); }
+        if ('\t' != 9) { oops(); }
+        if ('\v' != 11) { oops(); }
+        if ('\f' != 12) { oops(); }
+        if ('\a' != 7) { oops(); }
+        if ('\b' != 8) { oops(); }
+        if ('\\' != 92) { oops(); }
+        if ('\'' != 39) { oops(); }
+        if ('\"' != 34) { oops(); }
+    }
+
+    func testBoolDefaultReturn() bool {
+        if (!varDeclOnly() || !noVarDecls()) {
+            oops();
+        }
+    }
+
+    func testFieldVars() bool {
+        if (intNoValue != 0) { oops(); }
+        if (intWithValue != 100) { oops(); }
+        if (boolNoValue != false) { oops(); }
+        if (boolWithValue != true) { oops(); }
+    }
+
+    func get56() int {
+        return(56);
+    }
+
+    func testArrays() bool {
+        var i, modBase int;
+
+        modBase = 3;
+
+        for (i = 0; i < ARRAY_LEN; i = i + 1) {
+            if (intArray[i] != 0) {
+                oops();
+            }
+            if (boolArray[i] != false) {
+                oops();
+            }
+
+            intArray[i] = i % modBase;
+            boolArray[i] = intArray[i] == 0;
+        }
+
+        for (i = 0; i < ARRAY_LEN; i = i + 2) {
+            intArray[i] = -intArray[i];
+        }
+
+        if (intArray[get56()] != -2) { // 56 % 3 = 2, but even so negative
+            oops();
+        }
+
+        for (i = 0; i < ARRAY_LEN; i = i + 1) {
+            if (intArray[i] != (i % modBase) * ((i % 2) * 2 - 1)) {
+                oops();
+            }
+            if (intArray[i] == 0 != boolArray[i]) {
+                oops();
+            }
+        }
+    }
+
+    func testSimple() bool {
+        if (addWithNegation(100, 0xA, true) != -110) {
+            oops();
+        }
+    }
+
+    func testBlocks() bool {
+        if (addInsideBlocks(1234, 4321) != 5555) {
+            oops();
+        }
+    }
+
+    func testLoops() bool {
+        if (addWithWhileLoop(-0Xa, 1250) != 1240) {
+            oops();
+        }
+
+        if (addWithWhileLoopAndBreak(1025, 9025) != 10050) {
+            oops();
+        }
+
+        if (addWithWhileLoopAndContinue(0xFF, 255) != 510) {
+            oops();
+        } 
+
+        if (addWithForLoopPlus90(0x0, 10) != 0x64) {
+            oops();
+        }
+    }
+
+    func testRecursion() bool {
+        if (addRecursive(10, -10) != 0) {
+            oops();
+        }
+
+        if (addRecursive(-10, 20) != 10) {
+            oops();
+        }
+    }
+
+    func varDeclOnly() bool {
+        var a int;
+        var b bool;
+        var c, d, e, f int;
+    }
+
+    func noVarDecls() bool {
+        print_string("noVarDecls\n");
+    }
+
+    func addWithNegation(a int, b int, negate bool) int {
+        var multiplier int;
+
+        if (negate) {
+            multiplier = -1;
+        } else {
+            multiplier = 1;
+        }
+
+        return((a + b) * multiplier);
+    }
+
+    func addWithWhileLoop(a int, b int) int {
+        while(b != 0) {
+            a = a + 1;
+            b = b - 1;
+        }
+
+        return(a);
+    }
+
+    func addWithWhileLoopAndBreak(a int, b int) int {
+        while(true) {
+            a = a + 1;
+            b = b - 1;
+
+            if (b == 0) {
+                break;
+            }
+        }
+
+        return(a);
+    }
+
+    func addWithWhileLoopAndContinue(a int, b int) int {
+        while(b != 0) {
+            a = a + 1;
+            b = b - 1;
+
+            continue;
+
+            a = 0;
+            b = 0;
+        }
+
+        return(a);
+    }
+
+    func addWithForLoopPlus90(a int, b int) int {
+        var c int;
+
+        for (c = 0; c < 10; c = c + 1) {
+            a = a + c;
+            b = b + c;
+        }
+
+        return(a + b);
+    }
+
+    func addInsideBlocks(a int, b int) int {
+        var c int;
+        
+        {
+            var d int;
+            {
+                var c int;
+                d = a + b;
+            }
+            c = d;
+        }
+
+        return(c);
+    }
+
+    func addRecursive(a int, b int) int {
+        if (b == 0) {
+            return(a);
+        }
+        else {
+            if (b > 0) {
+                return(addRecursive(a + 1, b - 1));
+            }
+            else {
+                return(addRecursive(a - 1, b + 1));
+            }
+        }
+    }
+
+    func testUnaryOperators() bool {
+        var a int;
+        var b bool;
+
+        a = -a;
+        b = !b;
+
+        if (a != 0 || b != true) {
+            oops();
+        }
+
+        a = 10;
+        a = -a;
+
+        if (a != -10) {
+            oops();
+        }
+    }
+
+    func testBinaryArithmeticOperators() bool {
+        var a, b int;
+
+        a = 11;
+        b = 5;
+
+        if (a + b != 16) { oops(); }
+        if (a - b != 6) { oops(); }
+        if (a * b != 55) { oops(); }
+        if (a / b != 2) { oops(); }
+        if (a << b != 352) { oops(); }
+        if (a >> b != 0) { oops(); }
+        if (a % b != 1) { oops(); }
+    }
+
+    func testBinaryBooleanOperators() bool {
+        var t1, t2, f1 bool;
+        var a, b int;
+
+        t1 = true;
+        t2 = !t2;
+
+        if (t1 == t2) {} else { oops(); }
+        if (t1 == f1) { oops(); } else {}
+        if (t1 != t2) { oops(); } else {}
+        if (t1 != f1) {} else { oops(); }
+        if (t1 && t2 == true) {} else { oops(); }
+        if (t1 && f1 == true) { oops(); } else {}
+        if (t1 || t2 == true) {} else { oops(); }
+        if (f1 || t1 == true) {} else { oops(); }
+
+        a = 10;
+        b = 15;
+
+        if (a == b) { oops(); } else {}
+        if (a != b) {} else { oops(); }
+        if (a < b) {} else { oops(); }
+        if (a > b) { oops(); } else {}
+
+        b = 10;
+
+        if (a >= b) {} else { oops(); }
+        if (a <= b) {} else { oops(); }
+    }
+
+    func oops() void {
+        print_string("oops\n");
+    }
+}

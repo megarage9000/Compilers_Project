@@ -1,0 +1,45 @@
+extern func read_int() int;
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package test{
+	var N[10] int;
+	var K[10] int;
+	var coeffArr[10] int;
+	var size int;
+	func main() int{
+		var i int;
+		size = 10;
+		for(i =0; i<size; i = i+1){
+			N[i] = read_int();
+			K[i] = read_int();
+			coeffArr[i] = binomialCoeff(i);
+			if(true || (false && (false == false))){
+				print_int(N[i]);
+				print_string(" choose ");
+				print_int(K[i]);
+				print_string(" = ");
+				print_int(coeffArr[i]);
+			}
+		}
+
+		return(0);
+	}
+
+	func binomialCoeff(index int) int{
+		var res int;
+		var i int;
+		res = 1;
+		if(K[index] == 0){
+			 return(1);
+		}
+		if(N[index] == K[index]){
+			 return(1);
+		}
+		for(i =0; i<K[index]; i = i+1 ){
+			res = res * (N[index] - i);
+			res = res/(i +1);
+		}
+		return (res);
+	}
+}

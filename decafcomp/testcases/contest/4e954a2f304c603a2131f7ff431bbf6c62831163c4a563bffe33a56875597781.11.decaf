@@ -1,0 +1,29 @@
+extern func print_string(string) void;
+
+package badnames {
+  var end int;
+  var noskct int;
+  var loop int;
+  var body int;
+  var next int;
+  func main() int {
+    var i int;
+    for (i = 0; i < 10; i = i + 1) {
+        loop = i;
+        body = i;
+        next = i;
+        end = i;
+    }
+
+    if (true || retfalse()) {
+        noskct = 1;
+    }
+
+    print_string("Avoided bad names!");
+
+    return (0);
+  }
+  func retfalse() bool {
+      return (false);
+  }
+}

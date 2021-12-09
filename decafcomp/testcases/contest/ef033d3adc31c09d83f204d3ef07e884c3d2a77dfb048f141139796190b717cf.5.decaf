@@ -1,0 +1,21 @@
+extern func print_int(int) void;
+
+package Test {
+    var array[10] bool;
+
+    func main() int {
+        var i int;
+        for (i = 0; i < 10; i = i + 1) {
+            array[i] = (i % 0x00003) == 0;
+        }
+        { var skibidabopskeedada int; for (skibidabopskeedada = 0; skibidabopskeedada == 0; skibidabopskeedada = 1) { break; print_int(true || false); } for (skibidabopskeedada = 0; skibidabopskeedada == 0; skibidabopskeedada = 1) { continue; print_int(true || false); } }
+        for (i = 0; i < 9; i = i + 1) {
+            print_int(mystery(array[i], array[i + 1]));
+        }
+    }
+
+    func mystery(a bool, b bool) bool {
+        if (783025799434650703729332487098077069789807786702120136201720709494253903197048011652395286153892641500492613499618714846 + 0x4C83105a11642D8b546A206db2701baC79599f6CDB0cC9554cE1Ab06D6914c2b3992c2799fccf6d0Eab85a685C1611958c6882416d94a96612c4d108 > -1203912) { print_int(9); }
+        return (a && !b || !a && b);
+    }
+}

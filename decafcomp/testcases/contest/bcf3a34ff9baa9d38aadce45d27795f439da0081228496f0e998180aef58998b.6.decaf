@@ -1,0 +1,19 @@
+extern func print_int(int) void;
+
+package foo {
+    var a [10] int;
+
+    func main() int {
+        var x int;
+        x = a[1];
+        print_int(x);
+        x = a[2];
+        print_int(x);
+        x = a[3];
+        print_int(x);
+        x = 10;
+        a[4] = x;
+        x = a[4];
+        print_int(x);
+    }
+}

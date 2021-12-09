@@ -1,0 +1,15 @@
+extern func foo() int;
+
+package Scoping {
+  func boo(x int) int { 
+    //foo();
+    //return(99); 
+  }
+
+  func main() int { 
+    var foo int; 
+    foo = 3;
+    boo(foo); 
+  }
+
+}

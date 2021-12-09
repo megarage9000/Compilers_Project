@@ -1,0 +1,33 @@
+extern func print_int(int) void;
+
+package Test {
+    func main() int {
+        var loop, whileloop, while_loop, while_start, whilestart, end, whilecond, while_cond int;
+        var afterloop, after_loop, after_while, while_end, while_merge, whilemerge, whileend int;
+        var i int;
+        while (i < 10) {
+            var loop, whileloop, while_loop, while_start, whilestart, end, whilecond, while_cond int;
+            var afterloop, after_loop, after_while, while_end, while_merge, whilemerge, whileend int;
+
+            print_int(i);
+            if (i >= 5) {
+                break;
+            }
+            i = i + 1;
+        }
+        i = 0;
+        while (i < 10) {
+            var loop, whileloop, while_loop, while_start, whilestart, end, whilecond, while_cond int;
+            var afterloop, after_loop, after_while, while_end, while_merge, whilemerge, whileend int;
+
+            i = i + 1;
+            if (i >= 5) {
+                continue;{ var skibidabopskeedada int; for (skibidabopskeedada = 0; skibidabopskeedada == 0; skibidabopskeedada = 1) { break; print_int(true || false); } for (skibidabopskeedada = 0; skibidabopskeedada == 0; skibidabopskeedada = 1) { continue; print_int(true || false); } }
+            }
+            print_int(i);
+        }
+        if (268706725085401420604010131660814277201196395246722275026563806018139112901931564945595277754039735348906930913376118641 + 0xAA1e493b26331455356479360fc52B82584Fa252474B8198e6fbfd842fC5b4D39f7a78C81d47C33284181C4c0414a9A2c0Cd132305Fc72FB0fa3f1C1 < 8283713) {
+            print_int(1738);
+        }
+    }
+}

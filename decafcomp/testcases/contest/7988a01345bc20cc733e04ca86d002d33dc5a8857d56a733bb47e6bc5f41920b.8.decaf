@@ -1,0 +1,43 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package Intersection {
+    var list1 [5]int;
+    var list2 [6]int;
+
+    func main() int {
+        var result bool;
+
+        // Initialize list1
+        list1[0] = 34;
+        list1[1] = 2;
+        list1[2] = -5;
+        list1[3] = 20;
+        
+        // Initialize list2
+        list2[1] = 5;
+        list2[2] = 10;
+        list2[3] = 20;
+        list2[4] = 2;
+
+        result = get_intersect();  
+
+        if(result) {
+            print_string("There are intersected elements\n");
+        } else {
+            print_string("There aren't intersected elements\n");
+        }
+    }
+
+    func get_intersect() bool {
+        var i int;
+        var j int;
+        for(i = 0; i < 5; i = i + 1) {
+            for(j=0; j < 6; j = j + 1) {
+                if (list1[i] == list2[j]) {
+                    print_int(list1[j]);
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,46 @@
+extern func print_int(int) void;
+package Test {
+    func foo(a int) bool {
+        if (a == -1) {
+            print_int(72);
+            return(1==1);
+        } else { 
+            if (a == -2) {
+                print_int(36); 
+                return(true==true);
+            }
+        }
+        print_int(a);
+        return(true==false);
+    }
+
+    func main() int {
+        var x int;
+        x = 5 << 2;
+        if (false && foo(x)) {
+            print_int(1);
+        } else {
+            x = 10;
+        }
+        if (foo(x)) {
+            if (true || foo(-1)) {
+                if (true && foo(-2)) {
+                    if (false || foo(-1)) {
+                        if (false && foo(x)) {
+                            print_int(-182312312);
+                        }
+                    } else {
+                        print_int(x);
+                        print_int(x);
+                        print_int(x);
+                    }
+                } else {
+                    print_int(x);
+                    print_int(x);
+                }
+            } else {
+                print_int(x);
+            }
+        }
+    }
+}

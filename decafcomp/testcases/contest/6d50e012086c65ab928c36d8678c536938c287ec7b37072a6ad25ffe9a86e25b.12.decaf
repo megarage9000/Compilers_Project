@@ -1,0 +1,131 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+extern func read_int() int;
+
+package PolishCalculator {
+    var BUFFER_LEN int = 100;
+    var END_OF_EXPR int;
+    var calcPosition int;
+    var buffer [100]int;
+
+    func main() int {
+        var i int;
+
+        END_OF_EXPR = -5; // cannot set this in the field decl because it's negative
+
+        printInstructions();
+
+        while (true) {
+            print_string("Enter an expression:\n");
+    
+            for (i = 0; i < BUFFER_LEN; i = i + 1) {
+                buffer[i] = read_int();
+
+                if (buffer[i] >= -4) {
+                    continue;
+                }
+
+                if (buffer[i] == END_OF_EXPR) {
+                    break;
+                }
+
+                if (buffer[i] == -6) {
+                    print_string("Exiting...\n");
+                    return;
+                }
+
+                print_string("Invalid input. Please try again.");
+                i = i - 1;
+            }
+
+            printExpression();
+            calculateExpression();
+        }
+    }
+
+    func printInstructions() void {
+        print_string("Polish Calculator\n");
+        print_string("-----------------\n");
+        print_string("Enter a mathematical expression in polish / prefix notation (max 100 inputs).\n");
+        print_string("Integers >= 0 represent that integer.\n");
+        print_string("Integers < 0 represent operators.\n\n");
+        print_string("Operators:\n");
+        print_string("  -1: +\n");
+        print_string("  -2: -\n");
+        print_string("  -3: *\n");
+        print_string("  -4: /\n");
+        print_string("  -5: end of expression (evaluate)\n");
+        print_string("  -6: exit immediately\n\n");
+        print_string("For example, -3 2 -1 5 6 -5 represents * 2 + 5 6 = 2 * (5 + 6) = 22\n");
+        print_string("For negative numbers, use -2 0 x = - 0 x = 0 - x (where x is a positive integer)\n\n");
+    }
+
+    func printExpression() void {
+        var i int;
+
+        print_string("\nYou entered: ");
+
+        for (i = 0; i < BUFFER_LEN && buffer[i] != END_OF_EXPR; i = i + 1) {
+            if (buffer[i] >= 0) {
+                print_int(buffer[i]);
+                print_string(" ");
+                continue;
+            }
+            
+            if (buffer[i] == -1) {
+                print_string("+ ");
+                continue;
+            }
+
+            if (buffer[i] == -2) {
+                print_string("- ");
+                continue;
+            }
+
+            if (buffer[i] == -3) {
+                print_string("* ");
+                continue;
+            }
+
+            if (buffer[i] == -4) {
+                print_string("/ ");
+                continue;
+            }
+        }
+
+        print_string("\n");
+    }
+
+    func calculateExpression() void {
+        print_string("Result: ");
+        calcPosition = 0;
+        print_int(calculate());
+        print_string("\n\n");
+    }
+
+    func calculate() int {
+        var i int;
+        i = calcPosition;
+        calcPosition = calcPosition + 1;
+
+        if (buffer[i] >= 0) {
+            return(buffer[i]);
+        }
+        
+        if (buffer[i] == -1) {
+            return(calculate() + calculate());
+        }
+
+        if (buffer[i] == -2) {
+            return(calculate() - calculate());
+        }
+
+        if (buffer[i] == -3) {
+            return(calculate() * calculate());
+        }
+
+        if (buffer[i] == -4) {
+            return(calculate() / calculate());
+        }
+    }
+}

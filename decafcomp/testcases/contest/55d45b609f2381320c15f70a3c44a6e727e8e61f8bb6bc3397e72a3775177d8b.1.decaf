@@ -1,0 +1,14 @@
+extern func print_int(int) void;
+
+package Test {
+    func main() int {
+        var count int;
+        count = 2;
+        while (false) {
+            count = 3;
+        }
+        if (true) {
+            print_int(count);
+        }
+    }
+}

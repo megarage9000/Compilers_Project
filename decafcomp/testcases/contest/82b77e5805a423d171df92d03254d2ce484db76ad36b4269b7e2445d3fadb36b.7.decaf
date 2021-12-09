@@ -1,0 +1,15 @@
+extern func print_int(int) void;
+package Test {
+    var foo [4] int;
+
+    func main() int {
+        foo[0] = 1;
+        foo[1] = 2;
+        foo[2] = 3;
+        foo[3] = 4;
+        print_int(foo[0]);
+        print_int(foo[1]);
+        print_int(foo[2]);
+        print_int(foo[3]);
+    }
+}

@@ -1,0 +1,46 @@
+extern func print_int(int) void;
+package Test {
+    var globe int;
+
+    func foo(b bool) bool {
+        return(!b);
+    }
+
+    func foo1(a int) int {
+        if (a < 0) {
+            return(0);
+        }
+        if (a % 5 == 0) {
+            print_int(5);
+        } else {
+            if (a % 2 == 0) {
+                if (foo(true)) {
+                    a = a - 1;
+                } else {
+                    if (false && foo(false)) {
+                        print_int(10);
+                    }
+                }
+                print_int(a);
+            } else {
+                a = a - 3;
+            }
+        }
+        a = a - 1;
+        return(foo1(a));
+    }
+
+    func main() int {
+        var a int;
+        var b bool;
+
+        a = 10 * 2;
+        b = false;
+
+        if (foo(b)) {
+            globe = a << 1;
+        }
+        print_int(globe);
+        foo1(a);
+    }
+}

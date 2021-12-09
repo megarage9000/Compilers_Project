@@ -1,0 +1,16 @@
+extern func print_int(int) void;
+package Test {
+    func main() int
+    {
+        var x int;
+        if (true || false) {
+            {
+                if (false || true){
+                    {
+                        print_int(1);
+                    }
+                }
+            }
+        }
+    }
+}

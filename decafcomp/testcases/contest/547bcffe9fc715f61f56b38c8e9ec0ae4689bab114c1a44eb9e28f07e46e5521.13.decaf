@@ -1,0 +1,48 @@
+extern func print_int(int) void; extern func ____(int, int, int, int, int, string) void; extern func print_string(string) void;
+
+
+package IF {
+  var a int;
+  var True int = 0;
+
+  func main() int {
+    a = 
+
+
+    (IF(1, 2, 3, 4, 5));
+
+    print_int(a
+    );
+
+    print_string("\"\\\\");
+  }
+
+  func IF(a int, b int, c int, d int, e int) int {
+    var WHILE bool;
+    WHILE = true;
+    WHILE = true;
+    WHILE = true;
+    WHILE = true;
+    WHILE = true;
+    WHILE = true;
+    WHILE = true;
+    while(WHILE) {
+      WHILE = true;
+      if (True > 100) {
+        break;
+        return(100);
+      }
+      True = True + 1;
+    }
+    if ((!WHILE || !WHILE || !WHILE && WHILE || WHILE && e <= d)) {
+      return (1);
+    }
+
+    if (((a < b) && b < c && c < d && d < e)) {
+      a = (20);
+      return (a);
+    }
+
+    return (0);
+  }
+}

@@ -1,0 +1,18 @@
+extern func foo() int;
+extern func print_int(int) void;
+
+package Scoping {
+    func main() int {
+        foo(3);  
+    }
+    func foo( z int) void {
+        var x int;
+        x = 3;
+        {
+            var x int;
+            x = 5;
+            print_int(5);
+        }
+        print_int(3);
+    }
+}

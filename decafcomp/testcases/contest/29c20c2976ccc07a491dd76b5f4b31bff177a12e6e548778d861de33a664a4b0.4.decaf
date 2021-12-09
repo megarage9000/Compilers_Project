@@ -1,0 +1,26 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package fors {
+    func main() int {
+        var i,j int;
+        for (j = 0; i < 2; i = i + 1) {
+            var i,j int;
+            print_string("outer\n");
+            print_int(i);
+            print_int(j);
+            for (j = 3; i < 3; i = i + 1) {
+                var i,j int;
+                print_string("mid\n");
+                print_int(i);
+                print_int(j);
+                for (j = 7; i < 4; i = i + 1) {
+                    print_string("in\n");
+                    print_int(i);
+                    print_int(j);
+                    print_string("\n");
+                }
+            }
+        }
+    }
+}

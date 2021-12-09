@@ -1,0 +1,33 @@
+extern func print_int(int) void; extern func c______(int, int, int, int, int) bool; extern func print_string(string) void;
+
+package a {
+  var i int = 1;
+  func main() int {
+    i = i - 1;
+    if (i == -1) {
+      return(-11);
+    }
+
+    if (i == -2 || i == -3) {
+      return(-11);
+    }
+
+    if (main() == 1 || main() == 1) {
+      return(-11);
+    }
+
+    if (i == -2) {
+      print_string("b");
+      return;
+    }
+
+    main();
+
+    if (i == -3) {
+      print_string("a");
+      return;
+    }
+
+    return(-11);
+  }
+}

@@ -1,0 +1,37 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package EvansCompilerShredder {
+    
+    var message [12]int;
+    func setMessage() void
+    {
+        message[0] = 'H';
+        message[1] = 'E';
+        message[2] = 'L';
+        message[3] = 'L';
+        message[4] = 'O';
+        message[5] = ' ';
+        message[6] = 'W';
+        message[7] = 'O';
+        message[8] = 'R';
+        message[9] = 'L';
+        message[10] = 'D';
+        message[11] = '!';
+    }
+
+    func main() int {
+        var sum, i int;
+        setMessage();
+        for(i = 0; i < 12; i = i + 1){
+            sum = sum + message[i];
+        }
+        if(sum == 72 + 69 + 76 + 76 + 79 + 32 + 87 + 79 + 82 + 76 + 68 + 33){
+            print_string("'HELLO WORLD!' recognized :)");
+        }
+        else{
+            print_string("'HELLO WORLD!' not recognized :(");
+        }
+    }
+
+}

@@ -1,0 +1,14 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package Test {
+    func square(a int) int {
+        a = a * a;
+        print_int(a);
+        return (a);
+    }
+    func main() int {
+        var x int;
+        square(x + 2);
+    }
+}

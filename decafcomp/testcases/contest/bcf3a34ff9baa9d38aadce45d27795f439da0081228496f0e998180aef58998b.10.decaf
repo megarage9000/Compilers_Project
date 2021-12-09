@@ -1,0 +1,39 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package foo {
+    var a [10] int;
+
+    func fun1(x int) void {
+        var i int;
+        i = 0;
+        while (i < 10) {
+          a[i] = i + x;
+          i = i + 1;
+        }
+    }
+    func fun3(x int) int {
+        var i int;
+        for (i = 0; i < 10; i = i + 1) {
+            x = x + a[i];
+        }
+        return(x);
+    }
+    func fun2(x int, bb bool) bool {
+        if(bb && x > 0) {
+            return(true);
+        } else {
+            return(false);
+        }
+    }
+    func main() int {
+        var x int;
+        var b bool;
+        fun1(1);
+        x = fun3(0);
+        b = fun2(x, true);
+        print_int(x);
+        print_string(" ");
+        print_int(b);
+    }
+}

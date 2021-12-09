@@ -1,0 +1,27 @@
+extern func print_int(int) void;
+
+package one {
+    func main() int {
+        var loop bool;
+        var end int;
+        loop = true;
+        end = 1;
+
+        if (loop) {
+            if(nottrue() && totallytrue()){
+                print_int(222222);
+            }
+            return;
+        }
+    }
+
+    func nottrue() bool{
+        print_int(0);
+        return(false);
+    }
+
+    func totallytrue() bool{
+        print_int(1);
+        return(true);
+    }
+}

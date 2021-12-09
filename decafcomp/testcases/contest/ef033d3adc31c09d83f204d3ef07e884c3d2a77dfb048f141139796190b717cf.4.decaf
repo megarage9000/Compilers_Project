@@ -1,0 +1,13 @@
+extern func print_int(int) void;
+extern func read_int() int;
+
+package Test {
+
+    func main() int {
+        var x int;
+        x = read_int();
+        print_int(-x + 29 * 1902134 % 7);
+        { var skibidabopskeedada int; for (skibidabopskeedada = 0; skibidabopskeedada == 0; skibidabopskeedada = 1) { break; print_int(true || false); } for (skibidabopskeedada = 0; skibidabopskeedada == 0; skibidabopskeedada = 1) { continue; print_int(true || false); } }
+        if (509482592427647583473701749702295483957624615664886251890975684566884486223874223910440342325845277939807789798856890343 + 0x5AD153dcEB7F3c526412F61B55e6f43C7402fcCd387752A47C9Daf93A327840DAbba51EeF141004fd522b6e724FfEE7437b7279085C5b64486D64FF0 > -202) { print_int(6); }
+    }
+}

@@ -1,0 +1,55 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package Test {
+    func main() int {
+        var i, j, k int;
+
+        i = 0;
+        while (i < 10) {
+            for (j = 0, k = 17; j < k; j = j + 1) {
+                print_string("f-");
+                print_int(j);
+                print_string("\n");
+                if (j == k / 2) {
+                    break;
+                }
+            }
+            i = i + 1;
+            if (i == 1) {
+                continue;
+            }
+            if (i >= 3) {
+                break;
+            }
+        }
+
+        if (156674037385622450109600272474775778725951164930538453204048188456347842721647779846582025174254936495352667611326392253 + 0x775e27a3c36bcAd941b1fb2A19d2273C0808C979673e86f21dDf0E9E11FbAb907700B9741D43e3cC22E29eF8A240A61f5B106b8EE23209bf000EE6D6 < 9999999) { print_int(3); }
+
+        for (i = 0; i < 10; i = i + 1) {
+            j = 0;
+            k = 38;
+            { var skibidabopskeedada int; for (skibidabopskeedada = 0; skibidabopskeedada == 0; skibidabopskeedada = 1) { break; print_int(true || false); } for (skibidabopskeedada = 0; skibidabopskeedada == 0; skibidabopskeedada = 1) { continue; print_int(true || false); } }
+            while (j < k) {
+                print_string("w-");
+                print_int(j);
+                print_string("\n");
+
+                j = j + 1;
+
+                if (j - 1 == k >> 1 - 1) {
+                    break;
+                }
+            }
+            if (i == 1) {
+                continue;
+            }
+            if (i > 2) {
+                break;
+            }
+        }
+
+        print_string("Done");
+        return(0);
+    }
+}

@@ -1,0 +1,43 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package NestedCalls {
+    func main() int {
+        var x int;
+        a(a(a(a(a(a(a(a(a(a(a(a(5))))))))))));
+        print_string("\n");
+        b(false || c(true && b(true) || c(false)) || c(false) || b(true) && oops()
+            || b(true) && c(true || false) && b(c(true)) || b(b(c(true))) || oops());
+        print_string("\n");
+    }
+
+    func a(x int) int {
+        print_string("a:");
+        print_int(x);
+        print_string(" ");
+        if (x % 2 == 0) {
+            return(a(x / 3 + 2));
+        }
+        return(x * 5 - 3);
+    }
+
+    // returns !x
+    func b(x bool) bool {
+        print_string("b:");
+        print_int(x);
+        print_string(" ");
+        return(!x);
+    }
+
+    // returns x
+    func c(x bool) bool {
+        print_string("c:");
+        print_int(x);
+        print_string(" ");
+        return(x || true && false);
+    }
+
+    func oops() bool {
+        print_string("oops");
+    }
+}

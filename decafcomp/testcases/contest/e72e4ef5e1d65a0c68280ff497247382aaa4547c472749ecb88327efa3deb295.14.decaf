@@ -1,0 +1,30 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+
+package EvansCompilerShredder {
+    
+    var x [100000]int; //Gosh, i sure hope everyone wespects memowy awwocation rules >.<
+    
+    func main() int {
+
+        var y int;
+        for(y = 0; y < 100000; y = y + 1){
+            
+            if( x[y] != 0 && x[200000] == 0 )
+            {
+                print_string("How did I get here? \n");
+
+                print_string("Letting the days go by! \n");
+                print_string("Let the water hold me down \n");
+                print_string("Letting the days go by! \n");
+                print_string("Water flowing underground \n");
+
+                break;
+            }
+        }
+
+        print_string("Same as it ever was");
+    }
+}
+

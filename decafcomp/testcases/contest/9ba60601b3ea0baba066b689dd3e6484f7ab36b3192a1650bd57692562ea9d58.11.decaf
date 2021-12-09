@@ -1,0 +1,18 @@
+extern func print_string(string) void;
+
+package arguments {
+    func main() int {
+        var b bool;
+        b = false && x();
+        if (b) {
+            print_string("y");
+        } else {
+            print_string("z");
+        }
+    }
+
+    func x() bool {
+        print_string("x");
+        return;
+    }
+}

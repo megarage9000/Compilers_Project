@@ -1,0 +1,22 @@
+extern func print_int(int) void;
+
+package Test3 {
+    func hailstone(a int) int {
+        if (a %2 == 0) {
+            return (a/2);
+        }
+        else {
+            return (3*a + 1);
+        }
+    }
+    func main() int {
+        var x int;
+        x = 5000;
+        while (x != 1) {
+            x = hailstone(x);
+            print_int(x);
+        }
+
+    }
+}
+

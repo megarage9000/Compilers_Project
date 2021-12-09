@@ -1,0 +1,15 @@
+extern func print_int(int) void;
+
+package Entry {
+
+    var entry bool = true;
+
+    func main() int {
+
+        if (entry) {
+            print_int(entry);
+        }
+        return (0);
+    }
+
+}

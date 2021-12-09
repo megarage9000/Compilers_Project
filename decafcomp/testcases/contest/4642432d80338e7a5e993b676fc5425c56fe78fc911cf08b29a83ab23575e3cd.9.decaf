@@ -1,0 +1,29 @@
+extern func print_int(int) void;
+
+package Power {
+
+    func pow(base int, n int) int {
+        var store int;
+
+        if (n == 0) {
+            return (1);
+        }
+        if (n == 1) {
+            return (base);
+        }
+
+        if (n % 2 == 0) {
+            store = pow(base, n / 2);
+            return (store * store);
+        } else {
+            store = pow(base, (n - 1) / 2);
+            return (base * store * store);
+        }
+    }
+
+    func main() int {
+        var x int;
+        x = pow(2, 27);
+        print_int(x); // should be 134,217,728
+    }
+}

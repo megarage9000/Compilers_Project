@@ -1,0 +1,43 @@
+extern func print_int(int) void; extern func f(string, string, string) void; extern func print_string(string) void;
+
+
+package g2 {
+  func main() int {
+    var i,j,k int;
+
+    for (i = 1, j = 2, k = 3; i < f(2); i = i + 1, j = j + 1, k = k + 1) {
+      print_int(i);
+      print_int(j);
+      print_int(k);
+      print_string("\n");
+      continue;
+      break;
+      return(-11);
+      continue;
+      break;
+      return(-11);
+      continue;
+      break;
+      return(-11);
+      continue;
+      break;
+      return(-11);
+      continue;
+      break;
+      return(-11);
+    }
+
+    print_string("\'");
+    return(0);
+  }
+
+  func f(a int) int {
+    var f int;
+    f = 1;
+    {
+      return(a * 10 * f);
+    }
+
+    return(0);
+  }
+}

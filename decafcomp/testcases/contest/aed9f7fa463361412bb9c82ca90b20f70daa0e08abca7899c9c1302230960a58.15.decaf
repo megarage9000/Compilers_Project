@@ -1,0 +1,23 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+package Test {
+    func foo() bool {
+        print_int(10);
+        return(true);
+    }
+    func main() int {
+        var x, y int;
+        x = 10;
+        y = 20;
+        if (x > y) {
+            print_string("X is bigger");
+        }
+        while (x % y > 2) {
+            print_string("Executed");
+            if (false && foo()) {
+                x = 0;
+            }
+            x = x >> 2;
+        }
+    }
+}

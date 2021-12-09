@@ -1,0 +1,79 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package test{
+	var arr[7] int;
+	var n int;
+
+	func main() int{
+		var i int;
+		var pos int;
+		n = 7;
+		pos = 2;
+		arr[0] = 2;
+		arr[1] = 4;
+		arr[2] = 14;
+		arr[3] = 23;
+		arr[4] = 22;
+		arr[5] = 9;
+		arr[6] = 12;
+		print_string("Array: ");
+		printArray();
+		splitArr(pos);
+		print_string("Array after spliting: ");
+		printArray();
+
+		rightRotate(3);
+		print_string("Array after roatating: ");
+		printArray();
+		return(0);
+	}
+
+	func splitArr(k int) void{
+		var i int;
+		for(i =0; i<k; i = i+1){
+			var x int;
+			var j int;
+			x = arr[0];
+
+			for(j = 0; j<n-1; j= j+1){
+				arr[j] = arr[j +1];
+			}
+			arr[n-1] = x;
+		}
+	}
+
+	func reverseArray(start int, end int) void {
+        while(start < end){
+            swapArrayElement(start, end);
+            start= start + 1;
+            end= end -1;
+            continue;
+            break;
+        }
+    }
+	
+	 func rightRotate(d int) void {
+        reverseArray(0, n-1);
+        reverseArray(0, d-1);
+        reverseArray(d, n-1);
+    }
+
+    func swapArrayElement (l int , r int) void {
+		var temp int ;
+		temp = arr[l];
+		arr[l] = arr[r];
+		arr[r] = temp;
+	}
+
+	func printArray() void {
+	    var i int;
+	    print_int(arr[0]);
+	    for(i =1; i < n; i = i+ 1){
+	      print_string(", ");
+	      print_int(arr[i]);   
+	    }
+    	print_string("\n");
+ 	 }
+}
+

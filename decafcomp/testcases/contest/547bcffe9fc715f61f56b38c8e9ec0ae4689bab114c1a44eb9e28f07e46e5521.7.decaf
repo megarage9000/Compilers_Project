@@ -1,0 +1,25 @@
+extern func print_int(int) void; extern func c______(int, int, int, int, int) bool; extern func print_string(string) void;
+
+package a {
+  var i int = 1;
+
+  func other_func() bool {
+    var i bool;
+    i = true;
+    if (i) {
+      return();
+      if (i) {
+        return(false);
+      }
+    }
+
+    return(false);
+  }
+
+  func main() int {
+    if (!other_func()) {
+      return(-11);
+    }
+    print_int(0xdEaDbEeF);
+  }
+}

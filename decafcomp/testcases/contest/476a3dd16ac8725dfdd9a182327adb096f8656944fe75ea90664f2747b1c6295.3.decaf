@@ -1,0 +1,17 @@
+extern func print_int(int) void;
+package Test {
+    func main() int
+    {
+        var x int;
+        var y int;
+
+        x = 2;
+        y = 3 * 7 - 40 / 2;
+
+        if (y > x) {
+            print_int(y);
+        } else {
+            print_int(x);
+        }
+    }
+}

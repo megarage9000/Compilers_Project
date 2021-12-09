@@ -1,0 +1,20 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package loop {
+    func getCondition() bool {
+        return (true);
+    }
+
+    func main() int {
+        var x int;
+        x = 1;
+        while(getCondition()) {
+            if (x == 2) {
+                print_int(5);
+                break;
+            }
+            x = x + 1;
+        }
+    }
+}

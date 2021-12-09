@@ -1,0 +1,35 @@
+extern func print_int(int) void;
+
+package C {
+    var num int;
+    func main() int {
+        var i int;
+        for (i = 0; i < 10; i = i + 1) {
+          if (i % 2 == 0) {
+            var i int;
+            for(i = 5; i< 10; i= i+1) {
+              if(test(i)) {
+                num = num + 1;
+                print_int(num);
+                }
+              else {
+                continue;
+                }
+            }
+            }
+            else{
+             break;
+            }
+          
+          print_int(i);
+        }
+	     print_int (0);
+      return (0);
+    }
+
+    func test(a int) bool{
+        return (a % 2 == 0);
+    }
+}
+
+

@@ -1,0 +1,38 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package EvansCompilerShredder {
+    
+    func main() int { 
+
+        var x, y, z, w int;
+        for(
+            x = 0, 
+            y = 0, 
+            z = 0, 
+            w = 0; 
+            
+           (x < 10 && 
+            y < 100 && 
+            z < 100 && 
+            w < 100 );
+
+            x = x + 1,
+            y = x - 1,
+            z = x + y,
+            w = z + z
+        ){
+            print_int(x);
+            print_int(y);
+            print_int(z);
+            print_int(w);
+
+            print_string(".");
+        }
+        
+        print_int(x);
+        print_int(y);
+        print_int(z);
+        print_int(w);
+    }
+}

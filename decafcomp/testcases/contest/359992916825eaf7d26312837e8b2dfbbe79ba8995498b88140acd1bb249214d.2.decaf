@@ -1,0 +1,24 @@
+extern func print_int(int) void;
+
+package hello {
+    func main() int {
+        var x int;
+        while(true) {
+            x = x + 1;
+            
+            while (true) {
+                if (x == 1 || hello1(x)) {
+                    break;
+                }
+            }
+            
+            break;
+        }
+        
+        print_int(2);
+    }
+    
+    func hello1(x int) bool {
+        return(hello1(x));
+    }
+}

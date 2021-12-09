@@ -1,0 +1,47 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+extern func read_int() int;
+
+package IsPrime {
+    func main() int {
+        while(true) {
+            var n int;
+            print_string("Enter a number (negative to exit): ");
+            n = read_int();
+            print_string("\n");
+            
+            if (n < 0) {
+                print_string("Exiting...\n");
+                break;
+            }
+
+            if (isPrime(n)) {
+                print_int(n);
+                print_string(" is prime.\n");
+            }
+            print_string("\n");
+        }
+    }
+
+    func isPrime(n int) bool {
+        var i int;
+        var prime bool;
+        prime = true;
+
+        for (i = 2; i <= (n/2); i = i + 1) {
+            if (isDivisibleBy(n, i)) {
+                print_int(n);
+                print_string(" is divisible by ");
+                print_int(i);
+                print_string(".\n");
+                prime = false;
+            }
+        }
+
+        return(prime);
+    }
+
+    func isDivisibleBy(n int, i int) bool {
+        return(n % i == 0);
+    }
+}

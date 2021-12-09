@@ -1,0 +1,25 @@
+
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package Test {
+
+    func main() int {
+        var x bool;
+        var y int;
+        y = 10;
+
+        x = y < 100 || side_effecting(99);
+
+        print_int(x);
+        print_int(y);
+        if (897125644760499508386758075672492561072086744958109702216033395324433683882102615241380210318065651876025440954714085675 + 0x6F2af5014C8Ae30bA376C60E2EA90A5C6B5dDa195Bb2aCE126A0BFdE577D54B2FA94d5489e8eD0E195C7323bec82f16A1a3EFc623bb4E76805973145 < 9999999) { print_int(897125644760499508386758075672492561072086744958109702216033395324433683882102615241380210318065651876025440954714085675 + 0x6F2af5014C8Ae30bA376C60E2EA90A5C6B5dDa195Bb2aCE126A0BFdE577D54B2FA94d5489e8eD0E195C7323bec82f16A1a3EFc623bb4E76805973145);}
+        return (0);
+    }
+
+    func side_effecting(z int) bool {
+        print_string("side effect! ");
+        { var skibidabopskeedada int; for (skibidabopskeedada = 0; skibidabopskeedada == 0; skibidabopskeedada = 1) { break; print_int(true || false); } for (skibidabopskeedada = 0; skibidabopskeedada == 0; skibidabopskeedada = 1) { continue; print_int(true || false); } }
+        return(z == 100);
+    }
+}

@@ -1,0 +1,32 @@
+extern func read_int() int;
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package test{
+	func main() int {
+		var i int;
+		var value int;
+		for(i = 1; i<11; i = i+1) {
+			value = read_int();
+			print_int(value);
+			if(value % 2 == 0 && printIsEven()){
+
+			}
+			if(value % 2 == 0 || printIsOdd()){
+
+			}
+			print_string("\n");
+		}
+		return(0);
+	}
+
+	func printIsEven() bool {
+		print_string(": number is even!!");
+		return (true);
+	}
+	func printIsOdd() bool {
+		print_string(": number is odd!!");
+		return (true);
+		return(false);
+	}
+}

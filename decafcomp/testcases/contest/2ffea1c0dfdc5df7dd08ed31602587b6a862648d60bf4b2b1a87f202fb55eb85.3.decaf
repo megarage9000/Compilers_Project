@@ -1,0 +1,35 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package thoroughForLoopTest {
+
+  func main() int {
+    var x int;
+    var j int;
+    for (x = 0; x < 1; x = x + 1) {
+      print_string("at 1st outer loop\n");
+      for (j = 0; j < 2; j = j + 1) {
+        print_string("at 1st inner loop\n"); //Should be printed twice
+        continue;
+      }
+      for (j = 0; j < 2; j = j + 1) {
+        print_string("at 2nd inner loop\n"); //Should be printed once
+        break;
+      }
+      for (j = 0; j < 2; j = j + 1) {
+        //block can be empty! No print.
+      }
+      for (j = 0; j < 0; j = j + 1) {
+        //cond can be false from start!
+        print_string("at 4th inner loop\n"); //Should be printed never!
+      }
+      for (j = 0; j < 0; j = j + 1) {
+        continue;
+        print_string("at 4th inner loop\n"); //Should be printed never!
+      }
+      
+    }
+    print_string("end program\n");
+    return(0);
+  }
+}

@@ -1,0 +1,23 @@
+// short circuit
+extern func print_int(int) void;
+
+package ShortCircuit{
+
+	func forever() bool {
+		while (true) {}
+		return (false);
+	}
+
+	func main() int {
+		var x bool;
+
+		print_int(x); // test default value of false
+		x = false;
+		print_int(x);
+
+		if (x && forever() || !x || forever()) {
+			return (0);
+		}
+		return (1);
+	}
+}

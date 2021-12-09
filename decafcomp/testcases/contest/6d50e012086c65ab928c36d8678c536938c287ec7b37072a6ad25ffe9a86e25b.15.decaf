@@ -1,0 +1,53 @@
+// based upon C code from: https://slaystudy.com/c-program-to-print-pascals-triangle/
+
+extern func print_string(string) void;
+extern func print_int(int) void;
+extern func read_int() int;
+
+package PascalsTriangle {
+    var ARRAY_LEN int = 1000;
+    var arr [1000000]int; // 1000 * 1000, 2D array, 4 bytes per int = 4MB
+
+    func main() int {
+        var n int;
+        print_string("How many rows of Pascal's triangle would you like (max ");
+        print_int(ARRAY_LEN);
+        print_string(")?\n");
+        n = read_int();
+
+        if (n > ARRAY_LEN) {
+            n = ARRAY_LEN;
+        }
+
+        pascalsTriangle(n);
+    }
+
+    func pascalsTriangle(n int) void {
+        var i, j int;
+
+        for (i = 0; i < n; i = i + 1) {
+            for (j = 0; j < n - 1 - i; j = j + 1) {
+                print_string(" ");
+            }
+
+            for (j = 0; j <= i; j = j + 1) {
+                if (j == 0 || j == i) {
+                    arr[index(i, j)] = 1;
+                }
+                else {
+                    arr[index(i, j)] = arr[index(i-1, j-1)] + arr[index(i-1, j)];
+                }
+
+                print_int(arr[index(i, j)]);
+                print_string(" ");
+            }
+
+            print_string("\n");
+        }
+    }
+
+    // get a 1D index from a 2D index
+    func index(x int, y int) int {
+        return(x * ARRAY_LEN + y);
+    }
+}

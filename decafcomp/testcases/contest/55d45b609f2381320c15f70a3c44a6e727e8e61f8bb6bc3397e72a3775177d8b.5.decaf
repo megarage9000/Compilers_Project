@@ -1,0 +1,16 @@
+extern func print_int(int) void;
+
+package Test {
+	func main() int{
+		var x bool;
+		x = true;
+
+        // testing booleans
+        if (x) {
+            print_int(10);
+        }
+        else {
+            print_int(-10);
+        }
+    }
+}

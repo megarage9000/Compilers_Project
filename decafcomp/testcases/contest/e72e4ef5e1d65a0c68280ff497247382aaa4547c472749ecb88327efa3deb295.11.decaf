@@ -1,0 +1,18 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package EvansCompilerShredder {
+    
+    func main() int {
+        
+        while(true){
+            while(true){
+                if(true) { break; }
+            }
+            print_string("Hello ");
+            break;
+        }
+        print_string("World!");
+    }
+
+}

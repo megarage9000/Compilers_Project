@@ -1,0 +1,14 @@
+extern func print_int(int) void;
+
+package foo {
+    func main() int {
+        var size, comp int;
+
+        size = 5 << 2 / 2 % 10 - 3 * 2 / 2 >> 2;
+        comp = 0;
+
+        if (size >= comp) {
+            print_int(size);
+        }
+    }
+}

@@ -1,0 +1,30 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package factorial {
+  func main() int {
+    print_int(factorial(5));
+    print_string("\n");
+    print_int(factorial(0));
+
+    return (0);
+  }
+  func factorial(target int) int {
+      var start int;
+      var prod int;
+
+      if (target <= 0) {
+          print_string("Bad input!\n");
+          return (0);
+      }
+
+      prod = target;
+      start = target - 1;
+      while (start != 0) {
+          prod = prod * start;
+          start = start - 1;
+      }
+
+      return (prod);
+  }
+}

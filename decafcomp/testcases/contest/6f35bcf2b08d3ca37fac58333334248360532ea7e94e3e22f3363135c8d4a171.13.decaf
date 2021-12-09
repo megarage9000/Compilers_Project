@@ -1,0 +1,13 @@
+extern func print_int(int) void;
+extern func read_int() void;
+
+package packagename {
+	func main() int {
+		var x int;
+		x = read_int();
+		print_int(x);
+	}
+	func read_int() int {
+		return(1337);
+	}
+}

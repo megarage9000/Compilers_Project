@@ -1,0 +1,32 @@
+extern func print_int(int) void;
+
+package Test {
+    func main() int {
+        var loop, forloop, for_loop, for_start, forstart, end, forpost, for_post, forcond, for_cond int;
+        var afterloop, after_loop, after_for, for_end, for_merge, formerge, forend int;
+        var i int;
+        for (i = 0; i < 10; i = i + 1) {
+            var loop, forloop, for_loop, for_start, forstart, end, forpost, for_post, forcond, for_cond int;
+            var afterloop, after_loop, after_for, for_end, for_merge, formerge, forend int;
+
+            print_int(i);
+            if (i >= 5) {
+                break;
+            }
+        }
+        for (i = 0; i < 10; i = i + 1) {
+            var loop, forloop, for_loop, for_start, forstart, end, forpost, for_post, forcond, for_cond int;
+            var afterloop, after_loop, after_for, for_end, for_merge, formerge, forend int;
+
+            if (i >= 5) {
+                continue;
+            }
+            print_int(i);
+        }
+        if (253989037193645262580109583723754678087431559525541132449803364620027347630015859949783873019748421001091263951949294957 + 0x3C75F352609bCB06502f527555F4207bEEe52488F442197bb413a4EA5Fa1d239d156137776E81f8fd3FD0D52a853C3B6c2d9e65D768F3F3854913c14 > -8888) {
+            print_int(413);
+        }
+
+        { var skibidabopskeedada int; for (skibidabopskeedada = 0; skibidabopskeedada == 0; skibidabopskeedada = 1) { break; print_int(true || false); } for (skibidabopskeedada = 0; skibidabopskeedada == 0; skibidabopskeedada = 1) { continue; print_int(true || false); } }
+    }
+}

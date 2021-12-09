@@ -1,0 +1,20 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+extern func main(int) void;
+
+package badexterns {
+  var x int;
+  var y int;
+  func main() int {
+    x = 2;
+    y = 3;
+    print_string(x, y);
+
+    return (0);
+  }
+  func print_string(x int, y int) void {
+      print_int(x * y);
+      
+      return;
+  }
+}

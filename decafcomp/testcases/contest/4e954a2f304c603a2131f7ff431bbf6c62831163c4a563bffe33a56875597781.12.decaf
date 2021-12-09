@@ -1,0 +1,36 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package boolpromo {
+  func main() int {
+    intsonly((false && (true || false)), (true || (false && false || (false && (false || true)))), (true || false || (true && false)));
+    intsonly((false && (true || false)), ((true || (false && false || (false && (false || true)))) && false), (false || (true && false)));
+
+    return (0);
+  }
+  func intsonly(x int, y int, z int) void {
+      var sum int;
+      var diff int;
+      var prod int;
+      var div int;
+
+      if (y == 0 || z == 0) {
+          print_string("Division by zero!");
+          return;
+      }
+
+      sum = x + y + z;
+      diff = x - y - z;
+      prod = x * y * z;
+      div = x / y / z;
+
+      print_int(sum);
+      print_string("\n");
+      print_int(diff);
+      print_string("\n");
+      print_int(prod);
+      print_string("\n");
+      print_int(div);
+      print_string("\n");
+  }
+}

@@ -1,0 +1,14 @@
+extern func print_string(string) void;
+
+package forawhile {
+    func main() int {
+        while (true) {
+            var i int;
+            for (i = 0; i < 5; i=i+1) {
+                continue;
+            }
+            print_string("ok");
+            break;
+        }
+    }
+}

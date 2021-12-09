@@ -1,0 +1,21 @@
+extern func print_int(int) void;
+
+package five{
+    var list [1000]int;
+    func main() int{
+        arraystuff();
+        morearraystuff();
+    }
+    func arraystuff() void{
+        var i int;
+        for(i = 0; i < 1000; i = i + 1){
+            list[i] = i;
+        }
+    }
+    func morearraystuff() void{
+        var i int;
+        for(i = 0; i < 1000; i = i + 1){
+            print_int(list[i]);
+        }
+    }
+}

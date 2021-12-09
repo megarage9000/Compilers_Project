@@ -1,0 +1,28 @@
+extern func print_int(int) void; extern func ____(int, int, int, int, int, string) void; extern func print_string(string) void;
+
+package a {
+  var a, b, c, d [100]int;
+  func main() int {
+    var i int;
+    var j bool;
+    if (j) {
+      return(-11);
+    }
+
+    for (j = true; i < 100; i = i + 1) {
+      if (a[i] != b[i]) {
+        return(-11);
+      }
+      if (b[i] != c[i]) {
+        return(-11);
+      }
+      if (d[i] != c[i]) {
+        return(-11);
+      }
+      if (a[i] != 0) {
+        return(-11);
+      }
+    }
+    print_int(j);
+  }
+}

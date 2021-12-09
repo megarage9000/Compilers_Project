@@ -1,0 +1,45 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+// This creates a set of extern functions that shadow the name of
+// methods in this package. If a compiler does not handle the
+// linkage, symbols, and types correctly they will have issues.
+
+extern func foo(string) bool;
+extern func bar(string) void;
+extern func baz(string) int;
+
+package DecafDestroyer {
+    func main() int {
+        foo(1);
+        bar(false);
+        baz();
+
+        print_string("9: extern_shadow_methods\n");
+    }
+
+    func foo(x int) void {
+        print_int(x);
+
+        x = 42;
+        print_int(x);
+
+        print_string("-- 9: extern_shadow_foo\n");
+    }
+
+    func bar(y bool) void {
+        print_int(y);
+
+        y = true;
+        print_int(y);
+
+        y = false;
+        print_int(y);
+
+        print_string("-- 9: extern_shadow_bar\n");
+    }
+
+    func baz() void {
+        print_string("-- 9: extern_shadow_baz\n");
+    }
+}

@@ -1,0 +1,73 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package test{
+	var arr[10] int;
+
+	func exponentialSearch(n int, x int) int{
+		var i int;
+		if(arr[0] == x){
+			return(0);
+		}
+		i = 1;
+		while(i< n && arr[i] <= x){
+			i = i*2;
+		}
+
+		return (binarySearch(i/2, min(i, n-1), x));
+	}
+
+	func min(a int, b int) int {
+		if(a < b){
+
+			return (a);
+		}
+		return (b);
+	}
+
+	func binarySearch(l int, r int, x int) int{
+
+		if(r >= l){
+			var mid int;
+			mid = l + (r-l)/2;
+			if(arr[mid] == x){
+				return (mid);
+			}
+
+			if(arr[mid] > x){
+				return (binarySearch(l, mid -1, x));
+			}
+
+			return (binarySearch(mid+ 1, r, x));
+		}
+		return (-1);
+	}
+
+	func main() int{
+		var size int;
+		var x int;
+		var result int;
+		x = 30;
+
+		size = 10;
+		arr[0] = 2;
+		arr[1] = 4;
+		arr[2] = 14;
+		arr[3] = 23;
+		arr[4] = 25;
+		arr[5] = 30;
+		arr[6] = 49;
+		arr[7] = 57;
+		arr[8] = 93;
+		arr[9] = 220;
+		result = exponentialSearch(size, x);
+		if(result == -1) {
+			print_string("Element is not present in array\n");
+		}
+		else {
+			print_string("Element is present in array at index: ");
+			print_int(result);
+		}
+		return(0);
+	}
+}

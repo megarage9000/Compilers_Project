@@ -1,0 +1,28 @@
+extern func print_int(int) void; extern func ____(int, int, int, int, int, string) void; extern func print_string(string) void;
+
+
+package _____________ {
+
+
+  func main() int {
+    return(y());
+    print_string("hey");
+  }
+
+  func y() int {
+    if (!x(5)) {
+      return(-1 + -10);
+      print_string("hey");
+    }
+
+    return;
+    print_string("hey");
+  }
+
+  func x(x int) bool {
+    { var x int; x = 1; }
+    { var x bool; x = true; print_int(x); }
+    { var x int; print_int(x); }
+    { print_string("hi"); }
+  }
+}

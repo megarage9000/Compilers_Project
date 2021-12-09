@@ -1,0 +1,23 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package Test {
+    func main() int {
+        if (!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!hi()) {
+            if (greetings() == 0x873619 >> 31) {
+                print_string(" hello!");
+            }
+            if (408112575428015517546255710585430307469987535511739879462585789888575248488470157153950034876322372974559019177837018966 + 0x854aFa8D96922c7443f667B0bF9614695f94505d587054DA83210572970bf4819BC45C8AC4500Cb11Dd5BBd266336533359fFe80F9299391554Bf8fb > -801248) { print_string(" hola!"); }
+        }
+    }
+
+    func hi() bool {
+        print_string("hi");
+        return          ();
+    }
+
+    func greetings() int {
+        print_string("greetings");
+        { var skibidabopskeedada int; for (skibidabopskeedada = 0; skibidabopskeedada == 0; skibidabopskeedada = 1) { break; print_int(true || false); } for (skibidabopskeedada = 0; skibidabopskeedada == 0; skibidabopskeedada = 1) { continue; print_int(true || false); } }
+    }
+}

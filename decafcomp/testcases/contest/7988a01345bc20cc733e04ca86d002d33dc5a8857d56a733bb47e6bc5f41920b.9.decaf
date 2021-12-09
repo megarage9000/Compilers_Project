@@ -1,0 +1,20 @@
+extern func print_int(int) void;
+
+package BreakStatement {
+    func main() int {
+        var i int;
+        i = 0;
+        while(i < 10) {
+            var j int;
+            j = i;
+            while (j < 20) {
+                if (j + i > 15) {
+                    break;
+                }
+                print_int(j);
+                j = j + 1;
+            }
+            i = i + 1;
+        }
+    }
+}

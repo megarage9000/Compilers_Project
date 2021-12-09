@@ -1,0 +1,62 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+// From advent of code 2021 day 6
+package Lanternfish {
+
+    var fishes [5] int;
+    var ages[9] int;
+    var temp[9] int;
+
+    func initialize_problem() void {
+        fishes[0] = 3;
+        fishes[1] = 4;
+        fishes[2] = 3;
+        fishes[3] = 1;
+        fishes[4] = 2;
+    }
+
+    func solve() int {
+        var i int;
+        var days int;
+        var count int;
+        count = 0;
+        for (i = 0; i < 5; i = i + 1) {
+            var age int;
+            age = fishes[i];
+            ages[age] = ages[age] + 1;
+        }
+
+        for (days = 0; days < 80; days = days + 1) {
+            for (i = 0; i < 9; i = i + 1) {
+                temp[i] = 0;
+            }
+
+            for (i = 0; i < 9; i = i + 1) {
+                if (i == 0) {
+                    temp[6] = temp[6] + ages[i];
+                    temp[8] = temp[8] + ages[i];
+                }
+                else {
+                    temp[i - 1] = temp[i-1] + ages[i];
+                }
+            }
+
+            for (i = 0; i < 9; i = i + 1) {
+                ages[i] = temp[i];
+            }
+        }
+
+        for (i = 0; i < 9; i = i + 1) {
+            count = count + ages[i];
+        }
+        
+        return (count);
+    }
+
+    func main() int {
+        initialize_problem();
+        print_int(solve());
+        return(0);
+    }
+}

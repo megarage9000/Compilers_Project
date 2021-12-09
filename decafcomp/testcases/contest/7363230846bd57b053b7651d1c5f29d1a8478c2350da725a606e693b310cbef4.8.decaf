@@ -1,0 +1,16 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+// This test case ensures people correctly handle hex literals with
+// uppercase X's as well. Turns out default test cases don't have that...
+
+package DecafDestroyer {
+    func main() int {
+        var x int;
+
+        x = 0x42;
+        x = 0X42;
+
+        print_string("7: upper_lower_hex_literal");
+    }
+}

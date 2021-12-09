@@ -1176,7 +1176,10 @@ public:
 	llvm::Value *Codegen() {
 		// For now we assume we don't store / allocate extern parameters
 		try {
-			return defineExtern(returnType, argTypes, func_name, llvm_id);
+			if(func_name != "main"){				
+				return defineExtern(returnType, argTypes, func_name, llvm_id);
+			}
+			return nullptr;
 		} catch (std::exception &e) {
 			throw_semantic_error(e.what());
 			return nullptr;

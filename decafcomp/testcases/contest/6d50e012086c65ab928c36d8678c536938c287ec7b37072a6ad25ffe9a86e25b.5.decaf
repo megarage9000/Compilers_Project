@@ -1,0 +1,9 @@
+extern func print_string(string) void;
+
+package CommentCRNoLF {
+    func main() int {
+        print_string("Not commented out\n");
+        // this is a comment        print_string("This is commented out (previous comment ends in CR, not CRLF or LF)...\n");
+        print_string("Not commented out\n");
+    }
+}

@@ -1,0 +1,54 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package InsertionSort {
+
+    var arr [10]int;
+
+    func cr() void { print_string("\n"); }
+
+    func displayList(start int, len int) void {
+		var j int;
+		print_string("List:\n");
+		for (j = start; j < start + len; j = j + 1) {
+			print_int(arr[j]);
+			print_string(" ");
+			if ((j - start + 1) % 20 == 0 || j + 1 == start + len) {
+				cr();
+			}
+		}
+	}
+
+    func initList(size int) void {
+		var i int;
+		for (i = 0; i < size; i = i + 1) {
+			arr[i] = (i * 2382983) % 100;
+		}
+	}
+
+    func insertionSort(n int) void {
+        var i int;
+        var key int;
+        var j int;
+        for(i = 1; i < n; i = i +1){
+            key = arr[i];
+            j = i - 1;
+            while(j>=0 && arr[j] > key){
+                arr[j + 1] = arr[j];
+                j = j - 1;
+            }
+            arr[j + 1] = key;
+        }
+    }
+    
+    func main() int {
+        var n int;
+        n = 10;
+        initList(10);
+        displayList(0,n);
+        insertionSort(n);
+        displayList(0,n);
+        return(0);
+    }
+
+}

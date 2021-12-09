@@ -1,0 +1,34 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+package Test {
+    var foo int = 42;
+    var fooTheSecond [5] int;
+    var fooTheThird bool;
+    var fooTheFourth [5] bool;
+
+    func fooTheFUNction() bool {
+        fooTheSecond[1] = 10;
+        return(true);
+    }
+
+    func main() int {
+        fooTheSecond[1] = foo;
+        if (false && fooTheFUNction()) {
+            print_string("Should reach here");
+        }
+        if (10 % 8 > 10) {
+            fooTheThird = true;
+        } else {
+            fooTheThird = false;
+        }
+        while (fooTheThird) {
+            print_int(10);
+            break;
+        }
+        fooTheFourth[3] = fooTheThird;
+        fooTheFourth[2] = false;
+        print_int(fooTheFourth[3]);
+        print_int(fooTheFourth[2]);
+        print_int(fooTheSecond[1]);
+    }
+}

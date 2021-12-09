@@ -1,7 +1,0 @@
-package C {
-	func f() void {
-		while (true) {
-			break;
-		}
-	}
-}

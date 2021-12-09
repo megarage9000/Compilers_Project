@@ -1,0 +1,14 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package index {
+    var a[255] int;
+
+    func main() int {
+        a['a'] = 127;
+        print_int(a['a']);
+        print_int(a[0x61]);
+        print_int(a[0x60]);
+        print_int(a[0x62]);
+    }
+}

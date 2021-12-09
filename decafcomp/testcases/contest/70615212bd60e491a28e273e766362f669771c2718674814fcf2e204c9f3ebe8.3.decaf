@@ -1,0 +1,26 @@
+extern func print_int(int) void;
+
+package C {
+
+    func main() int {
+        print_int(foo1(false));
+		return(0);
+    }
+
+    func foo1(a bool) int {
+        var i int;
+        if(a == true) {
+            i = 100;
+            return (i);
+        }
+        return (0);
+    }
+
+    func foo2() int {
+        var a int;
+        a = foo1(true);
+        return(a); 
+    }
+}
+
+

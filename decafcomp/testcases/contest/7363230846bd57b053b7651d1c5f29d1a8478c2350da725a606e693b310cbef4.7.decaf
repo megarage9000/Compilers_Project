@@ -1,0 +1,15 @@
+//extern func print_int(int) void;
+extern func print_string(string) void;
+
+package DecafDestroyer {
+    // This test case creates a field with the same name as a stdlib extern function.
+    // Compilers that erase the previous declaration and do linkage incorrectly
+    // will fail at linking due to multiple definitions.
+    var print_int int;
+
+    func main() int {
+        print_int = 1;
+
+        print_string("6: field_shadow_stdlib\n");
+    }
+}

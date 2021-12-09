@@ -1,0 +1,20 @@
+extern func print_string(string) void;
+
+package PrintReturn {
+    var x int = 0;
+
+    func main() int {
+        {
+            x = returnOne();  
+            {
+                print_string("1");
+            }
+        }
+    }
+
+    func returnOne() int {
+        {
+            return(1);
+        }
+    }
+}

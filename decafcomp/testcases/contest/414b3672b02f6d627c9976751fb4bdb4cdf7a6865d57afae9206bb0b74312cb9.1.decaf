@@ -1,0 +1,105 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package very_small {
+    var size int = 100;
+    var list1 [100] int;
+    var list2 [200] bool;
+
+    func main() int {
+        print_int(funcCheck());
+        print_int(breakContinueCheck());
+        print_int(true && shortCircuitCheck());
+        print_int(15+arrayCheck(size)*2);
+    }
+
+    func funcCheck() int {
+        return (12+func1());
+    }
+
+    func func1() int {
+        return (intcast(func2())+intcast(func2()));
+    }
+
+    func func2() bool {
+        return (-6%4 == -2);
+    }
+
+    func intcast(x int) int {
+        return (((x)));
+    }
+
+    func breakContinueCheck() int {
+        var a, b, c, l int;
+        var times int;
+        print_string("\n    here    \n");
+        times = 0;
+        l = 2;
+        for (a = 0; a < 20; a = a + 1) {
+            if (a == 2 || a == 4 || a == 6) { continue; }
+                for (b = 0; b < 20; b = b + 1) {
+                    if (a == 2 && b == 4) { continue; }
+                        while (c < 20) {
+                            c = c + 1;
+                            if (a == 8 && b == 1 && c == 3 || c == 4) { continue; }
+                            for (l = 0; l < 10; l = l + 1) {
+                                if (a == 1 && b == 7 && c == 4 && l == 1) { continue; }
+                                times = times + 1;
+                                if (a == 3 && b == 2 && c == 6 && l == 4) { break; }
+                            }
+                            if (a == 2 && b == 7 && c == 2) { continue; }
+                        }
+                    if (a == 8 && b == 1) { break; }
+                }
+            if (a == 9) { break; }
+            else {
+                print_string(" sad ");
+            }
+        }
+        print_int(times);
+    }
+
+    func shortCircuitCheck() bool {
+        var a, b int;
+        var w, d bool;
+        a = 25;
+        w = a < (10*5) && true || error1(a) && error2(a,a) || true;
+        print_int(w);
+        return ();
+    }
+
+    func error1 (x int) bool {
+        print_string("bad");
+    }
+
+    func error2 (x int, y int) bool {
+        print_string("bad2");
+    }
+
+
+    func arrayCheck(size int) int {
+        var a int;
+        var b bool;
+        b = false==false;
+        list2[10] = b;
+        print_string("\n");
+        print_int(list1[0]);
+        print_int(list2[0]);
+        print_string("\n");
+        print_string("\n");
+        print_int(list2[10]);
+        for (a = 0; a < size; a = a + 1) {
+            list2[a*2] = b;
+            list1[a] = (a * 345382) % size;
+            if (a == 10) {
+                print_int(list1[a]);
+                print_int(list2[a*2]);
+            }
+        }
+        list1[0] = 1293891293849127387123871237128378173812379812793791872324323233524155141234251231231236141415141323145523231451231313293847184764917593074671020385656128103484612894712846182947162638264563030483649174639457374843837194058236462832918563734923613749217475712947618361839461288373746129471647312137127388138461648192847462839494756193958471263849193846371992846272818237451273718839193747172838172637218281726361849549634923852923499139827245819134913718193194918328737174712764628405028375830418374819374749175 + 0X8367187365729302847573184812737217417218219409278482193927371920403847292818237187313934943814818a9348128839139318138B9383481273712836743719274713874712738283717264930481847127482394838391041731748290219129239F9283821932130172387127127367162163818283929129299919d9192838293891238198737128171274126435134519104172456124841261236238187136124621621812812371761281282942825765291031713812694781273981297948812083081209301993983282898e9328481394381374137171277d93984812982381291291291912931919d;
+        print_string("\n");
+        print_int(list1[0]);
+        return;
+    }
+
+}

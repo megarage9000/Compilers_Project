@@ -1,0 +1,13 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package EvansCompilerShredder {
+    func main() int {
+        while(true && -(0 + cast(!false)) - 4 >> 2 - 1 != -3) { }
+        print_string("Just a normal program");
+    }
+
+    func cast(x int) int {
+        return(x);
+    }
+}

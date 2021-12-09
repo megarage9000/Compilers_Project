@@ -1,0 +1,24 @@
+extern func print_int(int) void;
+
+package blah
+{
+    var i, j int;
+    var sum_kind_of int = 0;
+    func main() int
+    {
+        i = 0;
+        while (i < 5)
+        {
+            for (j = 0; j < 5; j = j+1)
+            {
+                sum_kind_of = sum_kind_of + i + j;
+            }
+            i = i + 1;
+            if (i % 3 == 0)
+            {
+                continue;
+            }
+        }
+        print_int(sum_kind_of);
+    }
+}

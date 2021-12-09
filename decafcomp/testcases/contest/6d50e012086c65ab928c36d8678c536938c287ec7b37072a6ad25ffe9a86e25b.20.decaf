@@ -1,0 +1,68 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package ArrayFun {
+    var ARRAY_LEN int = 200;
+    var intArray [0xc8] int;
+    var boolArray [0XC8] bool;
+
+    func main() int {
+        initIntArray();
+        initBoolArray();
+
+        if (!verifyIntArray() || !verifyBoolArray()) {
+            oops();
+            return;
+        }
+
+        print_string("success!\n");
+    }
+
+    func initIntArray() void {
+        var i int;
+
+        for (i = 0; i < ARRAY_LEN; i = i + 1) {
+            intArray[i] = intArray[i] + i; // set to i (default is 0)
+        }
+    }
+
+    func initBoolArray() void {
+        var i int;
+
+        for (i = 0; i < ARRAY_LEN; i = i + 1) {
+            // set even indices to true, odd to false
+            if (i%2 == 0) {
+                boolArray[i] = !!!boolArray[i] || oops(); // set to true (default false, !!!false = !false = true)
+            }
+            else {
+                boolArray[i] = !!!!boolArray[i] && oops(); // set to false (default false, !!!!false = !!false = false)
+            }
+        }
+    }
+
+    func verifyIntArray() bool {
+        var i int;
+
+        for (i = 0; i < ARRAY_LEN; i = i + 1) {
+            if (intArray[i] != i) {
+                oops();
+                return(false);
+            }
+        }
+    }
+
+    func verifyBoolArray() bool {
+        var i int;
+
+        for (i = 0; i < ARRAY_LEN; i = i + 1) {
+            if (boolArray[i] != (i % 2 == 0)) {
+                oops();
+                return(false);
+            }
+        }
+    }
+
+    func oops() bool {
+        print_string("oops");
+    }
+}

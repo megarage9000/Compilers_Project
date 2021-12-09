@@ -1,0 +1,15 @@
+extern func print_int(int) void;
+
+package Array1 {
+    var array [10]int;
+    
+    func main() int {
+        var i int;
+        i = 1;
+        while(i < 10) {
+            array[i] = array[i-1] + 2;
+            print_int(array[i]);
+            i = i + 1;
+        }
+    }
+}

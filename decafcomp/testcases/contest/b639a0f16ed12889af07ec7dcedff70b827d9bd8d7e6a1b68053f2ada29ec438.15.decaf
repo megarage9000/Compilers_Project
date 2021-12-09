@@ -1,0 +1,69 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package test{
+
+	var arr [5] int;
+
+	func ceilSearch(low int, high int, x int) int {
+		var i int;
+		//if x is smaller than or equal to first element, return first element
+
+		if( x <= arr[low]){
+			return (low);
+		} 
+
+		//search linearly for ceil
+		for(i = low; i < high; i = i+1){
+			if(arr[i] == x){
+				 return (i);
+			}
+
+			//if x lies in arr[i] and arr[i+1]
+			if(arr[i] < x && arr[i+1] >= x) {
+				return (i+1);
+			}
+		}
+
+		return (-1);
+	}
+
+
+	func main() int {
+		var size int;
+		var x int;
+		var index int;
+		x  = 6;
+		size  = 5;
+		
+		arr[0] = 2;
+		arr[1] = 4;
+		arr[2] = 14;
+		arr[3] = 23;
+		arr[4] = 22;
+
+		index = ceilSearch(0, size-1, x);
+
+		if(index == -1 ){
+			print_string("Ceiling for \"");
+				print_int(x);
+				print_string("\" does not exist in the array.");
+		}
+		else {
+			if(true || infiniteLoop()){
+				print_string("Ceiling for \"");
+				print_int(x);
+				print_string("\" in the array : ");
+				print_int(arr[index]);
+			}
+		}
+		return (0);
+
+	}
+
+	func infiniteLoop() bool{
+		while(true){
+			print_string("In while loop");
+		}
+	}
+}

@@ -1,0 +1,39 @@
+extern func print_int(int) void;
+package Test {
+
+    var list [10] int;
+
+    func binarySearchHelper(l int, r int, x int) int
+    {
+        var mid int;
+        if (r >= l) {
+            mid = l + (r - l) / 2;
+            if (list[mid] == x){
+                return(mid);
+            }
+            if (list[mid] > x){
+                return(binarySearchHelper(l, mid - 1, x));
+            }
+            return(binarySearchHelper(mid + 1, r, x));
+        }
+        return(-1);
+    }
+    func binarySearch(x int) int {
+        return(binarySearchHelper(0, 10, x));
+    }
+    func main() int
+    {
+        list[0] = 7;
+        list[1] = 1;
+        list[2] = 3;
+        list[3] = 2;
+        list[4] = 8;
+        list[5] = 0;
+        list[6] = 9;
+        list[7] = 4;
+        list[8] = 5;
+        list[9] = 6;
+
+        print_int(binarySearch(6));
+    }
+}

@@ -1,0 +1,20 @@
+extern func print_string(string) void;
+
+package shortcircbrack {
+  func main() int {
+    if (((((false || false) || false && true) && true) && (false || true)) && loopforever()) {
+        print_string("Stuck forever!");
+    } else {
+        print_string("Escaped loop!");
+    }
+
+    return (0);
+  }
+  func loopforever() bool {
+    while (true) {
+        continue;
+    }
+
+    return (true);
+  }
+}

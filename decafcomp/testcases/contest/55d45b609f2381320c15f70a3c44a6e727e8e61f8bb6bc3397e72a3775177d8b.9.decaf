@@ -1,0 +1,19 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package Test {
+    func main() int {
+        // testing unary minus and unary not
+        var x int;
+        var y int;
+        var b bool;
+        x = 19;
+        y = -x; 
+
+        if (y == -19) {
+            if (!b) {
+                print_int(y);
+            }
+        }
+    }
+}

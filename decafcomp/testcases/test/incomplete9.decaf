@@ -1,6 +1,0 @@
-package foo {
-    var x int;
-    func main() { }
-    {
-}
-

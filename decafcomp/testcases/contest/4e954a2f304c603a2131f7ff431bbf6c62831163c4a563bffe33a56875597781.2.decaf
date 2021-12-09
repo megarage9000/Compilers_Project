@@ -1,0 +1,14 @@
+extern func print_int(int) void;
+
+package printchar {
+  func main() int {
+    var x int;
+    var y int;
+    x = '\n';
+    y = '\'';
+
+    print_int(x * y);
+
+    return (0);
+  }
+}

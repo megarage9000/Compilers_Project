@@ -1,0 +1,25 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package Test {
+    var v[4] int;
+    var a[4] int;
+    var result int;
+    func main() int {
+        var i int;
+        v[0] = 1;
+        v[1] = 0;
+        v[2] = 7;
+        v[3] = 9;
+
+        a[0] = 3;
+        a[1] = 4;
+        a[2] = 2;
+        a[3] = 11;
+
+        for (i = 0; i < 4; i = i + 1) {
+            result = result + (v[i] * a[i]);
+        }
+        print_int(result);
+    }
+}

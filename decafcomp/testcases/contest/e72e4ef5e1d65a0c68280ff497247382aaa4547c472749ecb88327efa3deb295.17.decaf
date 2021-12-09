@@ -1,0 +1,15 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package EvansCompilerShredder {
+
+    func doesDecafHaveReferenceTypes(x int) void {
+        x = 'Y';
+    }    
+    func main() int {
+        var x int;
+        x = 'N';
+        doesDecafHaveReferenceTypes(x);
+        print_int(x);
+    }
+}

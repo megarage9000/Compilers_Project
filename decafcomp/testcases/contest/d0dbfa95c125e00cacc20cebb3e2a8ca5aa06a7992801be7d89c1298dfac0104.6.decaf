@@ -1,0 +1,15 @@
+extern func print_string(string) void;
+
+package IfAndCond {
+    var x int = 0;
+
+    func main() int {
+        {
+            if(false && true){
+                print_string("2");
+            } else{
+                print_string("1");
+            }
+        }
+    }
+}

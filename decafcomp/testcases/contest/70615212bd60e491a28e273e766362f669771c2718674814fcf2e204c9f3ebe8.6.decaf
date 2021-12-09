@@ -1,0 +1,11 @@
+extern func print_int(int) void;
+
+package C {
+    func main() int {
+      var x, y int;
+      var w bool;
+      x = 99;
+      y = 999;
+      w = y < 100 || 8 < 12 && x < 100; 
+    }
+}

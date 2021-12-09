@@ -1,0 +1,44 @@
+extern func print_int(int) void; extern func f(string, string, string) void; extern func print_string(string) void;
+
+
+package _2 {
+  var a, b [100]bool;
+  var c [20] int;
+
+  func main() int {
+    var b int;
+
+    while(b < 20 && true != a[b]) {
+      b = b + 1;
+      c[b] = b;
+    }
+
+    g(true);
+
+    for (b = b; b < 2000; b = b + 1) {
+      print_int(c[19] + f(b));
+      return(0);
+    }
+
+    return(-11);
+  }
+
+  func g(a bool) void {
+    {}
+    {}
+    {}{
+      var a bool;
+    if (a == b[0]) {
+      return;
+    }
+    }
+    print_string("a");
+    {}
+    {}
+    {}
+  }
+
+  func f(a int) int {
+    return(a * 0XF * '\t');
+  }
+}

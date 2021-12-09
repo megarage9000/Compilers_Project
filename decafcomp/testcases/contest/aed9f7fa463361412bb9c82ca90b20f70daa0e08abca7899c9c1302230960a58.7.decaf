@@ -1,0 +1,68 @@
+extern func print_int(int) void;
+package Test {
+    func main() int {
+        var a,b,c,d,e,f,g int;
+        a = 10;
+        b = 12;
+        c = 14;
+        d = 16;
+        e = 18;
+        f = 0;
+        g = 0;
+        while(a != 10 || (true && false)) {
+            b = c;
+            if (b == 18) {
+                b = a;
+            }
+            while (b == 10) {
+                a = -1;
+                b = b + 10;
+            }
+            if ( (c << d) > 0) {
+                print_int(c);
+                c = d;
+            }
+            while ( e < e) {
+                e = e * 5;
+            }
+            if (a == 10) {
+                if (f == 3) {
+                    f = f + 1;
+                    continue;
+                } else {
+                    f = f + 2;
+                }
+            } else {
+                print_int(52);
+                break;
+            }
+            b = c - 10;
+            c = b + 2;
+            d = e >> e;
+            print_int(d);
+            while (b < c) {
+                b = b + 1;
+                b = a - 2;
+                c = c - 7;
+                g = g + 1;
+                if (g == 5) {
+                    b = 100;
+                    c = 0;
+                }
+                if (b - c > 10) {
+                    c = c - 100;
+                } else {
+                    c = c + 1;
+                }
+                print_int(b);
+                print_int(c);
+                break;
+            }
+            print_int(a);
+            f = f + 1;
+            if (f > 6) {
+                a = 11;
+            }
+        }
+    }
+}

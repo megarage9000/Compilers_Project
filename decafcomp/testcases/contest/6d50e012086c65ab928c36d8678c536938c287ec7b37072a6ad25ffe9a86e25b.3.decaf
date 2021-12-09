@@ -1,0 +1,52 @@
+extern func print_string(string) void;
+
+package HelloWorldShortCircuit {
+    func main() int {
+        var greeting bool;
+        // consonants return true, vowels return false
+        greeting = (H() || oops()) && E() && oops() || L() && L() && O() && oops() || space();
+        greeting = W() && O() && oops() || R() && L() && D() && newline() || oops();
+    }
+
+    func H() bool {
+        print_string("H");
+    }
+
+    func E() bool {
+        print_string("E");
+        return(false);
+    }
+
+    func L() bool {
+        print_string("L");
+    }
+
+    func O() bool {
+        print_string("O");
+        return(false);
+    }
+
+    func W() bool {
+        print_string("W");
+    }
+
+    func R() bool {
+        print_string("R");
+    }
+
+    func D() bool {
+        print_string("D");
+    }
+
+    func oops() bool {
+        print_string("oops");
+    }
+
+    func space() bool {
+        print_string(" ");
+    }
+
+    func newline() bool {
+        print_string("\n");
+    }
+}

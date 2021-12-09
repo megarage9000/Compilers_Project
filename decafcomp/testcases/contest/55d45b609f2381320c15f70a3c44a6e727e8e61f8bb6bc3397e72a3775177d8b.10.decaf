@@ -1,0 +1,19 @@
+extern func print_int(int) void;
+
+package Test {
+    func default(a bool) bool {
+        if (a) {
+            print_int(5);
+        } else {
+            print_int(4);
+        }
+    }
+
+    func main() int {
+        var flag bool;
+        flag = default(false);
+        if (flag) {
+            print_int(2);
+        }
+    }
+}

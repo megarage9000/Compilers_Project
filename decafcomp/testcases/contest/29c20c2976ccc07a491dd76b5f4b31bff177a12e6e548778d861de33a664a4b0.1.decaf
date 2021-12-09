@@ -1,0 +1,15 @@
+extern func print_int(int) void;
+
+package test {
+  func main() int {
+    var upper, lower int;
+    upper = 0X1234567890abcdefABCDEF;
+    lower = 0x1234567890ABCDEFabcdef;
+    if ( upper == lower ) {
+      print_int(upper);
+    } else {
+      print_int(lower);
+    }
+    return(0);
+  }
+}

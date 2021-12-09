@@ -1,0 +1,65 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package Selection {
+
+    var arr [20] int;
+	var size int = 20;
+
+    func randomize_array() void{
+        var i int;
+        var counter int;
+        counter = 20;
+        for (i = 0; i < size; i = i + 1) {
+            if (i % 2 == 0) {
+                arr[i] = counter - i;
+            }
+            else {
+                arr[i] = counter + i;
+            }
+        }
+    }
+
+    func print_arr() void {
+		var i int;
+		var j int;
+		for (i = 0; i < size; i = i + 10) {
+			for (j = 0; j < 10; j = j + 1) {
+				print_int(arr[i + j]);
+				if (j != 9) {
+					print_string(",");
+				}
+			}
+			print_string("\n");
+		}
+	}
+
+    func selection_sort() void{
+        var i int;
+        var j int;
+        for (i = 0; i < size; i = i + 1) {
+            var temp int;
+            var index int;
+            index = i;
+            
+            for (j = i; j < size; j = j + 1) {
+                if (arr[j] < arr[index]) {
+                    index = j;
+                }
+            }
+            temp = arr[i];
+            arr[i] = arr[index];
+            arr[index] = temp;
+        }
+    }
+
+    func main() int {
+        randomize_array();
+        print_string("Before Selection Sort\n");
+        print_arr();
+        selection_sort();
+        print_string("After Selection Sort\n");
+        print_arr();
+        return (0);
+    }
+}

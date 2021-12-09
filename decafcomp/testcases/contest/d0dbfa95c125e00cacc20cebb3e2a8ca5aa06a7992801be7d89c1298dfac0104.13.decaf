@@ -1,0 +1,17 @@
+extern func print_int(int) void;
+package Test {
+    func main() int
+    {
+        var x int;
+        x = - 5;
+        if (true) {
+            {
+                {
+                    {
+                        print_int(x / -5);
+                    }
+                }
+            }
+        }
+    }
+}

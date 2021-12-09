@@ -1,0 +1,19 @@
+extern func print_int(int) void;
+
+package hello {
+    func main() int {
+        var x int;
+        
+        if (hello1(x)) {
+            print_int(2);
+        }
+    }
+    
+    func hello1(x int) bool {
+        if (x == 100) {
+            return(true);
+        }
+        
+        return(hello1(x + 1));
+    }
+}

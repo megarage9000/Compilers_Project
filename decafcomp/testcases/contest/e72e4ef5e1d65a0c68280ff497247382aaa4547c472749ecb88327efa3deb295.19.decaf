@@ -1,0 +1,24 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package EvansCompilerShredder {
+    
+    var //This signifies that comes next is a variable
+        //This next part is really important -- also, here's some cool characters: \n\r\t\v\f\
+    x   //This is the identifier
+    int //This is the type
+    ;   //This terminates the line
+    
+    func main() int {
+        x //The identifier
+        = //Assignment
+        x //LHS
+        + //Operator
+        1 //Constant
+        ; //Terminator
+
+        //I hope these comments have been helpful!
+        print_string("Done! The answer is: ");
+        print_int(x);
+    }
+}

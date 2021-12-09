@@ -1,0 +1,57 @@
+extern func print_int(int) void;
+
+package BubbleSort {
+
+    var size int = 100;
+    var list[100] int;
+
+    func main() int {
+        populate();
+        bubblesort();
+        if(verifysort()){
+            print_int(1);   
+        }
+    }
+
+    func populate() void {
+        var i int;
+        for(i = 0; i < size; i = i + 1){
+            list[i] = 200-i;
+        }
+    }
+
+    func bubblesort() void {
+        {
+            var i int;
+            var j int;
+            var temp int;
+
+            for (i = 0; i < size; i = i + 1){
+                for(j = 0; j < (size - (i - 1)); j = j + 1){
+                    if(list[j] > list[j+1]) {
+                        temp = list[j];
+                        list[j] = list[j+1];
+                        list[j+1] = temp;
+                    }
+                }
+            }
+        }
+    }
+
+    func verifysort() bool {
+        {
+            var i int;
+            var j int;
+            var temp int;
+
+            for (i = 0; i < size; i = i + 1){
+                for(j = 0; j < (size - (i - 1)); j = j + 1){
+                    if(list[j] > list[j+1]) {
+                        return(false);
+                    }
+                }
+            }
+            return(true);
+        }
+    }
+}

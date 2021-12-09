@@ -1,0 +1,24 @@
+extern func print_int(int) void;
+
+package hello {
+    func main() int {
+        if (hello1()) {
+            hello2();
+            print_int(hello3());
+        }
+        
+        print_int(2);
+    }
+    
+    func hello1() bool {
+        return;
+    }
+    
+    func hello2() void {
+        return;
+    }
+    
+    func hello3() int {
+        return;
+    }
+}

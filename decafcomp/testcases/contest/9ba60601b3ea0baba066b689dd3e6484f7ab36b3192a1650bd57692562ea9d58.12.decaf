@@ -1,0 +1,19 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package index {
+    var a,b [10] int;
+
+    func main() int {
+        var i int;
+
+        b[3] = 5;
+        a[5] = 7;
+        a[0] = 1;
+
+        for (i = 0; i < 10; i = i+1) {
+            print_int(a[b[i]]);
+            print_string("\n");
+        }
+    }
+}

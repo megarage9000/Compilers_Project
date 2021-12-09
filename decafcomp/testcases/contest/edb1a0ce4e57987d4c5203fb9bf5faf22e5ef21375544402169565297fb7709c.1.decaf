@@ -1,0 +1,63 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package Insertion {
+
+    var arr [20] int;
+	var size int = 20;
+
+    func randomize_array() void{
+        var i int;
+        var counter int;
+        counter = 20;
+        for (i = 0; i < size; i = i + 1) {
+            if (i % 2 == 0) {
+                arr[i] = counter - i;
+            }
+            else {
+                arr[i] = counter + i;
+            }
+        }
+    }
+
+    func print_arr() void {
+		var i int;
+		var j int;
+		for (i = 0; i < size; i = i + 10) {
+			for (j = 0; j < 10; j = j + 1) {
+				print_int(arr[i + j]);
+				if (j != 9) {
+					print_string(",");
+				}
+			}
+			print_string("\n");
+		}
+	}
+
+    func insertion_sort() void {
+        var i int;
+        
+        for (i = 1; i < size; i = i + 1) {
+            var key int;
+            var j int;
+            key = arr[i];
+            j = i - 1;
+            while (j >= 0 && key < arr[j]) {
+                arr[j + 1] = arr[j];
+                j = j - 1;
+            }
+            arr[j+1] = key;
+        }
+    }
+
+    func main() int {
+        randomize_array();
+        print_string("Before Insertion Sort\n");
+        print_arr();
+        insertion_sort();
+        print_string("After Insertion Sort\n");
+        print_arr();
+        return (0);
+    }
+
+}

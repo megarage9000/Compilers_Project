@@ -1,0 +1,9 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package Test {
+    var arr [10] int;
+    func main() int {
+        print_int(arr[50]);
+    }
+}

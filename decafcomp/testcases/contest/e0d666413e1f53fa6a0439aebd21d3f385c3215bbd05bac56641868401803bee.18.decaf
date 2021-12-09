@@ -1,0 +1,26 @@
+extern func print_int(int) void;
+
+package Test {
+    func main() int {
+        var x int;
+        var a int;
+        a = 0;
+        x = 20;
+        while(x > 0) {
+            while(x > 0) {
+                if (x % 2 == 0) {
+                    break;
+                } else {
+                    // Do some random stuff
+                    while (x % 2 != 0) {
+                        print_int(a);
+                        a = a * a; 
+                        x = x - 1;
+                    }
+                }
+            }
+            x = x - 1;
+            print_int(x);
+        }
+    }
+}

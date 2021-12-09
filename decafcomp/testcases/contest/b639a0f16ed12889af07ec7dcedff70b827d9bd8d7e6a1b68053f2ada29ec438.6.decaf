@@ -1,0 +1,78 @@
+extern func read_int() int;
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package test{
+	func sum( n int, i int, ms int) int {
+		var s int;
+		s =0;
+		while(n != 0){
+			s = s+(n%i);
+			if(s>ms) {
+				return(s);	
+			}
+			n = n/i;
+		}
+		return(s);
+	}
+
+	func msb (n int, l int, r int) int{
+		var B int;
+		var ms int;
+		var t int;
+		var i int;
+		B = 0;
+		ms = 10000;
+		if(n>=l && n<= r){
+			return(n);
+		}
+		if(n<= l){
+			return (l);
+		}
+		t = l*l;
+		for( i = l ; ((t <= n) && (i <= r)); i = i+1, t = i*i) {
+			var ds int;
+			ds = sum(n,i, ms);
+			if(ds == 1){
+				return(i);
+			}
+			if(ms>ds){
+			ms = ds;
+			B= i;
+			}
+		}
+
+		l = i;
+		while(l<= r && n/r<r){
+			var d1 int;
+			var d2 int;
+			d1 = n%r;
+			d2 = n/r;
+			if(d2>ms){
+				break;
+			}
+			if(ms>(d1+d2)){
+				ms = d1 + d2;
+				B =r;
+			}
+			r = n/(d2 +1);
+		}
+		return (B);
+
+	}
+
+
+	func main() int{
+		var Q, n, l, r int;
+		Q =10;
+		while (Q != 0){
+			n = read_int();
+			r = read_int();
+			l = 2;
+			print_int(msb(n,l,r));
+			print_string("\n");
+			Q = Q-1;
+		}
+		return(0);
+	}
+}

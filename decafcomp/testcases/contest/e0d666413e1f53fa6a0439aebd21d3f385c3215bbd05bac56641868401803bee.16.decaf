@@ -1,0 +1,198 @@
+extern func print_string(string) void;
+
+package Test {
+    // Make a c string
+    var str[16] int;
+    func print_char(x int) void {
+        if (x == 65) {
+            print_string("A");
+        }
+        if (x == 66) {
+            print_string("B");
+        }
+        if (x == 67) {
+            print_string("C");
+        }
+        if (x == 68) {
+            print_string("D");
+        }
+        if (x == 69) {
+            print_string("E");
+        }
+        if (x == 70) {
+            print_string("F");
+        }
+        if (x == 71) {
+            print_string("G");
+        }
+        if (x == 72) {
+            print_string("H");
+        }
+        if (x == 73) {
+            print_string("I");
+        }
+        if (x == 74) {
+            print_string("J");
+        }
+        if (x == 75) {
+            print_string("K");
+        }
+        if (x == 76) {
+            print_string("L");
+        }
+        if (x == 77) {
+            print_string("M");
+        }
+        if (x == 78) {
+            print_string("N");
+        }
+        if (x == 79) {
+            print_string("O");
+        }
+        if (x == 80) {
+            print_string("P");
+        }
+        if (x == 81) {
+            print_string("Q");
+        }
+        if (x == 82) {
+            print_string("R");
+        }
+        if (x == 83) {
+            print_string("S");
+        }
+        if (x == 84) {
+            print_string("T");
+        }
+        if (x == 85) {
+            print_string("U");
+        }
+        if (x == 86) {
+            print_string("V");
+        }
+        if (x == 87) {
+            print_string("W");
+        }
+        if (x == 88) {
+            print_string("X");
+        }
+        if (x == 89) {
+            print_string("Y");
+        }
+        if (x == 90) {
+            print_string("Z");
+        }
+        if (x == 63) {
+            print_string("?");
+        }
+        if (x == 39) {
+            print_string("\'");
+        }
+        if (x == 97) {
+            print_string("a");
+        }
+        if (x == 98) {
+            print_string("b");
+        }
+        if (x == 99) {
+            print_string("c");
+        }
+        if (x == 100) {
+            print_string("d");
+        }
+        if (x == 101) {
+            print_string("e");
+        }
+        if (x == 102) {
+            print_string("f");
+        }
+        if (x == 103) {
+            print_string("g");
+        }
+        if (x == 104) {
+            print_string("h");
+        }
+        if (x == 105) {
+            print_string("i");
+        }
+        if (x == 106) {
+            print_string("j");
+        }
+        if (x == 107) {
+            print_string("k");
+        }
+        if (x == 108) {
+            print_string("l");
+        }
+        if (x == 109) {
+            print_string("m");
+        }
+        if (x == 110) {
+            print_string("n");
+        }
+        if (x == 111) {
+            print_string("o");
+        }
+        if (x == 112) {
+            print_string("p");
+        }
+        if (x == 113) {
+            print_string("q");
+        }
+        if (x == 114) {
+            print_string("r");
+        }
+        if (x == 115) {
+            print_string("s");
+        }
+        if (x == 116) {
+            print_string("t");
+        }
+        if (x == 117) {
+            print_string("u");
+        }
+        if (x == 118) {
+            print_string("v");
+        }
+        if (x == 119) {
+            print_string("w");
+        }
+        if (x == 120) {
+            print_string("x");
+        }
+        if (x == 121) {
+            print_string("y");
+        }
+        if (x == 122) {
+            print_string("z");
+        }
+        if (x == 32) {
+            print_string(" ");
+        }
+        if (x == 44) {
+            print_string(",");
+        }
+    }
+    func main() int {
+        var i int;
+        str[0] = 'H';
+        str[1] = 'e';
+        str[2] = 'y';
+        str[3] = ',';
+        str[4] = ' ';
+        str[5] = 'w';
+        str[6] = 'h';
+        str[7] = 'a';
+        str[8] = 't';
+        str[9] = '\'';
+        str[10] = 's';
+        str[11] = ' ';
+        str[12] = 'u';
+        str[13] = 'p';
+        str[14] = '?';
+        str[15] = 0;
+        for (i = 0; i < 15; i = i +1) {
+            print_char(str[i]);
+        }
+    }
+}

@@ -1,0 +1,69 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package test{
+	var arr[10] int;
+	func swapArrayElement (l int , r int) void {
+		var temp int ;
+		temp = arr[l];
+		arr[l] = arr[r];
+		arr[r] = temp;
+	}
+
+	func selectionSort (size int) void{
+		var i , j, min_index int;
+
+		for(i =0; i<size-1; i = i+1) {
+			min_index = i;
+			for(j = i+ 1; j< size; j = j+1){
+				if(arr[j] <arr[min_index]){
+					min_index = j;
+				}
+
+				swapArrayElement(min_index, i);
+			}
+		}
+	}
+
+	func printArray(size int) void{
+	 	var i int;
+	 	for(i = 0; i< size; i= i+1){
+	 		print_int(arr[i]);
+	 		if(checkIfLuckyNumber(arr[i], 2)){
+				print_string(" Wow! we found a lucky number!!");
+			}
+			print_string("\n");
+	 	}
+	 	print_string("\n");
+	}
+
+	func main() int {
+		var size int ;
+		var i int;
+		size = 10;
+		for(i = 0; i< size; i = i+1){
+			arr[i] = 50 - i;
+		}
+		selectionSort(size);
+		print_string("Sorted array: \n");
+		printArray(size);
+		return (0);
+	}
+
+	func checkIfLuckyNumber(num int, counter int) bool {
+		var check bool;
+		if(counter > num){
+			return (true);
+		}
+		if( num % counter == 0){
+			return (false);
+		}
+		//calculate next position of input no.
+
+		num =  num - (num/ counter);
+
+		counter = counter + 1;
+		return (checkIfLuckyNumber(num, counter));
+
+	}
+}

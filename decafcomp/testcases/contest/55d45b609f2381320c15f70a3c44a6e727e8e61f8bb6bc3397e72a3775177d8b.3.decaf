@@ -1,0 +1,13 @@
+extern func print_int(int) void;
+
+package Test {
+    func main() int {
+        var i int;
+        i = 10;
+
+        while (i > 0) {
+            print_int(i - 1);
+            i = i - 1;
+        }
+    }
+}

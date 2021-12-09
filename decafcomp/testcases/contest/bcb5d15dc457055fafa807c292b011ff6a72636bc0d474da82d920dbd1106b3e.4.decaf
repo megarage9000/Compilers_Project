@@ -1,0 +1,24 @@
+extern func print_string(string) void;
+
+package boolstuff
+{
+    func check(a bool, b bool) void
+    {
+        if (a && b)
+        {
+            print_string("both values are true\n");
+        }
+        else
+        {
+            print_string("one of these or both of these are false\n");
+        }
+    }
+
+    func main() int
+    {
+        check(true, true);
+        check(true, false);
+        check(false, true);
+        check(false, false);
+    }
+}

@@ -1,0 +1,21 @@
+extern func print_int(int) void;
+extern func aaaaaa() bool;
+
+package a {
+  var x bool;
+  func main() int {
+    var x int;
+    for (x = 0; x < 10; x = x + 1) {
+      continue;
+      print_int(x);
+      x = 0;
+      for (x = 0; x < 0; x = x - 1) {
+        print_int(x);
+        break;
+      }
+      continue;
+      while(true) {}
+    }
+    print_int(true);
+  }
+}

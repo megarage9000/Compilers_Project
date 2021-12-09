@@ -1,0 +1,39 @@
+extern func print_int(int) void;
+
+package simple {
+    
+
+    func base() void {
+        var a int;
+        var b int;
+        a = 10;
+        b = 11;
+        recur(a,b);
+    }
+
+    func recur(a int, b int) void {
+      
+        if (a % 2 == 0){
+          print_int(a);
+          
+          if ( (a >= 0) && (b >= 0) ){
+            recur(a-1,b);
+          }
+        } else {
+          print_int(b);
+
+          if ( (a >= 0) && (b >= 0) ){
+            recur(a,b-1);
+          }
+        }
+
+    }
+
+
+    func main() int {
+        base();
+    }
+
+
+
+}

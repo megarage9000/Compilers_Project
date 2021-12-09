@@ -1,0 +1,15 @@
+extern func print_int(int) void;
+
+package Test {
+    func main() int {
+        var x int;
+        var y, z bool;
+        y = true;
+        print_int(x);
+        if (268698637801374212180498253692998543836019759806176237030937446994634775323931367659619597596774310831097000665353736115 + 0xF992421d8b9b4B1Ff2b63a0a161cc9Bde6D0Deaf24BEb257bc39bAf1cdA10cE9cF5cC3bf09C981AaA52f36757b504C47765C53e933E25cc67531d887 > -10104) {
+            print_int(1337);
+        }
+        return(0);
+        print_int(y || z);
+    }
+}

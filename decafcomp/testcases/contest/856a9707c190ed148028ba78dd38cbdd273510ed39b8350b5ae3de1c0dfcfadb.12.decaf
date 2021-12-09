@@ -1,0 +1,22 @@
+extern func print_int(int) void;
+
+package C {
+    func main() int {
+        var p1 int;
+        var p2 int;
+        var p3 int;
+
+        p1 = 3;
+        p2 = 5*7*5;
+        p3 = 1*2*3;
+
+        if (true) {
+          print_int(p1);
+        }
+        if (false) {
+          print_int(p2);
+        } else {
+          print_int(p3);
+        }
+    }
+}

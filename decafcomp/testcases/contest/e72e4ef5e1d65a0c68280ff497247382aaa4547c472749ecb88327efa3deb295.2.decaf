@@ -1,0 +1,39 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package EvansCompilerShredder {
+    
+    var message [12]int;
+    var asciiMarker [256]int;
+
+    func setMessage() void
+    {
+        message[0] = 'H';
+        message[1] = 'E';
+        message[2] = 'L';
+        message[3] = 'L';
+        message[4] = 'O';
+        message[5] = ' ';
+        message[6] = 'W';
+        message[7] = 'O';
+        message[8] = 'R';
+        message[9] = 'L';
+        message[10] = 'D';
+        message[11] = '!';
+    }
+
+    func main() int {
+        var sum, i int;
+        setMessage();
+        for(i = 0; i < 12; i = i + 1){
+            asciiMarker[message[i]] = asciiMarker[message[i]] + 1;
+        }
+        print_string("D"); print_int(asciiMarker[68]);
+        print_string("E"); print_int(asciiMarker[69]);
+        print_string("H"); print_int(asciiMarker[72]);
+        print_string("L"); print_int(asciiMarker[76]);
+        print_string("O"); print_int(asciiMarker[79]);
+        print_string("R"); print_int(asciiMarker[82]);
+        print_string("W"); print_int(asciiMarker[87]);
+    }
+}

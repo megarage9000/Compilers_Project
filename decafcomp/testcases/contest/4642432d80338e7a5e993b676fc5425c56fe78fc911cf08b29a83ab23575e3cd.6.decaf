@@ -1,0 +1,15 @@
+extern func print_int(int) void;
+
+package UniversalHash {
+
+    func main() int {
+        var x int;
+        x = 9;
+
+        print_int(hash(x, 3, 7, 101, 100));
+    }
+
+    func hash(x int, A int, B int, P int, M int) int {
+        return (((A * x + B) % P) % M);
+    }
+}

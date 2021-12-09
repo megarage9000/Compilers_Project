@@ -1,0 +1,18 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package EvansCompilerShredder {
+    
+    var zeroInit [1000000]int;
+    
+    func main() int {
+        var x int;
+        for(x = 0; x < 1000000; x = x + 1){
+            if(zeroInit[x] != 0){
+                print_string("Oops!");
+                return;
+            }
+        }
+        print_string("No errors detected");
+    }
+}

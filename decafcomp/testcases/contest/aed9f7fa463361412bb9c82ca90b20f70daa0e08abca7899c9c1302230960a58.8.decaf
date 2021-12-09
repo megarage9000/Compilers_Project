@@ -1,0 +1,26 @@
+extern func print_int(int) void;
+package Test {
+    func foo() bool {
+        print_int(10);
+        return(false);
+    }
+
+    func recurse(a int) int {
+        if (a == 0) {
+            return(0);
+        }
+        print_int(a % 5);
+        return(recurse(a-1));
+    }
+
+    func main() int {
+        if (false && foo()) {
+            recurse(10000);
+        } else {
+            if (true && foo()) {
+                recurse(1);
+            }
+        }
+        recurse(20);
+    }
+}

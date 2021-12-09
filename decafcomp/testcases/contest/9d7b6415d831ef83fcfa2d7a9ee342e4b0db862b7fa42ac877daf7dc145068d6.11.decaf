@@ -1,0 +1,28 @@
+package Test {
+    func foo(a bool) bool {
+        if (a) {
+            return (true);
+        }
+        else {
+            return (false);
+        }
+    }
+
+    func foo1() bool {}
+
+    func main() int {
+        var x, y bool;
+        x = true;
+        y = false;
+        {
+            var x int;
+            x = 1;
+            if (x > 0) {
+                foo1();
+            }
+            if (!y) {
+                foo(true);
+            }
+        }
+    }
+}

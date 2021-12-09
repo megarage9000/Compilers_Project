@@ -1,0 +1,29 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package SumOfSquaresOfN {
+
+	func sumOfSquareOfN(n int) void {
+    var res int;
+    res = n * (n + 1) * ((2 * n) + 1) / 6;
+
+    print_string("Sum of squares of first ");
+    print_int(n);
+    print_string(" natural numbers is ");
+    print_int(res);
+    print_string("\n");
+	}
+
+	func main() int {
+    var a int;
+    var b int;
+
+    a = 5;
+    b = 10;
+
+		sumOfSquareOfN(a);
+    sumOfSquareOfN(b);
+
+		return(0);
+	}
+}

@@ -1,0 +1,16 @@
+extern func print_int(int) void;
+
+package loop {
+    func main() int {
+        var i int;
+        var n int;
+        var d bool;
+        for (n = 5, i = 0, d = true; i + n < 10; i = i + 1, d = false) {
+            if (d == true) {
+                print_int(i + n);
+            } else {
+                print_int(i);
+            }
+        }
+    }
+}

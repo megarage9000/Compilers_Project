@@ -1,0 +1,12 @@
+extern func print_int(int) void;
+extern func xs() void;
+
+package C {
+	var xs[100] int; 
+	func main() int 
+		{ 
+			var x,y int; 
+			x = -2147483648 - 2147483640;
+			y = xs[x]; 
+		}
+}

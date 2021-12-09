@@ -1,0 +1,33 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package Test {
+    var arr[10] int;
+    func main() int {
+        var i int;
+        var j int;
+        var minIndex int;
+        var temp int;
+        for (i = 0; i < 10; i = i + 1) {
+            arr[i] = 10 - i;
+            print_int(arr[i]);
+        }
+        print_string("\n");
+        minIndex = 0;
+        for (i = 0; i < 10; i = i + 1) {
+            minIndex = i;
+            for (j = i + 1; j < 10; j = j + 1) {
+                if (arr[j] < arr[minIndex]) {
+                    minIndex = j;
+                }
+            }
+            temp = arr[minIndex];
+            arr[minIndex] = arr[i];
+            arr[i] = temp;
+        }
+        for (i = 0; i < 10; i = i + 1) {
+            print_int(arr[i]);
+        }
+        print_string("\n");
+    }
+}

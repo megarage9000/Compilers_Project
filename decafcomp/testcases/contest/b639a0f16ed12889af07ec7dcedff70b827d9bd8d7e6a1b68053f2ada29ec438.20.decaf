@@ -1,0 +1,49 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package test{
+	var b1 bool;
+	func main() int {
+		var x ,y int;
+		y = 3;
+		x = 5;
+		b1 = true;
+
+		if(b1 || isDevisible(x, y)){
+			print_int(x);
+			print_string(" is divisible by ");
+			print_int(y);
+
+			if(!b1 && swap(x, y, b1)){
+				print_string("After swap x: ");
+				print_int(x);
+				print_string(" , y: ");
+				print_int(y);
+				print_string("\n");
+			}
+		}
+		return (0);
+	}
+
+	func isDevisible(num int, dem int) bool{
+		print_int(num);
+		print_string("/");
+		print_int(dem);
+		print_string(": ");
+		print_int(num % dem);
+		return(num%dem == 0);
+	}
+
+	func swap(a int, b int, s bool) bool{
+		 var temp int;
+		 var swap bool;
+		 swap  = s;
+		 print_string("\t doing swap\n ");
+		 if(swap){
+			 temp = a;
+			 a = b;
+			 b = a;
+		 }
+	 	return (swap);
+	}
+}

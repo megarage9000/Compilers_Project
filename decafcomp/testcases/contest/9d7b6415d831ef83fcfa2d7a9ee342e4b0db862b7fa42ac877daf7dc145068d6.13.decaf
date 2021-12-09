@@ -1,0 +1,25 @@
+extern func print_string(string) void;
+extern func print_int(int) void;
+
+package Test {
+    func main() int {
+        print_string("Test \n \t !\"");
+
+        foo();
+    }
+
+    func foo() void {
+        var x, y bool;
+        x = true;
+
+        {
+            print_string("hello world $%^&");
+
+            if (x == true) {
+                y = false;
+            }
+        }
+
+        print_int(!x);
+    }
+}

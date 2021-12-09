@@ -1,0 +1,24 @@
+extern func print_int(int) void;
+
+package Catalan {
+
+    func catalan(n int) int {
+        var k, a int;
+        if (n < 2) {
+            return (1);
+        }
+
+        a = 1;
+        for (k = 2; k <= n; k = k + 1) {
+            a = a * (n + k) / k;
+        }
+
+        return (a);
+    }
+
+    func main() int {
+        var x int;
+        x = catalan(11);
+        print_int(x); // should be 58786
+    }
+}

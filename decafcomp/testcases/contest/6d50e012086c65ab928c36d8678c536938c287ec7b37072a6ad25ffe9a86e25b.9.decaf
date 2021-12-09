@@ -1,0 +1,65 @@
+extern func print_int(int) void;
+extern func print_string(string) void;
+
+package Test {
+    func main() int {
+        // test overflow of integers and throw in some mixed hex capitalization for good measure
+        // numbers above int32 should overflow according to https://coursys.sfu.ca/2021fa-cmpt-379-d1/forum/524
+
+        // simple
+        print_int(-161);          print_string("\n");
+        print_int( 161);          print_string("\n");
+        print_int(-0XA1);         print_string("\n");
+        print_int( 0xA1);         print_string("\n");
+        print_int(-0Xa1);         print_string("\n");
+        print_int( 0xa1);         print_string("\n\n");
+
+        // under int32 limit
+        print_int(-19090108);     print_string("\n");
+        print_int( 19090108);     print_string("\n");
+        print_int(-0X1234AbC);    print_string("\n");
+        print_int( 0X1234AbC);    print_string("\n");
+        print_int(-0x1234aBc);    print_string("\n");
+        print_int( 0x1234aBc);    print_string("\n\n");
+
+        // at int32 limit
+        print_int(-2147483648);   print_string("\n");
+        print_int( 2147483647);   print_string("\n");
+        print_int(-0X80000000);   print_string("\n");
+        print_int( 0X7FFFFFFF);   print_string("\n");
+        print_int(-0x80000000);   print_string("\n");
+        print_int( 0x7fffffff);   print_string("\n\n");
+
+        // just above int32 limit
+        print_int(-2147483649);   print_string("\n");
+        print_int( 2147483648);   print_string("\n");
+        print_int(-0X80000001);   print_string("\n");
+        print_int( 0X80000000);   print_string("\n");
+        print_int(-0x80000001);   print_string("\n");
+        print_int( 0x80000000);   print_string("\n\n");
+
+        // above int32 limit
+        print_int(-46118360696);  print_string("\n");
+        print_int( 46118360696);  print_string("\n");
+        print_int(-0XABCDE5678);  print_string("\n");
+        print_int( 0XABCDE5678);  print_string("\n");
+        print_int(-0xabcde5678);  print_string("\n");
+        print_int( 0xabcde5678);  print_string("\n\n");
+
+        // well above int32 limit
+        print_int(-614485765069); print_string("\n");
+        print_int( 614485765069); print_string("\n");
+        print_int(-0X8F1234AbCd); print_string("\n");
+        print_int( 0X8F1234AbCd); print_string("\n");
+        print_int(-0x8f1234aBcD); print_string("\n");
+        print_int( 0x8f1234aBcD); print_string("\n\n");
+
+        // well above int64 (so atoi will no longer work)
+        print_int(-5376137740068795331393628712114502769314363786248343368259972499137957690706543160091962584875173797294596362801); print_string("\n");
+        print_int( 5376137740068795331393628712114502769314363786248343368259972499137957690706543160091962584875173797294596362801); print_string("\n");
+        print_int(-0X8F1234AbCd8AB19410932412ADEFBCAEF12918471231231ADEFBCAEF12918471231231ADEFBCAEF12918471231231); print_string("\n");
+        print_int( 0X8F1234AbCd8AB19410932412ADEFBCAEF12918471231231ADEFBCAEF12918471231231ADEFBCAEF12918471231231); print_string("\n");
+        print_int(-0x8f1234aBcD8ab19410932412adefbcaef12918471231231adefbcaef12918471231231adefbcaef12918471231231); print_string("\n");
+        print_int( 0x8f1234aBcD8ab19410932412adefbcaef12918471231231adefbcaef12918471231231adefbcaef12918471231231); print_string("\n\n");
+    }
+}

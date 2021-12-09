@@ -1,0 +1,23 @@
+extern func x(string) void;
+extern func print_string(string) void;
+
+package ifwhiles {
+    func main() int {
+        var b bool;
+        b = true;
+
+        if (b) {
+            while(true) {
+                print_string("true\n");
+                break;
+            }
+        } else {
+            while(true) {
+                print_string("false\n");
+                break;
+            }
+        }
+
+        print_string("the end\n");
+    }
+}

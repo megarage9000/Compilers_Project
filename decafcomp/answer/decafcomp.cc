@@ -1087,6 +1087,16 @@ public:
 			return nullptr;
 		}
 		if(!value) {
+			// On empty return
+			llvm::Type * funcType = func->getReturnType();
+			if(funcType != Builder.getVoidTy()){
+				if(funcType == Builder.getInt32Ty()) {
+					return Builder.CreateRet(initializeLLVMVal(funcType, 0));
+				}
+				else {
+					return Builder.CreateRet(initializeLLVMVal(funcType, 1));
+				}
+			}
 			return Builder.CreateRetVoid();
 		}
 		else if(func->getReturnType() == Builder.getVoidTy() && value != nullptr) {
